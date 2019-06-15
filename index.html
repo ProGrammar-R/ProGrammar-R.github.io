@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Azure Dreams PS1 De-randomizer</title>
+    <link rel="stylesheet"
+          href="https://unpkg.com/purecss@1.0.0/build/pure-min.css">
+    <link rel="stylesheet"
+          href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
+    <link rel="stylesheet" href="index.css">
+  </head>
+  <body>
+    <div id="version"></div>
+    <div id="content">
+      <h1>Azure Dreams PS1 De-randomizer</h1>
+      <div>
+        by pro_grammar
+      </div>
+      <form id="form" class="pure-g">
+        <p id="target" class="pure-u-1">
+          <span id="status"></span>
+          <input id="file" type="file" accept=".bin,.iso">
+        </p>
+        <div class="pure-u-14-24">
+          <fieldset>
+            <legend>Randomizations</legend>
+            <div class="pure-g">
+              <div class="pure-u-12-24">
+                <label for="seed">Seed:</label>
+              </div>
+              <div class="pure-u-12-24">
+                <input id="seed" type="text" placeholder="Optional">
+              </div>
+              <div class="pure-u-12-24">
+                <input id="preset" type="checkbox">
+                <label for="preset">Preset</label>
+              </div>
+              <div id="preset-select" class="pure-u-12-24">
+                <select id="preset-id"></select>
+                <span class="tooltip-wrapper">
+                  <span class="tooltip-indicator">?</span>
+                  <span class="tooltip hidden">
+                    <span id="preset-description"></span>
+                    <span id="preset-author"></span>
+                  </span>
+                </span>
+              </div>
+              <div class="pure-u-1">
+                <input id="clear"
+                       type="submit"
+                       class="pure-button hidden"
+                       value="Clear">
+              </div>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Options</legend>
+            <div class="pure-g">
+              <div class="pure-u-1">
+                <input id="append-seed" type="checkbox">
+                <label for="append-seed">Append seed to filename</label>
+              </div>
+              <div class="pure-u-1">
+                <input id="show-spoilers" type="checkbox">
+                <label for="show-spoilers">Show spoilers</label>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        <div class="pure-u-10-24 spoilers">
+          <textarea id="spoilers" rows="8" cols="32" disabled="disabled">
+          </textarea>
+        </div>
+        <p class="pure-u-1">
+          <input id="randomize"
+                 type="submit"
+                 class="pure-button pure-button-primary"
+                 disabled="disabled"
+                 value="Randomize">
+          <input id="copy"
+                 type="submit"
+                 class="pure-button"
+                 disabled="disabled"
+                 value="Copy seed">
+        </p>
+        <a id="download" style="display:none"></a>
+        <div id="loader"></div>
+      </form>
+      <div id="notification">Copied to clipboard</div>
+      <hr>
+      <h2><a name="help">Help</a></h2>
+      <p>
+        This de-randomizer targets the original NTSC-U release of
+        <a href="http://redump.org/disc/2424/"><i>Azure Dreams</i> (SLUS-00614)</a>. You will need an image of your game
+        disc in BIN/CUE format.
+      </p>
+      <p>
+        If the seed name is appended to your randomized image filename after
+        downloading, you will need to modify your cue file track listing to
+        reference the new filename.
+      </p>
+      <p>
+        Do not overwrite your original BIN file; keep it somewhere safe or you may need to obtain it again from your original disc.
+      </p>
+      <hr>
+      <h2><a name="about">About</a></h2>
+      <p>
+        This de-randomizer sets the each floor layout based off of the floor number, number of climbs up the tower,
+        and a random seed. As such, each trip up the tower should be unique but consistent with anyone else using the same seed.
+      </p>
+      <p>
+        This de-randomizer is a fan project and is not affiliated with Konami/KCET, the developer and publisher of Azure Dreams.
+        Please support the official release.
+      </p>
+      <hr>
+      <h2><a name="links">Links</a></h2>
+      <ul>
+        <li><a href="https://github.com/3snowp7im/SotN-Randomizer/">SotN Randomizer</a>, from which this project is derived
+               (under the terms of the <a href="https://github.com/3snowp7im/SotN-Randomizer/blob/master/LICENSE">WTFPL</a>)</li>
+        <li><a href="https://discord.gg/fEzBz8">Azure Dreams Speedruns</a>, an AD discord server</li>
+      </ul>
+      <hr>
+      <h2><a name="bugs">Bugs</a></h2>
+      <p>
+        Think you found a bug? The best way to report it is using <a href="https://github.com/ProGrammar-R/AD-DeRandomizer/issues/new/choose">GitHub issues</a>.
+      </p>
+      <hr>
+      <h2><a name="changelog">Changelog</a></h2>
+      <h3><time>June 14, 2019</time></h3>
+      <ul>
+        <li>First public release.</li>
+      </ul>
+    </div>
+    <div id="dev-border"></div>
+    <script src="constants.js"></script>
+    <script src="items.js"></script>
+    <script src="util.js"></script>
+    <script src="presets/safe.js"></script>
+    <script src="presets/index.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>
