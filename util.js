@@ -224,6 +224,14 @@
   }
 
   function setSeedAzureDreams(data, seed) {
+    //fix something
+    data.writeInstruction(0x6f44ac,0x82718274)
+    data.writeInstruction(0x6f44b0,0x826d826d)
+    data.writeInstruction(0x6f44b4,0x82710061)
+    data.writeByte(0x20efd72,0x71)
+    data.writeByte(0x20efd79,0x74)
+    data.writeInstruction(0x20efd7a,0x826d826d)
+
     //overwrite call to check_for_koh_icons to just return a constant v0 = 0
     data.writeInstruction(0x1ea692c,0x8c66000c)
     data.writeInstruction(0x218067c,0x8c66000c)
