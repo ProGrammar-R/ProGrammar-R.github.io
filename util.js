@@ -5,8 +5,8 @@
   let sjcl
 
   if (self) {
-    constants = self.sotnRando.constants
-    items = self.sotnRando.items
+    constants = self.adRando.constants
+    items = self.adRando.items
     sjcl = self.sjcl
   } else {
     constants = require('./constants')
@@ -402,7 +402,7 @@
     if (options.preset) {
       let presets
       if (self) {
-        presets = self.sotnRando.presets
+        presets = self.adRando.presets
       } else {
         presets = require('./presets')
       }
@@ -493,7 +493,7 @@
     PresetBuilder: PresetBuilder,
   }
   if (self) {
-    self.sotnRando = Object.assign(self.sotnRando || {}, {
+    self.adRando = Object.assign(self.adRando || {}, {
       util: exports,
     })
   } else {

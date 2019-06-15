@@ -22,9 +22,9 @@
   if (window) {
     worker = new Worker('worker.js')
     worker.addEventListener('message', workerMessage);
-    constants = sotnRando.constants
-    util = sotnRando.util
-    presets = sotnRando.presets
+    constants = adRando.constants
+    util = adRando.util
+    presets = adRando.presets
   } else {
     version = require('./package').version
     constants = require('./constants')
@@ -66,6 +66,8 @@
     downloadReady = false
     delete elems.download.download
     delete elems.download.href
+    delete elems.downloadCue.download
+    delete elems.downloadCue.href
   }
 
   function hideLoader() {
@@ -80,6 +82,7 @@
     selectedFile = undefined
     resetTarget()
     elems.randomize.disabled = true
+    elems.makeCue.disabled = true
     disableDownload()
     hideLoader()
   }
@@ -102,14 +105,17 @@
   function resetCopy() {
     if (elems.seed.value.length || (lastSeed && lastSeed.length)) {
       elems.copy.disabled = false
+      elems.makeCue.disabled = false
     } else {
       elems.copy.disabled = true
+      elems.makeCue.disabled = false
     }
   }
 
   function seedChange() {
     disableDownload()
     elems.copy.disabled = true
+    elems.makeCue.disabled = true
     haveChecksum = false
   }
 
@@ -145,16 +151,8 @@
     }
   }
 
-  function spoilersChange() {
-    if (!elems.showSpoilers.checked) {
-      elems.spoilers.style.visibility = 'hidden'
-      elems.showRelics.checked = false
-      elems.showRelics.disabled = true
-    } else {
-      showSpoilers()
-      elems.showRelics.disabled = false
-    }
-    localStorage.setItem('showSpoilers', elems.showSpoilers.checked)
+  function experimentalChangesChange() {
+    localStorage.setItem('experimentalChanges', elems.experimentalChanges.checked)
   }
 
   function dragLeaveListener(event) {
@@ -234,7 +232,6 @@
     const seed = data.seed
     checksum = data.checksum
     info = data.info
-    showSpoilers()
     const url = URL.createObjectURL(new Blob([data.data], {
       type: 'application/octet-binary',
     }))
@@ -246,10 +243,16 @@
     } else {
       elems.download.download = selectedFile.name
     }
+    const urlCue = URL.createObjectURL(new Blob(['FILE "',elems.download.download,'" BINARY\r\n','  TRACK 01 MODE2/2352\r\n','    INDEX 01 00:00:00\r\n'], {
+      type: 'application/octet-binary',
+    }))
+    elems.downloadCue.download = [elems.download.download.slice(0, -3), 'cue'].join('')
     elems.download.href = url
+    elems.downloadCue.href = urlCue
     elems.download.click()
     URL.revokeObjectURL(url)
     resetCopy()
+    hideLoader()
   }
 
   function clearHandler(event) {
@@ -297,6 +300,12 @@
     }
   }
 
+  function makeCueHandler(event) {
+    event.preventDefault()
+    event.stopPropagation()
+    elems.downloadCue.click()
+  }
+
   function formatInfo(info, verbosity) {
     if (!info) {
       return ''
@@ -326,14 +335,6 @@
       }
     })
     return lines.join('\n')
-  }
-
-  function showSpoilers() {
-    let verbosity = 2
-    elems.spoilers.value = formatInfo(info, verbosity)
-    if (elems.showSpoilers.checked && elems.spoilers.value.match(/[^\s]/)) {
-      elems.spoilers.style.visibility = 'visible'
-    }
   }
 
   let elems
@@ -617,11 +618,12 @@
       presetAuthor: document.getElementById('preset-author'),
       clear: document.getElementById('clear'),
       appendSeed: document.getElementById('append-seed'),
-      showSpoilers: document.getElementById('show-spoilers'),
-      spoilers: document.getElementById('spoilers'),
+      experimentalChanges: document.getElementById('experimental-changes'),
       download: document.getElementById('download'),
+      downloadCue: document.getElementById('downloadCue'),
       loader: document.getElementById('loader'),
       copy: document.getElementById('copy'),
+      makeCue: document.getElementById('makeCue'),
       notification: document.getElementById('notification'),
       seedUrl: document.getElementById('seed-url'),
     }
@@ -633,8 +635,9 @@
     elems.presetId.addEventListener('change', presetIdChange)
     elems.clear.addEventListener('click', clearHandler)
     elems.appendSeed.addEventListener('change', appendSeedChange)
-    elems.showSpoilers.addEventListener('change', spoilersChange)
+    elems.experimentalChanges.addEventListener('change', experimentalChangesChange)
     elems.copy.addEventListener('click', copyHandler)
+    elems.makeCue.addEventListener('click', makeCueHandler)
     // Load presets
     presets.forEach(function(preset) {
       const option = document.createElement('option')
@@ -710,7 +713,7 @@
       document.getElementById('dev-border').classList.add('dev')
     }
     loadOption('appendSeed', appendSeedChange, true)
-    loadOption('showSpoilers', spoilersChange, true)
+    loadOption('experimentalChanges', experimentalChangesChange, true)
     setTimeout(function() {
       const els = document.getElementsByClassName('tooltip')
       Array.prototype.forEach.call(els, function(el) {

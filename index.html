@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
     <title>Azure Dreams PS1 De-randomizer</title>
     <link rel="stylesheet"
           href="https://unpkg.com/purecss@1.0.0/build/pure-min.css">
@@ -44,6 +45,10 @@
                   </span>
                 </span>
               </div>
+              <div class="pure-u-1" hidden="hidden">
+                <input id="experimental-changes" type="checkbox">
+                <label for="experimental-changes">Experimental Changes</label>
+              </div>
               <div class="pure-u-1">
                 <input id="clear"
                        type="submit"
@@ -58,10 +63,6 @@
               <div class="pure-u-1">
                 <input id="append-seed" type="checkbox">
                 <label for="append-seed">Append seed to filename</label>
-              </div>
-              <div class="pure-u-1">
-                <input id="show-spoilers" type="checkbox">
-                <label for="show-spoilers">Show spoilers</label>
               </div>
             </div>
           </fieldset>
@@ -81,8 +82,14 @@
                  class="pure-button"
                  disabled="disabled"
                  value="Copy seed">
+          <input id="makeCue"
+                 type="submit"
+                 class="pure-button"
+                 disabled="disabled"
+                 value="Create CUE">
         </p>
         <a id="download" style="display:none"></a>
+        <a id="downloadCue" style="display:none"></a>
         <div id="loader"></div>
       </form>
       <div id="notification">Copied to clipboard</div>
@@ -96,7 +103,7 @@
       <p>
         If the seed name is appended to your randomized image filename after
         downloading, you will need to modify your cue file track listing to
-        reference the new filename.
+        reference the new filename. You can also create a new cue file using the feature above, assuming the bin file uses mode 2 encoding.
       </p>
       <p>
         Do not overwrite your original BIN file; keep it somewhere safe or you may need to obtain it again from your original disc.

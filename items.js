@@ -2,7 +2,7 @@
 
   let constants
   if (self) {
-    constants = self.sotnRando.constants
+    constants = self.adRando.constants
   } else {
     constants = require('./constants')
   }
@@ -22,7 +22,7 @@
 
   const exports = items
   if (self) {
-    self.sotnRando = Object.assign(self.sotnRando || {}, {
+    self.adRando = Object.assign(self.adRando || {}, {
       items: exports,
     })
   } else {

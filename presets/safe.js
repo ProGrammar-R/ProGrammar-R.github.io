@@ -4,8 +4,8 @@
   const metadata = {
     id: 'safe',
     name: 'Safe',
-    description: 'Requires no speedrun or glitch knowledge for completion.',
-    author: '3snow_p7im, setz, and soba',
+    description: 'Not built yet.',
+    author: 'original by 3snow_p7im, setz, and soba',
     weight: -100,
   }
 
@@ -13,8 +13,8 @@
   let constants
   let util
   if (self) {
-    constants = self.sotnRando.constants
-    util = self.sotnRando.util
+    constants = self.adRando.constants
+    util = self.adRando.util
   } else {
     constants = require('../constants')
     util = require('../util')
@@ -27,9 +27,9 @@
   // Export.
   const preset = builder.build()
   if (self) {
-    const presets = (self.sotnRando || {}).presets || []
+    const presets = (self.adRando || {}).presets || []
     presets.push(preset)
-    self.sotnRando = Object.assign(self.sotnRando || {}, {
+    self.adRando = Object.assign(self.adRando || {}, {
       presets: presets,
     })
   } else if (!module.parent) {

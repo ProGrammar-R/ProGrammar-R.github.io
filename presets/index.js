@@ -2,7 +2,7 @@
 
   let exports
   if (self) {
-    exports = self.sotnRando.presets
+    exports = self.adRando.presets
   } else {
     exports = [
       require('./safe'),
@@ -21,7 +21,7 @@
   })
 
   if (self) {
-    self.sotnRando = Object.assign(self.sotnRando || {}, {
+    self.adRando = Object.assign(self.adRando || {}, {
       presets: exports,
     })
   } else {

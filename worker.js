@@ -14,15 +14,15 @@ self.addEventListener('message', function(message) {
     const reader = new FileReaderSync()
     const fileData = reader.readAsArrayBuffer(data.file)
     const array = new Uint8Array(fileData)
-    const check = new sotnRando.util.checked(array)
-    Math.seedrandom(sotnRando.util.saltSeed(
+    const check = new adRando.util.checked(array)
+    Math.seedrandom(adRando.util.saltSeed(
       data.version,
       data.options,
       data.seed,
     ))
-    const options = self.sotnRando.util.Preset.options(data.options)
-    //sotnRando.randomizeItems(check, options, data.info)
-    sotnRando.util.setSeedAzureDreams(check, data.seed)
+    const options = self.adRando.util.Preset.options(data.options)
+    //adRando.randomizeItems(check, options, data.info)
+    adRando.util.setSeedAzureDreams(check, data.seed)
     const checksum = check.sum()
     if (data.checksum && data.checksum !== checksum) {
       throw new Error(VER_ERROR)

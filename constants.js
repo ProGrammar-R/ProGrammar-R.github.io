@@ -212,7 +212,7 @@
     SLOT: SLOT,
   }
   if (self) {
-    self.sotnRando = Object.assign(self.sotnRando || {}, {
+    self.adRando = Object.assign(self.adRando || {}, {
       constants: exports,
     })
   } else {
