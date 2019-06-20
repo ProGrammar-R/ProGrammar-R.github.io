@@ -149,6 +149,9 @@
           i++
         }
         break
+      case 's':
+        options.singleRoom = true
+        break
       default:
         throw new Error('Invalid randomization: ' + c)
       }
@@ -157,6 +160,36 @@
       throw new Error('No randomizations')
     }
     return options
+  }
+
+  function optionsToString(options) {
+    options = Object.assign({}, options)
+    delete options.checkVanilla
+    delete options.verbose
+    Object.getOwnPropertyNames(options).forEach(function(opt) {
+      if (options[opt] === false) {
+        delete options[opt]
+      }
+    })
+    let randomize = ''
+    while (Object.getOwnPropertyNames(options).length) {
+      if ('preset' in options) {
+        randomize += 'P:' + options.preset
+        if (Object.getOwnPropertyNames(options).length > 1) {
+          randomize += ','
+        }
+        delete options.preset
+      } else if ('singleRoom' in options) {
+        if (options.singleRoom) {
+          randomize += 's'
+        }
+        delete options.singleRoom
+      } else {
+        const unknown = Object.getOwnPropertyNames(options).pop()
+        throw new Error('Unknown options: ' + unknown)
+      }
+    }
+    return randomize
   }
 
   function optionsFromUrl(url) {
@@ -317,6 +350,12 @@
     })
   }
 
+  function setSingleRoom(options, data) {
+    if (options.singleRoom) {
+      data.writeShort(0x1ea8188, 0x7fff)
+      data.writeShort(0x2181ed8, 0x7fff)
+    }
+  }
 
   function saltSeed(version, options, seed) {
     const str = JSON.stringify({
@@ -359,12 +398,14 @@
     description,
     author,
     weight,
+    singleRoom,
   ) {
     this.id = id
     this.name = name
     this.description = description
     this.author = author
     this.weight = weight
+    this.singleRoom = singleRoom
   }
 
   function clone(obj) {
@@ -448,8 +489,8 @@
   // Helper class to create relic location locks.
   function PresetBuilder(metadata) {
     this.metadata = metadata
-    // The collection of starting equipment.
-    this.equipment = true
+    // Single-room floors
+    this.singleRoom = false
   }
 
   // Convert lock sets into strings.
@@ -468,6 +509,7 @@
         }
       })
     }
+    const singleRoom = self.singleRoom
     return new Preset(
       self.metadata.id,
       self.metadata.name,
@@ -475,6 +517,7 @@
       self.metadata.author,
       self.metadata.weight || 0,
       equipment,
+      singleRoom,
     )
   }
 
@@ -488,6 +531,7 @@
     optionsToUrl: optionsToUrl,
     setSeedAzureDreams: setSeedAzureDreams,
     saltSeed: saltSeed,
+    setSingleRoom: setSingleRoom,
     restoreFile: restoreFile,
     shuffled: shuffled,
     Preset: Preset,

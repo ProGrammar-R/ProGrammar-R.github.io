@@ -123,9 +123,11 @@
     localStorage.setItem('preset', elems.preset.checked)
     if (elems.preset.checked) {
       elems.presetSelect.classList.remove('hide')
+      elems.singleRoom.disabled = true
       presetIdChange()
     } else {
       elems.presetSelect.classList.add('hide')
+      elems.singleRoom.disabled = false
     }
   }
 
@@ -136,7 +138,12 @@
     localStorage.setItem('presetId', preset.id)
     if (elems.preset.checked) {
       const options = preset.options()
+      elems.singleRoom.checked = !!options.singleRoom
     }
+  }
+
+  function singleRoomChange() {
+    localStorage.setItem('singleRoom', elems.singleRoom.checked)
   }
 
   function appendSeedChange() {
@@ -193,7 +200,7 @@
       return {preset: presets[elems.presetId.selectedIndex].id}
     }
     const options = {
-      foo: '',
+      singleRoom: elems.singleRoom.checked,
     }
     return options
   }
@@ -263,6 +270,7 @@
     elems.seed.disabled = false
     elems.preset.disabled = false
     elems.presetId.disabled = false
+    elems.singleRoom.disabled = false
     elems.clear.classList.add('hidden')
     presetChange()
   }
@@ -569,7 +577,7 @@
       console.error('\n' + err.message)
       process.exit(1)
     }
-    //returnVal = randomizeItems(check, applied, info) && returnVal
+    util.setSingleRoom(applied, check)
     util.setSeedAzureDreams(check, seed)
     const checksum = check.sum()
     // Verify expected checksum matches actual checksum.
@@ -619,6 +627,7 @@
       clear: document.getElementById('clear'),
       appendSeed: document.getElementById('append-seed'),
       experimentalChanges: document.getElementById('experimental-changes'),
+      singleRoom: document.getElementById('single-room'),
       download: document.getElementById('download'),
       downloadCue: document.getElementById('downloadCue'),
       loader: document.getElementById('loader'),
@@ -636,6 +645,7 @@
     elems.clear.addEventListener('click', clearHandler)
     elems.appendSeed.addEventListener('change', appendSeedChange)
     elems.experimentalChanges.addEventListener('change', experimentalChangesChange)
+    elems.singleRoom.addEventListener('change', singleRoomChange)
     elems.copy.addEventListener('click', copyHandler)
     elems.makeCue.addEventListener('click', makeCueHandler)
     // Load presets
@@ -686,6 +696,9 @@
       presetChange()
       elems.preset.disabled = true
       elems.presetId.disabled = true
+      elems.singleRoom.checked = applied.singleRoom
+      singleRoomChange()
+      elems.singleRoom.disabled = true
       elems.clear.classList.remove('hidden')
       const baseUrl = url.origin + url.pathname
       window.history.replaceState({}, document.title, baseUrl)
@@ -714,6 +727,7 @@
     }
     loadOption('appendSeed', appendSeedChange, true)
     loadOption('experimentalChanges', experimentalChangesChange, true)
+    loadOption('singleRoom', singleRoomChange, false)
     setTimeout(function() {
       const els = document.getElementsByClassName('tooltip')
       Array.prototype.forEach.call(els, function(el) {

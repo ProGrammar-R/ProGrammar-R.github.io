@@ -4,8 +4,8 @@
   const metadata = {
     id: 'safe',
     name: 'Safe',
-    description: 'Not built yet.',
-    author: 'original by 3snow_p7im, setz, and soba',
+    description: 'No changes beyond deterministic floor layouts.',
+    author: 'pro_grammar',
     weight: -100,
   }
 
@@ -23,6 +23,8 @@
 
   // Create PresetBuilder.
   const builder = new PresetBuilder(metadata)
+
+  builder.singleRoom = false
 
   // Export.
   const preset = builder.build()
