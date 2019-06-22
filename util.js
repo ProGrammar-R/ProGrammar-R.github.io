@@ -149,6 +149,9 @@
           i++
         }
         break
+      case 't':
+        options.tutorialSkip = true
+        break
       case 's':
         options.singleRoom = true
         break
@@ -179,6 +182,11 @@
           randomize += ','
         }
         delete options.preset
+      } else if ('tutorialSkip' in options) {
+        if (options.tutorialSkip) {
+          randomize += 't'
+        }
+        delete options.tutorialSkip
       } else if ('singleRoom' in options) {
         if (options.singleRoom) {
           randomize += 's'
@@ -350,10 +358,19 @@
     })
   }
 
-  function setSingleRoom(options, data) {
+  function setAppliedOptions(options, data) {
     if (options.singleRoom) {
       data.writeShort(0x1ea8188, 0x7fff)
       data.writeShort(0x2181ed8, 0x7fff)
+    }
+    if (options.tutorialSkip) {
+      data.writeInstruction(0x312b31c, 0x544e0508)
+      data.writeInstruction(0x313215c, 0x544e0508)
+      data.writeInstruction(0x3138f9c, 0x544e0508)
+      data.writeInstruction(0x313fddc, 0x544e0508)
+      data.writeInstruction(0x3146c1c, 0x544e0508)
+      data.writeInstruction(0x314da5c, 0x544e0508)
+      data.writeInstruction(0x315489c, 0x544e0508)
     }
   }
 
@@ -398,6 +415,7 @@
     description,
     author,
     weight,
+    tutorialSkip,
     singleRoom,
   ) {
     this.id = id
@@ -405,6 +423,7 @@
     this.description = description
     this.author = author
     this.weight = weight
+    this.tutorialSkip = tutorialSkip
     this.singleRoom = singleRoom
   }
 
@@ -489,7 +508,7 @@
   // Helper class to create relic location locks.
   function PresetBuilder(metadata) {
     this.metadata = metadata
-    // Single-room floors
+    this.tutorialSkip = true
     this.singleRoom = false
   }
 
@@ -509,6 +528,7 @@
         }
       })
     }
+    const tutorialSkip = self.tutorialSkip
     const singleRoom = self.singleRoom
     return new Preset(
       self.metadata.id,
@@ -516,7 +536,7 @@
       self.metadata.description,
       self.metadata.author,
       self.metadata.weight || 0,
-      equipment,
+      tutorialSkip,
       singleRoom,
     )
   }
@@ -531,7 +551,7 @@
     optionsToUrl: optionsToUrl,
     setSeedAzureDreams: setSeedAzureDreams,
     saltSeed: saltSeed,
-    setSingleRoom: setSingleRoom,
+    setAppliedOptions: setAppliedOptions,
     restoreFile: restoreFile,
     shuffled: shuffled,
     Preset: Preset,

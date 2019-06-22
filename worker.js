@@ -22,7 +22,7 @@ self.addEventListener('message', function(message) {
     ))
     const options = self.adRando.util.Preset.options(data.options)
     adRando.util.setSeedAzureDreams(check, data.seed)
-    adRando.util.setSingleRoom(options, check)
+    adRando.util.setAppliedOptions(options, check)
     const checksum = check.sum()
     if (data.checksum && data.checksum !== checksum) {
       throw new Error(VER_ERROR)

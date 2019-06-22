@@ -43,8 +43,11 @@
   }
 
   function optionsToUrl(options, checksum, seed, baseUrl) {
-    options = constants.defaultOptions
+    options = util.optionsToString(options)
     const args = []
+    if (options !== constants.defaultOptions) {
+      args.push(options)
+    }
     args.push(checksum.toString(16))
     args.push(encodeURIComponent(seed))
     let versionBaseUrl
@@ -123,10 +126,12 @@
     localStorage.setItem('preset', elems.preset.checked)
     if (elems.preset.checked) {
       elems.presetSelect.classList.remove('hide')
+      elems.tutorialSkip.disabled = true
       elems.singleRoom.disabled = true
       presetIdChange()
     } else {
       elems.presetSelect.classList.add('hide')
+      elems.tutorialSkip.disabled = false
       elems.singleRoom.disabled = false
     }
   }
@@ -138,8 +143,13 @@
     localStorage.setItem('presetId', preset.id)
     if (elems.preset.checked) {
       const options = preset.options()
+      elems.tutorialSkip.checked = !!options.tutorialSkip
       elems.singleRoom.checked = !!options.singleRoom
     }
+  }
+
+  function tutorialSkipChange() {
+    localStorage.setItem('tutorialSkip', elems.tutorialSkip.checked)
   }
 
   function singleRoomChange() {
@@ -201,6 +211,7 @@
     }
     const options = {
       singleRoom: elems.singleRoom.checked,
+      tutorialSkip: elems.tutorialSkip.checked,
     }
     return options
   }
@@ -270,6 +281,7 @@
     elems.seed.disabled = false
     elems.preset.disabled = false
     elems.presetId.disabled = false
+    elems.tutorialSkip.disabled = false
     elems.singleRoom.disabled = false
     elems.clear.classList.add('hidden')
     presetChange()
@@ -577,7 +589,7 @@
       console.error('\n' + err.message)
       process.exit(1)
     }
-    util.setSingleRoom(applied, check)
+    util.setAppliedOptions(applied, check)
     util.setSeedAzureDreams(check, seed)
     const checksum = check.sum()
     // Verify expected checksum matches actual checksum.
@@ -627,6 +639,7 @@
       clear: document.getElementById('clear'),
       appendSeed: document.getElementById('append-seed'),
       experimentalChanges: document.getElementById('experimental-changes'),
+      tutorialSkip: document.getElementById('tutorial-skip'),      
       singleRoom: document.getElementById('single-room'),
       download: document.getElementById('download'),
       downloadCue: document.getElementById('downloadCue'),
@@ -645,6 +658,7 @@
     elems.clear.addEventListener('click', clearHandler)
     elems.appendSeed.addEventListener('change', appendSeedChange)
     elems.experimentalChanges.addEventListener('change', experimentalChangesChange)
+    elems.tutorialSkip.addEventListener('change', tutorialSkipChange)
     elems.singleRoom.addEventListener('change', singleRoomChange)
     elems.copy.addEventListener('click', copyHandler)
     elems.makeCue.addEventListener('click', makeCueHandler)
@@ -696,6 +710,9 @@
       presetChange()
       elems.preset.disabled = true
       elems.presetId.disabled = true
+      elems.tutorialSkip.checked = applied.tutorialSkip
+      tutorialSkipChange()
+      elems.tutorialSkip.disabled = true
       elems.singleRoom.checked = applied.singleRoom
       singleRoomChange()
       elems.singleRoom.disabled = true
@@ -726,7 +743,8 @@
       document.getElementById('dev-border').classList.add('dev')
     }
     loadOption('appendSeed', appendSeedChange, true)
-    loadOption('experimentalChanges', experimentalChangesChange, true)
+    loadOption('experimentalChanges', experimentalChangesChange, false)
+    loadOption('tutorialSkip', tutorialSkipChange, true)
     loadOption('singleRoom', singleRoomChange, false)
     setTimeout(function() {
       const els = document.getElementsByClassName('tooltip')

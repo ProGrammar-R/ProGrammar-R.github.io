@@ -4,7 +4,7 @@
   const metadata = {
     id: 'safe',
     name: 'Safe',
-    description: 'No changes beyond deterministic floor layouts.',
+    description: 'No randomizations, with tutorial skip.',
     author: 'pro_grammar',
     weight: -100,
   }
@@ -24,6 +24,7 @@
   // Create PresetBuilder.
   const builder = new PresetBuilder(metadata)
 
+  builder.tutorialSkip = true
   builder.singleRoom = false
 
   // Export.
