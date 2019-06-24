@@ -134,7 +134,7 @@
           }
           slotsRemaining -= monsterSlots
 
-          let monsterLevel = Math.min(1, Math.round(monsterToAdd.scaling * f))
+          let monsterLevel = Math.max(1, Math.round(monsterToAdd.scaling * f))
           //let's make Trolls always at least level 2, for old time's sake
           if (monsterToAdd.name === "Troll") {
             monsterLevel = Math.max(2, monsterLevel)
