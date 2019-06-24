@@ -87,6 +87,7 @@
       const firstPossibleBarongFloor = 10
       const normalBarongFloorLSD = 6
       const whitePicketFloor = 25
+      const firstFloorForHealers = 6
 
       let address = 0x24638e8
       let f = 1
@@ -106,6 +107,10 @@
           floorMonsters.push({ID: monsterFromName("Picket").ID, level: 17, slots: 1})
           monsterChoices = removeMonsterNamed(monsterChoices, "Picket")
           slotsRemaining--
+        }
+        if (f < firstFloorForHealers) {
+          monsterChoices = removeMonsterNamed(monsterChoices, "Battnel")
+          monsterChoices = removeMonsterNamed(monsterChoices, "Nyuel")
         }
         while (floorMonsters.length < maxMonsterTypesPerFloor) {
           let idOfMonsterToAdd = lcg.rollBetween(0, monsterChoices.length-1)
