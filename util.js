@@ -152,6 +152,12 @@
       case 't':
         options.tutorialSkip = true
         break
+      case 'e':
+        options.enemizer = true
+        break
+      case 'b':
+        options.barongs = true
+        break
       case 's':
         options.singleRoom = true
         break
@@ -187,6 +193,19 @@
           randomize += 't'
         }
         delete options.tutorialSkip
+      } else if ('enemizer' in options) {
+        if (options.enemizer) {
+          randomize += 'e'
+        }
+        delete options.enemizer
+
+        //only do this if enemizer is set
+        if ('barongs' in options) {
+          if (options.barongs) {
+            randomize += 'b'
+          }
+          delete options.barongs
+        }
       } else if ('singleRoom' in options) {
         if (options.singleRoom) {
           randomize += 's'
@@ -356,6 +375,7 @@
         v++
       }
     })
+    return hex
   }
 
   function setAppliedOptions(options, data) {
@@ -416,6 +436,8 @@
     author,
     weight,
     tutorialSkip,
+    enemizer,
+    barongs,
     singleRoom,
   ) {
     this.id = id
@@ -424,6 +446,8 @@
     this.author = author
     this.weight = weight
     this.tutorialSkip = tutorialSkip
+    this.enemizer = enemizer,
+    this.barongs = barongs,
     this.singleRoom = singleRoom
   }
 
@@ -509,6 +533,8 @@
   function PresetBuilder(metadata) {
     this.metadata = metadata
     this.tutorialSkip = true
+    this.enemizer = false
+    this.barongs = false
     this.singleRoom = false
   }
 
@@ -529,6 +555,8 @@
       })
     }
     const tutorialSkip = self.tutorialSkip
+    const enemizer = self.enemizer
+    const barongs = self.barongs
     const singleRoom = self.singleRoom
     return new Preset(
       self.metadata.id,
@@ -537,9 +565,49 @@
       self.metadata.author,
       self.metadata.weight || 0,
       tutorialSkip,
+      enemizer,
+      barongs,
       singleRoom,
     )
   }
+
+  //LinearCongruentialGenerator
+  function LCG(modulus, multiplier, increment, seed) {
+    if (multiplier > modulus) {
+      console.warn("Typically multiplier < modulus")
+    }
+    if (seed > modulus) {
+      console.log("LCG seed will be truncated")
+    }
+    if (increment < 0) {
+      throw new Error("increment must be >= 0")
+    }
+    this.modulus = modulus
+    this.multiplier = multiplier
+    this.increment = increment
+    this.seed = seed & this.modulus
+  }
+
+  LCG.prototype.roll = function() {
+    this.seed = (this.multiplier * this.seed + this.increment) % this.modulus
+      return this.seed
+  }
+
+  //inclusive on both ends
+  LCG.prototype.rollBetween = function(lower, upper) {
+    if (lower === upper) {
+      //corner case, return either and still roll
+      this.roll()
+      return upper //doesn't matter which
+    }
+    if (lower > upper) {
+      throw new Error("lower must be < upper")
+    }
+    var rolled = this.roll()
+    return (rolled % (upper + 1 - lower)) + lower
+  }
+
+  lcgConstants = {modulus: 0x1fffFFFFffff, multiplier: 0x5DEECE66D, increment: 11,}
 
   const exports = {
     assert: assert,
@@ -556,6 +624,8 @@
     shuffled: shuffled,
     Preset: Preset,
     PresetBuilder: PresetBuilder,
+    LCG: LCG,
+    lcgConstants: lcgConstants,
   }
   if (self) {
     self.adRando = Object.assign(self.adRando || {}, {

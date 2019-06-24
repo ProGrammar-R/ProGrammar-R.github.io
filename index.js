@@ -6,6 +6,7 @@
   let constants
   let util
   let presets
+  let monsters
 
   let info
   let lastSeed
@@ -25,11 +26,13 @@
     constants = adRando.constants
     util = adRando.util
     presets = adRando.presets
+    monsters = adRando.monsters
   } else {
     version = require('./package').version
     constants = require('./constants')
     util = require('./util')
     presets = require('./presets')
+    monsters = require('./monsters')
   }
 
   function loadOption(name, changeHandler, defaultValue) {
@@ -102,7 +105,7 @@
     } else {
       elems.target.classList.remove('active')
       elems.status.innerText = 'Drop .bin file here or'
-    }      
+    }
   }
 
   function resetCopy() {
@@ -127,11 +130,15 @@
     if (elems.preset.checked) {
       elems.presetSelect.classList.remove('hide')
       elems.tutorialSkip.disabled = true
+      elems.enemizer.disabled = true
+      elems.barongs.disabled = true
       elems.singleRoom.disabled = true
       presetIdChange()
     } else {
       elems.presetSelect.classList.add('hide')
       elems.tutorialSkip.disabled = false
+      elems.enemizer.disabled = false
+      elems.barongs.disabled = !elems.enemizer.checked
       elems.singleRoom.disabled = false
     }
   }
@@ -144,12 +151,33 @@
     if (elems.preset.checked) {
       const options = preset.options()
       elems.tutorialSkip.checked = !!options.tutorialSkip
+      elems.enemizer.checked = !!options.enemizer
+      elems.barongs.checked = !!options.barongs
       elems.singleRoom.checked = !!options.singleRoom
     }
   }
 
   function tutorialSkipChange() {
     localStorage.setItem('tutorialSkip', elems.tutorialSkip.checked)
+  }
+
+  function enemizerChange() {
+    localStorage.setItem('enemizer', elems.enemizer.checked)
+    setBarongsBasedOnEnemizer()
+  }
+
+  function setBarongsBasedOnEnemizer() {
+    if (!elems.enemizer.checked) {
+      elems.barongs.checked = false
+      elems.barongs.disabled = true
+      barongsChange()
+    } else {
+      elems.barongs.disabled = false
+    }
+  }
+
+  function barongsChange() {
+    localStorage.setItem('barongs', elems.barongs.checked)
   }
 
   function singleRoomChange() {
@@ -210,8 +238,10 @@
       return {preset: presets[elems.presetId.selectedIndex].id}
     }
     const options = {
-      singleRoom: elems.singleRoom.checked,
       tutorialSkip: elems.tutorialSkip.checked,
+      enemizer: elems.enemizer.checked,
+      barongs: elems.barongs.checked,
+      singleRoom: elems.singleRoom.checked,
     }
     return options
   }
@@ -282,6 +312,8 @@
     elems.preset.disabled = false
     elems.presetId.disabled = false
     elems.tutorialSkip.disabled = false
+    elems.enemizer.disabled = false
+    setBarongsBasedOnEnemizer(true)
     elems.singleRoom.disabled = false
     elems.clear.classList.add('hidden')
     presetChange()
@@ -589,8 +621,10 @@
       console.error('\n' + err.message)
       process.exit(1)
     }
+    let hex = util.setSeedAzureDreams(check, seed)
+    monsters.setEnemizer(applied, check, hex)
     util.setAppliedOptions(applied, check)
-    util.setSeedAzureDreams(check, seed)
+
     const checksum = check.sum()
     // Verify expected checksum matches actual checksum.
     if (haveChecksum && expectChecksum !== checksum) {
@@ -639,7 +673,9 @@
       clear: document.getElementById('clear'),
       appendSeed: document.getElementById('append-seed'),
       experimentalChanges: document.getElementById('experimental-changes'),
-      tutorialSkip: document.getElementById('tutorial-skip'),      
+      tutorialSkip: document.getElementById('tutorial-skip'),
+      enemizer: document.getElementById('enemizer'),
+      barongs: document.getElementById('barongs'),
       singleRoom: document.getElementById('single-room'),
       download: document.getElementById('download'),
       downloadCue: document.getElementById('downloadCue'),
@@ -659,6 +695,8 @@
     elems.appendSeed.addEventListener('change', appendSeedChange)
     elems.experimentalChanges.addEventListener('change', experimentalChangesChange)
     elems.tutorialSkip.addEventListener('change', tutorialSkipChange)
+    elems.enemizer.addEventListener('change', enemizerChange)
+    elems.barongs.addEventListener('change', barongsChange)
     elems.singleRoom.addEventListener('change', singleRoomChange)
     elems.copy.addEventListener('click', copyHandler)
     elems.makeCue.addEventListener('click', makeCueHandler)
@@ -713,6 +751,12 @@
       elems.tutorialSkip.checked = applied.tutorialSkip
       tutorialSkipChange()
       elems.tutorialSkip.disabled = true
+      elems.enemizer.checked = applied.enemizer
+      enemizerChange()
+      elems.enemizer.disabled = true
+      elems.barongs.checked = applied.barongs
+      barongsChange()
+      elems.barongs.disabled = true
       elems.singleRoom.checked = applied.singleRoom
       singleRoomChange()
       elems.singleRoom.disabled = true
@@ -742,10 +786,14 @@
         || url.protocol === 'file:') {
       document.getElementById('dev-border').classList.add('dev')
     }
+    if (!elems.preset.checked) {
+      loadOption('tutorialSkip', tutorialSkipChange, true)
+      loadOption('enemizer', enemizerChange, false)
+      loadOption('barongs', barongsChange, false)
+      loadOption('singleRoom', singleRoomChange, false)
+    }
     loadOption('appendSeed', appendSeedChange, true)
     loadOption('experimentalChanges', experimentalChangesChange, false)
-    loadOption('tutorialSkip', tutorialSkipChange, true)
-    loadOption('singleRoom', singleRoomChange, false)
     setTimeout(function() {
       const els = document.getElementsByClassName('tooltip')
       Array.prototype.forEach.call(els, function(el) {
