@@ -152,6 +152,9 @@
       case 't':
         options.tutorialSkip = true
         break
+      case 'i':
+        options.introSkip = true
+        break
       case 'e':
         options.enemizer = true
         break
@@ -193,6 +196,11 @@
           randomize += 't'
         }
         delete options.tutorialSkip
+      } else if ('introSkip' in options) {
+        if (options.introSkip) {
+          randomize += 'i'
+        }
+        delete options.introSkip
       } else if ('enemizer' in options) {
         if (options.enemizer) {
           randomize += 'e'
@@ -392,6 +400,21 @@
       data.writeInstruction(0x314da5c, 0x544e0508)
       data.writeInstruction(0x315489c, 0x544e0508)
     }
+    if (options.introSkip) {
+      //skip from koh's birth to waking up, with a movie in between
+      data.writeByte(0xbac401, 0x3e)
+      data.writeByte(0xbac402, 0x00)
+      data.writeWord(0xbac403, 0x800187b3) //skip to address -1
+
+      //from waking up, instead give a pita fruit
+      data.writeByte(0xb946d8, 0x0c)
+      data.writeInstruction(0xb946d9, 0x16002e79)
+
+      //skip from there to end when leaving house
+      data.writeByte(0xb946dd, 0x3e)
+      data.writeByte(0xb946de, 0x00)
+      data.writeWord(0xb946df, 0x8002221e) //skip to address -1
+    }
   }
 
   function saltSeed(version, options, seed) {
@@ -436,6 +459,7 @@
     author,
     weight,
     tutorialSkip,
+    introSkip,
     enemizer,
     barongs,
     singleRoom,
@@ -446,6 +470,7 @@
     this.author = author
     this.weight = weight
     this.tutorialSkip = tutorialSkip
+    this.introSkip = introSkip
     this.enemizer = enemizer,
     this.barongs = barongs,
     this.singleRoom = singleRoom
@@ -533,6 +558,7 @@
   function PresetBuilder(metadata) {
     this.metadata = metadata
     this.tutorialSkip = true
+    this.introSkip = true
     this.enemizer = false
     this.barongs = false
     this.singleRoom = false
@@ -555,6 +581,7 @@
       })
     }
     const tutorialSkip = self.tutorialSkip
+    const introSkip = self.introSkip
     const enemizer = self.enemizer
     const barongs = self.barongs
     const singleRoom = self.singleRoom
@@ -565,6 +592,7 @@
       self.metadata.author,
       self.metadata.weight || 0,
       tutorialSkip,
+      introSkip,
       enemizer,
       barongs,
       singleRoom,

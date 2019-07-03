@@ -130,6 +130,7 @@
     if (elems.preset.checked) {
       elems.presetSelect.classList.remove('hide')
       elems.tutorialSkip.disabled = true
+      elems.introSkip.disabled = true
       elems.enemizer.disabled = true
       elems.barongs.disabled = true
       elems.singleRoom.disabled = true
@@ -137,6 +138,7 @@
     } else {
       elems.presetSelect.classList.add('hide')
       elems.tutorialSkip.disabled = false
+      elems.introSkip.disabled = false
       elems.enemizer.disabled = false
       elems.barongs.disabled = !elems.enemizer.checked
       elems.singleRoom.disabled = false
@@ -151,6 +153,7 @@
     if (elems.preset.checked) {
       const options = preset.options()
       elems.tutorialSkip.checked = !!options.tutorialSkip
+      elems.introSkip.checked = !!options.introSkip
       elems.enemizer.checked = !!options.enemizer
       elems.barongs.checked = !!options.barongs
       elems.singleRoom.checked = !!options.singleRoom
@@ -159,6 +162,10 @@
 
   function tutorialSkipChange() {
     localStorage.setItem('tutorialSkip', elems.tutorialSkip.checked)
+  }
+
+  function introSkipChange() {
+    localStorage.setItem('introSkip', elems.introSkip.checked)
   }
 
   function enemizerChange() {
@@ -239,6 +246,7 @@
     }
     const options = {
       tutorialSkip: elems.tutorialSkip.checked,
+      introSkip: elems.introSkip.checked,
       enemizer: elems.enemizer.checked,
       barongs: elems.barongs.checked,
       singleRoom: elems.singleRoom.checked,
@@ -312,6 +320,7 @@
     elems.preset.disabled = false
     elems.presetId.disabled = false
     elems.tutorialSkip.disabled = false
+    elems.introSkip.disabled = false
     elems.enemizer.disabled = false
     setBarongsBasedOnEnemizer(true)
     elems.singleRoom.disabled = false
@@ -674,6 +683,7 @@
       appendSeed: document.getElementById('append-seed'),
       experimentalChanges: document.getElementById('experimental-changes'),
       tutorialSkip: document.getElementById('tutorial-skip'),
+      introSkip: document.getElementById('intro-skip'),
       enemizer: document.getElementById('enemizer'),
       barongs: document.getElementById('barongs'),
       singleRoom: document.getElementById('single-room'),
@@ -695,6 +705,7 @@
     elems.appendSeed.addEventListener('change', appendSeedChange)
     elems.experimentalChanges.addEventListener('change', experimentalChangesChange)
     elems.tutorialSkip.addEventListener('change', tutorialSkipChange)
+    elems.introSkip.addEventListener('change', introSkipChange)
     elems.enemizer.addEventListener('change', enemizerChange)
     elems.barongs.addEventListener('change', barongsChange)
     elems.singleRoom.addEventListener('change', singleRoomChange)
@@ -751,6 +762,9 @@
       elems.tutorialSkip.checked = applied.tutorialSkip
       tutorialSkipChange()
       elems.tutorialSkip.disabled = true
+      elems.introSkip.checked = applied.introSkip
+      introSkipChange()
+      elems.introSkip.disabled = true
       elems.enemizer.checked = applied.enemizer
       enemizerChange()
       elems.enemizer.disabled = true
@@ -788,6 +802,7 @@
     }
     if (!elems.preset.checked) {
       loadOption('tutorialSkip', tutorialSkipChange, true)
+      loadOption('introSkip', introSkipChange, true)
       loadOption('enemizer', enemizerChange, false)
       loadOption('barongs', barongsChange, false)
       loadOption('singleRoom', singleRoomChange, false)
