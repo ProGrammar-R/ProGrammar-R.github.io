@@ -8,7 +8,10 @@
     util = require('./util')
   }
 
-  const monsters = [
+  const randomStarterOptionValue = 0
+  const randomStarterHexKey = 6
+
+  const allMonsters = [
     {ID: 0x01, name: "Hikewne", scaling: 0.8,},
     {ID: 0x02, name: "Kewne", scaling: 0.9,},
     {ID: 0x03, name: "Dragon", scaling: 0.8,},
@@ -57,13 +60,13 @@
   ]
 
   function monsterFromName(name) {
-    return monsters.filter(function(monster) {
+    return allMonsters.filter(function(monster) {
       return monster.name === name
     })[0]
   }
 
   function monsterFromID(ID) {
-    return monsters.filter(function(monster) {
+    return allMonsters.filter(function(monster) {
       return monster.ID === ID
     })[0]
   }
@@ -98,7 +101,7 @@
       while (f < 40) {
         let floorMonsters = []
         let slotsRemaining = 16
-        let monsterChoices = removeMonsterNamed(monsters, "Barong")
+        let monsterChoices = removeMonsterNamed(allMonsters, "Barong")
         if (f >= firstPossibleBarongFloor && f % 10 === barongFloorLSD) {
           floorMonsters.push({ID: monsterFromName("Barong").ID, level: 20, slots: 1})
           slotsRemaining--
@@ -158,10 +161,35 @@
         f++
       }
     }
+    //For some reason, calling setStarter from index.js doesn't work
+    setStarter(options, data, hex)
+  }
+
+  function setStarter(options, data, hex) {
+    console.log('Starter: ' + options.starter)
+    const addresses = [
+      {location: 0xa2d8b0,},
+      {location: 0xa2d92c,},
+      {location: 0xa2d94c,},
+    ]
+    let starter = options.starter
+    if (starter == randomStarterOptionValue) {
+      if (hex.length > randomStarterHexKey) {
+        starter = 1 + Math.abs(hex[randomStarterHexKey]) % allMonsters.length
+      } else {
+        starter = monsterFromName("Kewne").ID
+      }
+    }
+    addresses.forEach(function(starterAddress) {
+      data.writeByte(starterAddress.location, starter)
+    })
   }
 
   const exports = {
     setEnemizer: setEnemizer,
+    setStarter: setStarter,
+    allMonsters: allMonsters,
+    randomStarterOptionValue: randomStarterOptionValue,
   }
   if (self) {
     self.adRando = Object.assign(self.adRando || {}, {

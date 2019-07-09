@@ -161,6 +161,28 @@
       case 'b':
         options.barongs = true
         break
+      case 'S':
+        // Check for an argument.
+        if (randomize[i] !== ':') {
+          throw new Error('Expected argument')
+        }
+        let arg2
+        let start2
+        // Parse the arg name.
+        start2 = ++i
+        while (i < randomize.length
+               && [',', ':'].indexOf(randomize[i]) === -1) {
+          i++
+        }
+        arg2 = randomize.slice(start2, i)
+        if (!arg2.length) {
+          throw new Error('Expected argument')
+        }
+        options.starter = arg2
+        if (randomize[i] === ',') {
+          i++
+        }
+        break
       case 's':
         options.singleRoom = true
         break
@@ -214,6 +236,9 @@
           }
           delete options.barongs
         }
+      } else if ('starter' in options) {
+        randomize += 'S:' + options.starter + ','
+        delete options.preset
       } else if ('singleRoom' in options) {
         if (options.singleRoom) {
           randomize += 's'
@@ -462,6 +487,7 @@
     introSkip,
     enemizer,
     barongs,
+    starter,
     singleRoom,
   ) {
     this.id = id
@@ -473,6 +499,7 @@
     this.introSkip = introSkip
     this.enemizer = enemizer,
     this.barongs = barongs,
+    this.starter = starter,
     this.singleRoom = singleRoom
   }
 
@@ -561,6 +588,7 @@
     this.introSkip = true
     this.enemizer = false
     this.barongs = false
+    this.starter = 0x02
     this.singleRoom = false
   }
 
@@ -584,6 +612,7 @@
     const introSkip = self.introSkip
     const enemizer = self.enemizer
     const barongs = self.barongs
+    const starter = self.starter
     const singleRoom = self.singleRoom
     return new Preset(
       self.metadata.id,
@@ -595,6 +624,7 @@
       introSkip,
       enemizer,
       barongs,
+      starter,
       singleRoom,
     )
   }

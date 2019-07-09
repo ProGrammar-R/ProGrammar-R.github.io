@@ -37,10 +37,18 @@
 
   function loadOption(name, changeHandler, defaultValue) {
     const value = localStorage.getItem(name)
-    if (typeof(value) === 'string') {
-      elems[name].checked = value === 'true'
+    if (name === 'starter') {
+      if (typeof(value) === 'string') {
+        elems[name].value = value
+      } else {
+        elems[name].value = defaultValue
+      }
     } else {
-      elems[name].checked = defaultValue
+      if (typeof(value) === 'string') {
+        elems[name].checked = value === 'true'
+      } else {
+        elems[name].checked = defaultValue
+      }
     }
     changeHandler()
   }
@@ -133,6 +141,7 @@
       elems.introSkip.disabled = true
       elems.enemizer.disabled = true
       elems.barongs.disabled = true
+      elems.starter.disabled = true
       elems.singleRoom.disabled = true
       presetIdChange()
     } else {
@@ -141,6 +150,7 @@
       elems.introSkip.disabled = false
       elems.enemizer.disabled = false
       elems.barongs.disabled = !elems.enemizer.checked
+      elems.starter.disabled = false
       elems.singleRoom.disabled = false
     }
   }
@@ -156,6 +166,7 @@
       elems.introSkip.checked = !!options.introSkip
       elems.enemizer.checked = !!options.enemizer
       elems.barongs.checked = !!options.barongs
+      elems.starter.value = options.starter
       elems.singleRoom.checked = !!options.singleRoom
     }
   }
@@ -185,6 +196,10 @@
 
   function barongsChange() {
     localStorage.setItem('barongs', elems.barongs.checked)
+  }
+
+  function starterChange() {
+    localStorage.setItem('starter', elems.starter.value)
   }
 
   function singleRoomChange() {
@@ -249,6 +264,7 @@
       introSkip: elems.introSkip.checked,
       enemizer: elems.enemizer.checked,
       barongs: elems.barongs.checked,
+      starter: elems.starter.value,
       singleRoom: elems.singleRoom.checked,
     }
     return options
@@ -323,6 +339,7 @@
     elems.introSkip.disabled = false
     elems.enemizer.disabled = false
     setBarongsBasedOnEnemizer(true)
+    elems.starter.disabled = false
     elems.singleRoom.disabled = false
     elems.clear.classList.add('hidden')
     presetChange()
@@ -632,6 +649,9 @@
     }
     let hex = util.setSeedAzureDreams(check, seed)
     monsters.setEnemizer(applied, check, hex)
+    console.log('About to call setStarter')
+    monsters.setStarter(applied, check, hex)
+    console.log('Supposedly called setStarter')
     util.setAppliedOptions(applied, check)
 
     const checksum = check.sum()
@@ -686,6 +706,7 @@
       introSkip: document.getElementById('intro-skip'),
       enemizer: document.getElementById('enemizer'),
       barongs: document.getElementById('barongs'),
+      starter: document.getElementById('starter'),
       singleRoom: document.getElementById('single-room'),
       download: document.getElementById('download'),
       downloadCue: document.getElementById('downloadCue'),
@@ -708,6 +729,7 @@
     elems.introSkip.addEventListener('change', introSkipChange)
     elems.enemizer.addEventListener('change', enemizerChange)
     elems.barongs.addEventListener('change', barongsChange)
+    elems.starter.addEventListener('change', starterChange)
     elems.singleRoom.addEventListener('change', singleRoomChange)
     elems.copy.addEventListener('click', copyHandler)
     elems.makeCue.addEventListener('click', makeCueHandler)
@@ -717,6 +739,17 @@
       option.value = preset.id
       option.innerText = preset.name
       elems.presetId.appendChild(option)
+    })
+    // Load monsters
+    const randomStarterOption = document.createElement('option')
+    randomStarterOption.value = monsters.randomStarterOptionValue
+    randomStarterOption.innerText = 'Randomize'
+    elems.starter.appendChild(randomStarterOption)
+    monsters.allMonsters.forEach(function(monster) {
+      const option = document.createElement('option')
+      option.value = monster.ID
+      option.innerText = monster.name
+      elems.starter.appendChild(option)
     })
     const url = new URL(window.location.href)
     if (url.protocol !== 'file:') {
@@ -771,6 +804,9 @@
       elems.barongs.checked = applied.barongs
       barongsChange()
       elems.barongs.disabled = true
+      elems.starter.value = applied.starter
+      starterChange()
+      elems.starter.disabled = true
       elems.singleRoom.checked = applied.singleRoom
       singleRoomChange()
       elems.singleRoom.disabled = true
@@ -805,6 +841,7 @@
       loadOption('introSkip', introSkipChange, true)
       loadOption('enemizer', enemizerChange, false)
       loadOption('barongs', barongsChange, false)
+      loadOption('starter', starterChange, 0x02)
       loadOption('singleRoom', singleRoomChange, false)
     }
     loadOption('appendSeed', appendSeedChange, true)
