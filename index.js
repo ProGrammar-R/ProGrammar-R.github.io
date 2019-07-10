@@ -142,6 +142,7 @@
       elems.enemizer.disabled = true
       elems.barongs.disabled = true
       elems.starter.disabled = true
+      elems.nonnativeSpellsLevel.disabled = true
       elems.singleRoom.disabled = true
       presetIdChange()
     } else {
@@ -151,6 +152,7 @@
       elems.enemizer.disabled = false
       elems.barongs.disabled = !elems.enemizer.checked
       elems.starter.disabled = false
+      elems.nonnativeSpellsLevel.disabled = false
       elems.singleRoom.disabled = false
     }
   }
@@ -167,6 +169,7 @@
       elems.enemizer.checked = !!options.enemizer
       elems.barongs.checked = !!options.barongs
       elems.starter.value = options.starter
+      elems.nonnativeSpellsLevel.checked = !!options.nonnativeSpellsLevel
       elems.singleRoom.checked = !!options.singleRoom
     }
   }
@@ -200,6 +203,10 @@
 
   function starterChange() {
     localStorage.setItem('starter', elems.starter.value)
+  }
+
+  function nonnativeSpellsLevelChange() {
+    localStorage.setItem('nonnativeSpellsLevel', elems.nonnativeSpellsLevel.checked)
   }
 
   function singleRoomChange() {
@@ -265,6 +272,7 @@
       enemizer: elems.enemizer.checked,
       barongs: elems.barongs.checked,
       starter: elems.starter.value,
+      nonnativeSpellsLevel: elems.nonnativeSpellsLevel.checked,
       singleRoom: elems.singleRoom.checked,
     }
     return options
@@ -340,6 +348,7 @@
     elems.enemizer.disabled = false
     setBarongsBasedOnEnemizer(true)
     elems.starter.disabled = false
+    elems.nonnativeSpellsLevel.disabled = false
     elems.singleRoom.disabled = false
     elems.clear.classList.add('hidden')
     presetChange()
@@ -707,6 +716,7 @@
       enemizer: document.getElementById('enemizer'),
       barongs: document.getElementById('barongs'),
       starter: document.getElementById('starter'),
+      nonnativeSpellsLevel: document.getElementById('non-native-spells-level'),
       singleRoom: document.getElementById('single-room'),
       download: document.getElementById('download'),
       downloadCue: document.getElementById('downloadCue'),
@@ -730,6 +740,7 @@
     elems.enemizer.addEventListener('change', enemizerChange)
     elems.barongs.addEventListener('change', barongsChange)
     elems.starter.addEventListener('change', starterChange)
+    elems.nonnativeSpellsLevel.addEventListener('change', nonnativeSpellsLevelChange)
     elems.singleRoom.addEventListener('change', singleRoomChange)
     elems.copy.addEventListener('click', copyHandler)
     elems.makeCue.addEventListener('click', makeCueHandler)
@@ -807,6 +818,9 @@
       elems.starter.value = applied.starter
       starterChange()
       elems.starter.disabled = true
+      elems.nonnativeSpellsLevel.checked = applied.nonnativeSpellsLevel
+      nonnativeSpellsLevelChange()
+      elems.nonnativeSpellsLevel.disabled = true
       elems.singleRoom.checked = applied.singleRoom
       singleRoomChange()
       elems.singleRoom.disabled = true
@@ -842,6 +856,7 @@
       loadOption('enemizer', enemizerChange, false)
       loadOption('barongs', barongsChange, false)
       loadOption('starter', starterChange, 0x02)
+      loadOption('nonnativeSpellsLevel', nonnativeSpellsLevelChange, false)
       loadOption('singleRoom', singleRoomChange, false)
     }
     loadOption('appendSeed', appendSeedChange, true)

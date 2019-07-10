@@ -183,6 +183,9 @@
           i++
         }
         break
+      case 'n':
+        options.nonnativeSpellsLevel = true
+        break
       case 's':
         options.singleRoom = true
         break
@@ -239,6 +242,11 @@
       } else if ('starter' in options) {
         randomize += 'S:' + options.starter + ','
         delete options.preset
+      } else if ('nonnativeSpellsLevel' in options) {
+        if (options.nonnativeSpellsLevel) {
+          randomize += 'n'
+        }
+        delete options.nonnativeSpellsLevel
       } else if ('singleRoom' in options) {
         if (options.singleRoom) {
           randomize += 's'
@@ -412,6 +420,9 @@
   }
 
   function setAppliedOptions(options, data) {
+    if (options.nonnativeSpellsLevel) {
+      data.writeInstruction(0x1c75450, 0x21106000)
+    }
     if (options.singleRoom) {
       data.writeShort(0x1ea8188, 0x7fff)
       data.writeShort(0x2181ed8, 0x7fff)
@@ -488,6 +499,7 @@
     enemizer,
     barongs,
     starter,
+    nonnativeSpellsLevel,
     singleRoom,
   ) {
     this.id = id
@@ -500,6 +512,7 @@
     this.enemizer = enemizer,
     this.barongs = barongs,
     this.starter = starter,
+    this.nonnativeSpellsLevel = nonnativeSpellsLevel,
     this.singleRoom = singleRoom
   }
 
@@ -589,6 +602,7 @@
     this.enemizer = false
     this.barongs = false
     this.starter = 0x02
+    this.nonnativeSpellsLevel = false
     this.singleRoom = false
   }
 
@@ -613,6 +627,7 @@
     const enemizer = self.enemizer
     const barongs = self.barongs
     const starter = self.starter
+    const nonnativeSpellsLevel = self.nonnativeSpellsLevel
     const singleRoom = self.singleRoom
     return new Preset(
       self.metadata.id,
@@ -625,6 +640,7 @@
       enemizer,
       barongs,
       starter,
+      nonnativeSpellsLevel,
       singleRoom,
     )
   }

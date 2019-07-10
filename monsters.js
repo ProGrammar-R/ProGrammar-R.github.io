@@ -166,6 +166,25 @@
   }
 
   function setStarter(options, data, hex) {
+    const addresses = [
+      {location: 0xa2d8b0,},
+      {location: 0xa2d92c,},
+      {location: 0xa2d94c,},
+    ]
+    let starter = options.starter
+    if (starter == randomStarterOptionValue) {
+      if (hex.length > randomStarterHexKey) {
+        starter = 1 + Math.abs(hex[randomStarterHexKey]) % allMonsters.length
+      } else {
+        starter = monsterFromName("Kewne").ID
+      }
+    }
+    addresses.forEach(function(starterAddress) {
+      data.writeByte(starterAddress.location, starter)
+    })
+  }
+
+  function setSpellsLevelOutsideNativeElement(options, data, hex) {
     console.log('Starter: ' + options.starter)
     const addresses = [
       {location: 0xa2d8b0,},
