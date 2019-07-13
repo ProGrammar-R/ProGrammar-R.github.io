@@ -10,52 +10,64 @@
 
   const randomStarterOptionValue = 0
   const randomStarterHexKey = 6
+  const randomStarterElementHexKey = 7
+
+  const initialStatsAddress = 0x57f30;
+  const initialStatsRowLength = 24;
+  const initialStatsElementOffset = 20;
+  const initialStatsSpell1Offset = 8;
+
+  const primaryElements = [
+    {ID: 0x01, name: "Fire",},
+    {ID: 0x02, name: "Water",},
+    {ID: 0x04, name: "Wind",},
+  ]
 
   const allMonsters = [
     {ID: 0x01, name: "Hikewne", scaling: 0.8,},
-    {ID: 0x02, name: "Kewne", scaling: 0.9,},
-    {ID: 0x03, name: "Dragon", scaling: 0.8,},
-    {ID: 0x04, name: "Kid", scaling: 0.8,},
-    {ID: 0x05, name: "Ifrit", scaling: 0.9,},
-    {ID: 0x06, name: "Flame", scaling: 0.9,},
+    {ID: 0x02, name: "Kewne",   scaling: 0.9,},
+    {ID: 0x03, name: "Dragon",  scaling: 0.8,},
+    {ID: 0x04, name: "Kid",     scaling: 0.8,},
+    {ID: 0x05, name: "Ifrit",   scaling: 0.9,},
+    {ID: 0x06, name: "Flame",   scaling: 0.9,},
     {ID: 0x07, name: "Grineut", scaling: 0.9,},
     {ID: 0x08, name: "Griffon", scaling: 0.9,},
-    {ID: 0x09, name: "Saber", scaling: 0.9,},
+    {ID: 0x09, name: "Saber",   scaling: 0.9,},
     {ID: 0x0A, name: "Snowman", scaling: 0.9,},
-    {ID: 0x0B, name: "Ashra", scaling: 0.9,},
+    {ID: 0x0B, name: "Ashra",   scaling: 0.9,},
     {ID: 0x0C, name: "Arachne", scaling: 0.9,},
     {ID: 0x0D, name: "Battnel", scaling: 0.9,},
-    {ID: 0x0E, name: "Nyuel", scaling: 0.9,},
-    {ID: 0x0F, name: "Death", scaling: 0.9,},
-    {ID: 0x10, name: "Clown", scaling: 0.9,},
+    {ID: 0x0E, name: "Nyuel",   scaling: 0.9,},
+    {ID: 0x0F, name: "Death",   scaling: 0.9,},
+    {ID: 0x10, name: "Clown",   scaling: 0.9,},
     {ID: 0x11, name: "Univern", scaling: 0.9,},
     {ID: 0x12, name: "Unicorn", scaling: 0.9,},
-    {ID: 0x13, name: "Metal", scaling: 0.9,},
-    {ID: 0x14, name: "Block", scaling: 0.9,},
+    {ID: 0x13, name: "Metal",   scaling: 0.9,},
+    {ID: 0x14, name: "Block",   scaling: 0.9,},
     {ID: 0x15, name: "Pulunpa", scaling: 1,},
-    {ID: 0x16, name: "Troll", scaling: 1,},
-    {ID: 0x17, name: "Noise", scaling: 1,},
-    {ID: 0x18, name: "U-Boat", scaling: 0.9,},
-    {ID: 0x19, name: "Baloon", scaling: 0.9,},
+    {ID: 0x16, name: "Troll",   scaling: 1,},
+    {ID: 0x17, name: "Noise",   scaling: 1,},
+    {ID: 0x18, name: "U-Boat",  scaling: 0.9,},
+    {ID: 0x19, name: "Baloon",  scaling: 0.9,},
     {ID: 0x1A, name: "Dreamin", scaling: 0.9,},
-    {ID: 0x1B, name: "Blume", scaling: 0.9,},
+    {ID: 0x1B, name: "Blume",   scaling: 0.9,},
     {ID: 0x1C, name: "Volcano", scaling: 0.9,},
     {ID: 0x1D, name: "Cyclone", scaling: 0.9,},
     {ID: 0x1E, name: "Manoeva", scaling: 0.9,},
-    {ID: 0x1F, name: "Barong", scaling: 0.8,},
-    {ID: 0x20, name: "Picket", scaling: 1,},
-    {ID: 0x21, name: "Kraken", scaling: 0.9,},
-    {ID: 0x22, name: "Weadog", scaling: 0.9,},
+    {ID: 0x1F, name: "Barong",  scaling: 0.8,},
+    {ID: 0x20, name: "Picket",  scaling: 1,},
+    {ID: 0x21, name: "Kraken",  scaling: 0.9,},
+    {ID: 0x22, name: "Weadog",  scaling: 0.9,},
     {ID: 0x23, name: "Stealth", scaling: 0.9,},
-    {ID: 0x24, name: "Viper", scaling: 0.9,},
+    {ID: 0x24, name: "Viper",   scaling: 0.9,},
     {ID: 0x25, name: "Naplass", scaling: 0.9,},
-    {ID: 0x26, name: "Zu", scaling: 0.9,},
+    {ID: 0x26, name: "Zu",      scaling: 0.9,},
     {ID: 0x27, name: "Mandara", scaling: 1,},
-    {ID: 0x28, name: "Killer", scaling: 0.9,},
-    {ID: 0x29, name: "Garuda", scaling: 0.9,},
+    {ID: 0x28, name: "Killer",  scaling: 0.9,},
+    {ID: 0x29, name: "Garuda",  scaling: 0.9,},
     {ID: 0x2A, name: "Glacier", scaling: 0.8,},
-    {ID: 0x2B, name: "Tyrant", scaling: 0.9,},
-    {ID: 0x2C, name: "Golem", scaling: 0.8,},
+    {ID: 0x2B, name: "Tyrant",  scaling: 0.9,},
+    {ID: 0x2C, name: "Golem",   scaling: 0.8,},
     {ID: 0x2D, name: "Maximum", scaling: 0.8,},
   ]
 
@@ -114,6 +126,11 @@
         if (f < firstFloorForHealers) {
           monsterChoices = removeMonsterNamed(monsterChoices, "Battnel")
           monsterChoices = removeMonsterNamed(monsterChoices, "Nyuel")
+          if (options.hiddenSpells) { //these monsters gain healing
+            monsterChoices = removeMonsterNamed(monsterChoices, "Pulunpa")
+            monsterChoices = removeMonsterNamed(monsterChoices, "Manoeva")
+            monsterChoices = removeMonsterNamed(monsterChoices, "Mandara")
+          }
         }
         while (floorMonsters.length < maxMonsterTypesPerFloor) {
           let idOfMonsterToAdd = lcg.rollBetween(0, monsterChoices.length-1)
@@ -163,6 +180,7 @@
     }
     //For some reason, calling setStarter from index.js doesn't work
     setStarter(options, data, hex)
+    setAllHiddenSpellsAvailable(options, data)
   }
 
   function setStarter(options, data, hex) {
@@ -182,26 +200,33 @@
     addresses.forEach(function(starterAddress) {
       data.writeByte(starterAddress.location, starter)
     })
+    setRandomStarterElement(options, data, hex, starter)
   }
 
-  function setSpellsLevelOutsideNativeElement(options, data, hex) {
-    console.log('Starter: ' + options.starter)
-    const addresses = [
-      {location: 0xa2d8b0,},
-      {location: 0xa2d92c,},
-      {location: 0xa2d94c,},
-    ]
-    let starter = options.starter
-    if (starter == randomStarterOptionValue) {
-      if (hex.length > randomStarterHexKey) {
-        starter = 1 + Math.abs(hex[randomStarterHexKey]) % allMonsters.length
-      } else {
-        starter = monsterFromName("Kewne").ID
+  function setRandomStarterElement(options, data, hex, starterId) {
+    if (options.starterElement) {
+      let elementIndex = 0
+      if (hex.length > randomStarterElementHexKey) {
+        elementIndex = Math.abs(hex[randomStarterElementHexKey]) % primaryElements.length
       }
+      let element = primaryElements[elementIndex].ID
+      data.writeByte(initialStatsAddress + starterId * initialStatsRowLength + initialStatsElementOffset, element)
     }
-    addresses.forEach(function(starterAddress) {
-      data.writeByte(starterAddress.location, starter)
-    })
+  }
+
+  function setAllHiddenSpellsAvailable(options, data) {
+    const hiddenSpellTableAddress = 0x376318c
+    if (options.hiddenSpells) {
+      allMonsters.forEach(function(monster) {
+        let hiddenSpell = data.readByte(hiddenSpellTableAddress + monster.ID)
+        if (!!hiddenSpell) {
+          initialSpellAddress = initialStatsAddress + monster.ID * initialStatsRowLength + initialStatsSpell1Offset
+          data.writeByte(initialSpellAddress, hiddenSpell)
+          data.writeByte(initialSpellAddress + 1, 0x01) // set initial level
+          data.writeByte(initialSpellAddress + 2, 0x01) // set initial target level
+        }
+      })
+    }
   }
 
   const exports = {

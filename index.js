@@ -143,6 +143,8 @@
       elems.barongs.disabled = true
       elems.starter.disabled = true
       elems.nonnativeSpellsLevel.disabled = true
+      elems.starterElement.disabled = true
+      elems.hiddenSpells.disabled = true
       elems.singleRoom.disabled = true
       presetIdChange()
     } else {
@@ -153,6 +155,8 @@
       elems.barongs.disabled = !elems.enemizer.checked
       elems.starter.disabled = false
       elems.nonnativeSpellsLevel.disabled = false
+      elems.starterElement.disabled = false
+      elems.hiddenSpells.disabled = false
       elems.singleRoom.disabled = false
     }
   }
@@ -170,6 +174,8 @@
       elems.barongs.checked = !!options.barongs
       elems.starter.value = options.starter
       elems.nonnativeSpellsLevel.checked = !!options.nonnativeSpellsLevel
+      elems.starterElement.checked = !!options.starterElement
+      elems.hiddenSpells.checked = !!options.hiddenSpells
       elems.singleRoom.checked = !!options.singleRoom
     }
   }
@@ -207,6 +213,14 @@
 
   function nonnativeSpellsLevelChange() {
     localStorage.setItem('nonnativeSpellsLevel', elems.nonnativeSpellsLevel.checked)
+  }
+
+  function starterElementChange() {
+    localStorage.setItem('starterElement', elems.starterElement.checked)
+  }
+
+  function hiddenSpellsChange() {
+    localStorage.setItem('hiddenSpells', elems.hiddenSpells.checked)
   }
 
   function singleRoomChange() {
@@ -273,6 +287,8 @@
       barongs: elems.barongs.checked,
       starter: elems.starter.value,
       nonnativeSpellsLevel: elems.nonnativeSpellsLevel.checked,
+      starterElement: elems.starterElement.checked,
+      hiddenSpells: elems.hiddenSpells.checked,
       singleRoom: elems.singleRoom.checked,
     }
     return options
@@ -349,6 +365,8 @@
     setBarongsBasedOnEnemizer(true)
     elems.starter.disabled = false
     elems.nonnativeSpellsLevel.disabled = false
+    elems.starterElement.disabled = false
+    elems.hiddenSpells.disabled = false
     elems.singleRoom.disabled = false
     elems.clear.classList.add('hidden')
     presetChange()
@@ -717,6 +735,8 @@
       barongs: document.getElementById('barongs'),
       starter: document.getElementById('starter'),
       nonnativeSpellsLevel: document.getElementById('non-native-spells-level'),
+      starterElement: document.getElementById('starter-element'),
+      hiddenSpells: document.getElementById('hidden-spells'),
       singleRoom: document.getElementById('single-room'),
       download: document.getElementById('download'),
       downloadCue: document.getElementById('downloadCue'),
@@ -741,6 +761,8 @@
     elems.barongs.addEventListener('change', barongsChange)
     elems.starter.addEventListener('change', starterChange)
     elems.nonnativeSpellsLevel.addEventListener('change', nonnativeSpellsLevelChange)
+    elems.starterElement.addEventListener('change', starterElementChange)
+    elems.hiddenSpells.addEventListener('change', hiddenSpellsChange)
     elems.singleRoom.addEventListener('change', singleRoomChange)
     elems.copy.addEventListener('click', copyHandler)
     elems.makeCue.addEventListener('click', makeCueHandler)
@@ -821,6 +843,12 @@
       elems.nonnativeSpellsLevel.checked = applied.nonnativeSpellsLevel
       nonnativeSpellsLevelChange()
       elems.nonnativeSpellsLevel.disabled = true
+      elems.starterElement.checked = applied.starterElement
+      starterElementChange()
+      elems.starterElement.disabled = true
+      elems.hiddenSpells.checked = applied.hiddenSpells
+      hiddenSpellsChange()
+      elems.hiddenSpells.disabled = true
       elems.singleRoom.checked = applied.singleRoom
       singleRoomChange()
       elems.singleRoom.disabled = true
@@ -857,6 +885,8 @@
       loadOption('barongs', barongsChange, false)
       loadOption('starter', starterChange, 0x02)
       loadOption('nonnativeSpellsLevel', nonnativeSpellsLevelChange, false)
+      loadOption('starterElement', starterElementChange, false)
+      loadOption('hiddenSpells', hiddenSpellsChange, false)
       loadOption('singleRoom', singleRoomChange, false)
     }
     loadOption('appendSeed', appendSeedChange, true)

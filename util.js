@@ -186,6 +186,12 @@
       case 'n':
         options.nonnativeSpellsLevel = true
         break
+      case 'E':
+        options.starterElement = true
+        break
+      case 'h':
+        options.hiddenSpells = true
+        break
       case 's':
         options.singleRoom = true
         break
@@ -247,6 +253,16 @@
           randomize += 'n'
         }
         delete options.nonnativeSpellsLevel
+      } else if ('starterElement' in options) {
+        if (options.starterElement) {
+          randomize += 'E'
+        }
+        delete options.starterElement
+      } else if ('hiddenSpells' in options) {
+        if (options.hiddenSpells) {
+          randomize += 'h'
+        }
+        delete options.hiddenSpells
       } else if ('singleRoom' in options) {
         if (options.singleRoom) {
           randomize += 's'
@@ -500,6 +516,8 @@
     barongs,
     starter,
     nonnativeSpellsLevel,
+    starterElement,
+    hiddenSpells,
     singleRoom,
   ) {
     this.id = id
@@ -513,6 +531,8 @@
     this.barongs = barongs,
     this.starter = starter,
     this.nonnativeSpellsLevel = nonnativeSpellsLevel,
+    this.starterElement = starterElement,
+    this.hiddenSpells = hiddenSpells,
     this.singleRoom = singleRoom
   }
 
@@ -603,6 +623,8 @@
     this.barongs = false
     this.starter = 0x02
     this.nonnativeSpellsLevel = false
+    this.starterElement = false
+    this.hiddenSpells = false
     this.singleRoom = false
   }
 
@@ -628,6 +650,8 @@
     const barongs = self.barongs
     const starter = self.starter
     const nonnativeSpellsLevel = self.nonnativeSpellsLevel
+    const starterElement = self.starterElement
+    const hiddenSpells = self.hiddenSpells
     const singleRoom = self.singleRoom
     return new Preset(
       self.metadata.id,
@@ -641,6 +665,8 @@
       barongs,
       starter,
       nonnativeSpellsLevel,
+      starterElement,
+      hiddenSpells,
       singleRoom,
     )
   }
