@@ -180,7 +180,6 @@
     }
     //For some reason, calling setStarter from index.js doesn't work
     setStarter(options, data, hex)
-    setAllHiddenSpellsAvailable(options, data)
   }
 
   function setStarter(options, data, hex) {
@@ -200,17 +199,41 @@
     addresses.forEach(function(starterAddress) {
       data.writeByte(starterAddress.location, starter)
     })
+    setAllHiddenSpellsAvailable(options, data)
     setRandomStarterElement(options, data, hex, starter)
   }
 
   function setRandomStarterElement(options, data, hex, starterId) {
+    let starterElement = data.readByte(initialStatsAddress + starterId * initialStatsRowLength + initialStatsElementOffset)
+    console.log('Initial starter element ' + starterElement)
     if (options.starterElement) {
       let elementIndex = 0
       if (hex.length > randomStarterElementHexKey) {
         elementIndex = Math.abs(hex[randomStarterElementHexKey]) % primaryElements.length
       }
-      let element = primaryElements[elementIndex].ID
-      data.writeByte(initialStatsAddress + starterId * initialStatsRowLength + initialStatsElementOffset, element)
+      starterElement = primaryElements[elementIndex].ID
+      console.log('New starter element ' + starterElement)
+      data.writeByte(initialStatsAddress + starterId * initialStatsRowLength + initialStatsElementOffset, starterElement)
+    }
+    //need to change starter spell to match element
+    let initialSpellAddress = initialStatsAddress + starterId * initialStatsRowLength + initialStatsSpell1Offset
+    let starterSpell = data.readByte(initialSpellAddress)
+    if (starterSpell > 0) {
+      let spellElement = primaryElements[(starterSpell - 1) % primaryElements.length].ID
+      //console.log('Spell ID '+starterSpell)
+      //console.log('Spell element '+spellElement)
+      //console.log('Starter element '+starterElement)
+      while (spellElement < starterElement) {
+        spellElement *= 2
+        starterSpell++
+        //console.log('starterSpell ID ' + starterSpell)
+      }
+      while (spellElement > starterElement) {
+        spellElement /= 2
+        starterSpell--
+        //console.log('starterSpell ID ' + starterSpell)
+      }
+      data.writeByte(initialSpellAddress, starterSpell)
     }
   }
 
@@ -219,8 +242,8 @@
     if (options.hiddenSpells) {
       allMonsters.forEach(function(monster) {
         let hiddenSpell = data.readByte(hiddenSpellTableAddress + monster.ID)
+        let initialSpellAddress = initialStatsAddress + monster.ID * initialStatsRowLength + initialStatsSpell1Offset
         if (!!hiddenSpell) {
-          initialSpellAddress = initialStatsAddress + monster.ID * initialStatsRowLength + initialStatsSpell1Offset
           data.writeByte(initialSpellAddress, hiddenSpell)
           data.writeByte(initialSpellAddress + 1, 0x01) // set initial level
           data.writeByte(initialSpellAddress + 2, 0x01) // set initial target level

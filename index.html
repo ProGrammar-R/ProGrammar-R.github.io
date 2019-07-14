@@ -71,7 +71,7 @@
               </div>
               <div class="pure-u-1">
                 <input id="hidden-spells" type="checkbox">
-                <label for="hidden-spells">All monsters start with hidden spells</label>
+                <label for="hidden-spells">All monsters start with dormant spells awakened</label>
               </div>
               <div class="pure-u-1">
                 <input id="non-native-spells-level" type="checkbox">
@@ -151,7 +151,7 @@
         and a random seed. As such, each trip up the tower should be unique but consistent with anyone else using the same seed.
       </p>
       <p>
-        Some randomization and other options are also available, but only tutorial skip is enabled under the "Safe" preset.
+        Some randomization and other options are also available, but only tutorial and intro skips are enabled under the "Safe" preset.
       </p>
       <p>
         This de-randomizer is a fan project and is not affiliated with Konami/KCET, the developer and publisher of Azure Dreams.
@@ -168,6 +168,9 @@
       <hr>
       <h2><a name="bugs">Bugs</a></h2>
       <p>
+        There is a known bug with the intro skip: re-entering your house via your front door at any point will cause the game to freeze. Th
+      </p>
+      <p>
         Please report any issues, especially inconsistent spawns of a given floor on the same trip up the tower using
         <a href="https://github.com/ProGrammar-R/ProGrammar-R.github.io/issues/new">GitHub issues</a>
         or the #un-randomizer channel in the <a href="https://discord.gg/fEzBz8">Azure Dreams Speedruns</a> discord.
@@ -176,6 +179,7 @@
       <h2><a name="changelog">Changelog</a></h2>
       <h3><time>July 13, 2019</time></h3>
       <ul>
+        <li>v1.4.3 Fixed bug when randomizing starter element where initial spell's element would not match starter's new element (if different).</li>
         <li>v1.4.2 Added options to allow hidden spells to be available by default and random starter element (suggested by Sand_Knight_ and Baldwin).</li>
       </ul>
       <h3><time>July 9, 2019</time></h3>
