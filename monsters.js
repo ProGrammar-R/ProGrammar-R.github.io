@@ -205,20 +205,20 @@
 
   function setRandomStarterElement(options, data, hex, starterId) {
     let starterElement = data.readByte(initialStatsAddress + starterId * initialStatsRowLength + initialStatsElementOffset)
-    console.log('Initial starter element ' + starterElement)
+    //console.log('Initial starter element ' + starterElement)
     if (options.starterElement) {
       let elementIndex = 0
       if (hex.length > randomStarterElementHexKey) {
         elementIndex = Math.abs(hex[randomStarterElementHexKey]) % primaryElements.length
       }
       starterElement = primaryElements[elementIndex].ID
-      console.log('New starter element ' + starterElement)
+      //console.log('New starter element ' + starterElement)
       data.writeByte(initialStatsAddress + starterId * initialStatsRowLength + initialStatsElementOffset, starterElement)
     }
     //need to change starter spell to match element
     let initialSpellAddress = initialStatsAddress + starterId * initialStatsRowLength + initialStatsSpell1Offset
     let starterSpell = data.readByte(initialSpellAddress)
-    if (starterSpell > 0) {
+    if (starterSpell > 0 && starterId != monsterFromName("Hikewne").ID) {
       let spellElement = primaryElements[(starterSpell - 1) % primaryElements.length].ID
       //console.log('Spell ID '+starterSpell)
       //console.log('Spell element '+spellElement)
