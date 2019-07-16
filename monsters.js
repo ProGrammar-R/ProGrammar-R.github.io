@@ -95,6 +95,13 @@
     })
   }
 
+  function removeValueWithID(someValues, ID) {
+    return someValues.filter(function(someValue) {
+      return someValue.ID != ID
+    })
+  }
+
+
   function getPrimaryElements() {
     return allElements.filter(function(element) {
       return element.primary
@@ -238,16 +245,17 @@
     let starterElement = data.readByte(initialElementAddress)
     let starterDefaultElement = starterElement
     let tri = elementFromName("Tri").ID
+    let atypical = elementFromName("Atypical").ID
     //console.log('Initial starter element ' + starterElement)
     primaryElements = getPrimaryElements()
 
     if (options.starterElement != util.getDefaultFromList(allElements).ID) {
-      if (options.starterElement == elementFromName("Randomize").ID || options.starterElement == elementFromName("Atypical").ID) {
+      if (options.starterElement == elementFromName("Randomize").ID || options.starterElement == atypical) {
         let elementIndex = 0
         let elementsToChooseFrom = primaryElements
         //if chosen atypical, remove the default option from the list, except if tri, in which case all primary are atypical
-        if (options.starterElement == elementFromName("Atypical").ID && starterElement != tri) {
-          elementsToChooseFrom = removeValueNamed(elementsToChooseFrom, starterElement)
+        if (options.starterElement == atypical && starterElement != tri) {
+          elementsToChooseFrom = removeValueWithID(elementsToChooseFrom, starterElement)
         }
         if (hex.length > randomStarterElementHexKey) {
           elementIndex = Math.abs(hex[randomStarterElementHexKey]) % elementsToChooseFrom.length
