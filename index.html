@@ -65,13 +65,13 @@
                 <label for="starter">Starting monster</label>
                 <select id="starter"></select>
               </div>
-              <div class="pure-u-1">
-                <input id="starter-element" type="checkbox">
-                <label for="starter-element">Randomize starting monster's element (affects all monsters of that type)</label>
+              <div id="starter-element-select" class="pure-u-12-24">
+                <label for="starter-element">Monster's element</label>
+                <select id="starter-element"></select>
               </div>
-              <div class="pure-u-1">
-                <input id="hidden-spells" type="checkbox">
-                <label for="hidden-spells">All monsters start with dormant spells awakened</label>
+              <div id="hidden-spells-select" class="pure-u-1">
+                <label for="hidden-spells">Dormant spells awakened for</label>
+                <select id="hidden-spells"></select>
               </div>
               <div class="pure-u-1">
                 <input id="non-native-spells-level" type="checkbox">
@@ -179,6 +179,10 @@
       </p>
       <hr>
       <h2><a name="changelog">Changelog</a></h2>
+      <h3><time>July 15, 2019</time></h3>
+      <ul>
+        <li>v1.4.5 Added options to choose starter's element and to awaken dormant spells on just the starting monster type.</li>
+      </ul>
       <h3><time>July 14, 2019</time></h3>
       <ul>
         <li>v1.4.4 Fixed minor bug where randomizing starter element on Hikewne would also randomize the element on Dark Shoot, which caused problems with direct magic.</li>

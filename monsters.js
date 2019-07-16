@@ -9,6 +9,8 @@
   }
 
   const randomStarterOptionValue = 0
+
+  //which words from the hex string control which aspects
   const randomStarterHexKey = 6
   const randomStarterElementHexKey = 7
 
@@ -17,10 +19,14 @@
   const initialStatsElementOffset = 20;
   const initialStatsSpell1Offset = 8;
 
-  const primaryElements = [
-    {ID: 0x01, name: "Fire",},
-    {ID: 0x02, name: "Water",},
-    {ID: 0x04, name: "Wind",},
+  const allElements = [
+    {ID: -3, name: "Default",   primary: false, isDefault: true},
+    {ID: -2, name: "Randomize", primary: false, isDefault: false},
+    {ID: -1, name: "Atypical",  primary: false, isDefault: false},
+    {ID: 0,  name: "Tri",       primary: false, isDefault: false},
+    {ID: 0x01, name: "Fire",    primary: true,  isDefault: false},
+    {ID: 0x02, name: "Water",   primary: true,  isDefault: false},
+    {ID: 0x04, name: "Wind",    primary: true,  isDefault: false},
   ]
 
   const allMonsters = [
@@ -71,28 +77,52 @@
     {ID: 0x2D, name: "Maximum", scaling: 0.8,},
   ]
 
-  function monsterFromName(name) {
-    return allMonsters.filter(function(monster) {
-      return monster.name === name
+  const hiddenSpellOptions = [
+    {ID: 0, name: "Default (none)",             isDefault: true,},
+    {ID: 1, name: "Starting monster's type",    isDefault: false,},
+    {ID: 2, name: "All monsters", isDefault: false,},
+  ]
+
+  function thingFromName(thingList, name) {
+    return thingList.filter(function(thing) {
+      return thing.name === name
     })[0]
+  }
+
+  function removeValueNamed(someValues, name) {
+    return someValues.filter(function(someValue) {
+      return someValue.name !== name
+    })
+  }
+
+  function getPrimaryElements() {
+    return allElements.filter(function(element) {
+      return element.primary
+    })
+  }
+
+  function elementFromName(name) {
+    return thingFromName(allElements, name)
+  }
+
+  function monsterFromName(name) {
+    return thingFromName(allMonsters, name)
   }
 
   function monsterFromID(ID) {
     return allMonsters.filter(function(monster) {
-      return monster.ID === ID
+      return monster.ID == ID
     })[0]
-  }
-
-  function removeMonsterNamed(someMonsters, name) {
-    return someMonsters.filter(function(monster) {
-      return monster.name !== name
-    })
   }
 
   function removeMonsterWithID(someMonsters, ID) {
     return someMonsters.filter(function(monster) {
-      return monster.ID !== ID
+      return monster.ID != ID
     })
+  }
+
+  function hiddenSpellOptionFromName(name) {
+    return thingFromName(hiddenSpellOptions, name)
   }
 
   function setEnemizer(options, data, hex) {
@@ -113,23 +143,23 @@
       while (f < 40) {
         let floorMonsters = []
         let slotsRemaining = 16
-        let monsterChoices = removeMonsterNamed(allMonsters, "Barong")
+        let monsterChoices = removeValueNamed(allMonsters, "Barong")
         if (f >= firstPossibleBarongFloor && f % 10 === barongFloorLSD) {
           floorMonsters.push({ID: monsterFromName("Barong").ID, level: 20, slots: 1})
           slotsRemaining--
         }
         if (f === whitePicketFloor) {
           floorMonsters.push({ID: monsterFromName("Picket").ID, level: 17, slots: 1})
-          monsterChoices = removeMonsterNamed(monsterChoices, "Picket")
+          monsterChoices = removeValueNamed(monsterChoices, "Picket")
           slotsRemaining--
         }
         if (f < firstFloorForHealers) {
-          monsterChoices = removeMonsterNamed(monsterChoices, "Battnel")
-          monsterChoices = removeMonsterNamed(monsterChoices, "Nyuel")
-          if (options.hiddenSpells) { //these monsters gain healing
-            monsterChoices = removeMonsterNamed(monsterChoices, "Pulunpa")
-            monsterChoices = removeMonsterNamed(monsterChoices, "Manoeva")
-            monsterChoices = removeMonsterNamed(monsterChoices, "Mandara")
+          monsterChoices = removeValueNamed(monsterChoices, "Battnel")
+          monsterChoices = removeValueNamed(monsterChoices, "Nyuel")
+          if (!!options.hiddenSpells) { //these monsters gain healing
+            monsterChoices = removeValueNamed(monsterChoices, "Pulunpa")
+            monsterChoices = removeValueNamed(monsterChoices, "Manoeva")
+            monsterChoices = removeValueNamed(monsterChoices, "Mandara")
           }
         }
         while (floorMonsters.length < maxMonsterTypesPerFloor) {
@@ -199,54 +229,82 @@
     addresses.forEach(function(starterAddress) {
       data.writeByte(starterAddress.location, starter)
     })
-    setAllHiddenSpellsAvailable(options, data)
+    setHiddenSpellsAvailable(options, data, starter)
     setRandomStarterElement(options, data, hex, starter)
   }
 
   function setRandomStarterElement(options, data, hex, starterId) {
-    let starterElement = data.readByte(initialStatsAddress + starterId * initialStatsRowLength + initialStatsElementOffset)
+    let initialElementAddress = initialStatsAddress + starterId * initialStatsRowLength + initialStatsElementOffset
+    let starterElement = data.readByte(initialElementAddress)
+    let starterDefaultElement = starterElement
+    let tri = elementFromName("Tri").ID
     //console.log('Initial starter element ' + starterElement)
-    if (options.starterElement) {
-      let elementIndex = 0
-      if (hex.length > randomStarterElementHexKey) {
-        elementIndex = Math.abs(hex[randomStarterElementHexKey]) % primaryElements.length
+    primaryElements = getPrimaryElements()
+
+    if (options.starterElement != util.getDefaultFromList(allElements).ID) {
+      if (options.starterElement == elementFromName("Randomize").ID || options.starterElement == elementFromName("Atypical").ID) {
+        let elementIndex = 0
+        let elementsToChooseFrom = primaryElements
+        //if chosen atypical, remove the default option from the list, except if tri, in which case all primary are atypical
+        if (options.starterElement == elementFromName("Atypical").ID && starterElement != tri) {
+          elementsToChooseFrom = removeValueNamed(elementsToChooseFrom, starterElement)
+        }
+        if (hex.length > randomStarterElementHexKey) {
+          elementIndex = Math.abs(hex[randomStarterElementHexKey]) % elementsToChooseFrom.length
+        }
+        starterElement = elementsToChooseFrom[elementIndex].ID
+      } else {
+        starterElement = options.starterElement
       }
-      starterElement = primaryElements[elementIndex].ID
       //console.log('New starter element ' + starterElement)
-      data.writeByte(initialStatsAddress + starterId * initialStatsRowLength + initialStatsElementOffset, starterElement)
-    }
-    //need to change starter spell to match element
-    let initialSpellAddress = initialStatsAddress + starterId * initialStatsRowLength + initialStatsSpell1Offset
-    let starterSpell = data.readByte(initialSpellAddress)
-    if (starterSpell > 0 && starterId != monsterFromName("Hikewne").ID) {
-      let spellElement = primaryElements[(starterSpell - 1) % primaryElements.length].ID
-      //console.log('Spell ID '+starterSpell)
-      //console.log('Spell element '+spellElement)
-      //console.log('Starter element '+starterElement)
-      while (spellElement < starterElement) {
-        spellElement *= 2
-        starterSpell++
-        //console.log('starterSpell ID ' + starterSpell)
+      data.writeByte(initialElementAddress, starterElement)
+
+      //need to change starter spell to match element
+      let initialSpellAddress = initialStatsAddress + starterId * initialStatsRowLength + initialStatsSpell1Offset
+      let starterSpell = data.readByte(initialSpellAddress)
+
+      //but only change it for monsters that have spells, aren't Tri, and weren't originally Tri (Hikewne)
+      if (!!starterSpell && starterDefaultElement != tri) {
+        if (starterElement != tri) {
+          let spellElement = primaryElements[(starterSpell - 1) % primaryElements.length].ID
+          //console.log('Spell ID '+starterSpell)
+          //console.log('Spell element '+spellElement)
+          //console.log('Starter element '+starterElement)
+          while (spellElement < starterElement) {
+            spellElement *= 2
+            starterSpell++
+            //console.log('starterSpell ID ' + starterSpell)
+          }
+          while (spellElement > starterElement) {
+            spellElement /= 2
+            starterSpell--
+            //console.log('starterSpell ID ' + starterSpell)
+          }
+        } else {
+          //disable for monsters that weren't originally Tri
+          starterSpell = 0
+          //zero out levels, too
+          data.writeByte(initialSpellAddress + 1, 0)
+          data.writeByte(initialSpellAddress + 2, 0)
+        }
+        data.writeByte(initialSpellAddress, starterSpell)
       }
-      while (spellElement > starterElement) {
-        spellElement /= 2
-        starterSpell--
-        //console.log('starterSpell ID ' + starterSpell)
-      }
-      data.writeByte(initialSpellAddress, starterSpell)
     }
   }
 
-  function setAllHiddenSpellsAvailable(options, data) {
+  function setHiddenSpellsAvailable(options, data, starter) {
     const hiddenSpellTableAddress = 0x376318c
-    if (options.hiddenSpells) {
+    if (options.hiddenSpells != util.getDefaultFromList(hiddenSpellOptions).ID) {
+      let changeForAllMonsters = options.hiddenSpells == hiddenSpellOptionFromName("All monsters").ID
       allMonsters.forEach(function(monster) {
-        let hiddenSpell = data.readByte(hiddenSpellTableAddress + monster.ID)
-        let initialSpellAddress = initialStatsAddress + monster.ID * initialStatsRowLength + initialStatsSpell1Offset
-        if (!!hiddenSpell) {
-          data.writeByte(initialSpellAddress, hiddenSpell)
-          data.writeByte(initialSpellAddress + 1, 0x01) // set initial level
-          data.writeByte(initialSpellAddress + 2, 0x01) // set initial target level
+        if (changeForAllMonsters || monster.ID == starter) {
+          let hiddenSpell = data.readByte(hiddenSpellTableAddress + monster.ID)
+          let initialSpellAddress = initialStatsAddress + monster.ID * initialStatsRowLength + initialStatsSpell1Offset
+          if (!!hiddenSpell) {
+            data.writeByte(initialSpellAddress, hiddenSpell)
+            data.writeByte(initialSpellAddress + 1, 0x01) // set initial level
+            data.writeByte(initialSpellAddress + 2, 0x01) // set initial target level
+          }
         }
       })
     }
@@ -257,6 +315,8 @@
     setStarter: setStarter,
     allMonsters: allMonsters,
     randomStarterOptionValue: randomStarterOptionValue,
+    allElements: allElements,
+    hiddenSpellOptions: hiddenSpellOptions,
   }
   if (self) {
     self.adRando = Object.assign(self.adRando || {}, {

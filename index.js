@@ -37,18 +37,14 @@
 
   function loadOption(name, changeHandler, defaultValue) {
     const value = localStorage.getItem(name)
-    if (name === 'starter') {
-      if (typeof(value) === 'string') {
+    if (typeof(value) === 'string') {
+      if (name === 'starter' || name === 'hiddenSpells' || name === 'starterElement') {
         elems[name].value = value
       } else {
-        elems[name].value = defaultValue
+        elems[name].checked = value === 'true'
       }
     } else {
-      if (typeof(value) === 'string') {
-        elems[name].checked = value === 'true'
-      } else {
-        elems[name].checked = defaultValue
-      }
+      elems[name].checked = defaultValue
     }
     changeHandler()
   }
@@ -174,8 +170,8 @@
       elems.barongs.checked = !!options.barongs
       elems.starter.value = options.starter
       elems.nonnativeSpellsLevel.checked = !!options.nonnativeSpellsLevel
-      elems.starterElement.checked = !!options.starterElement
-      elems.hiddenSpells.checked = !!options.hiddenSpells
+      elems.starterElement.value = options.starterElement
+      elems.hiddenSpells.value = options.hiddenSpells
       elems.singleRoom.checked = !!options.singleRoom
     }
   }
@@ -216,11 +212,11 @@
   }
 
   function starterElementChange() {
-    localStorage.setItem('starterElement', elems.starterElement.checked)
+    localStorage.setItem('starterElement', elems.starterElement.value)
   }
 
   function hiddenSpellsChange() {
-    localStorage.setItem('hiddenSpells', elems.hiddenSpells.checked)
+    localStorage.setItem('hiddenSpells', elems.hiddenSpells.value)
   }
 
   function singleRoomChange() {
@@ -287,8 +283,8 @@
       barongs: elems.barongs.checked,
       starter: elems.starter.value,
       nonnativeSpellsLevel: elems.nonnativeSpellsLevel.checked,
-      starterElement: elems.starterElement.checked,
-      hiddenSpells: elems.hiddenSpells.checked,
+      starterElement: elems.starterElement.value,
+      hiddenSpells: elems.hiddenSpells.value,
       singleRoom: elems.singleRoom.checked,
     }
     return options
@@ -675,10 +671,8 @@
       process.exit(1)
     }
     let hex = util.setSeedAzureDreams(check, seed)
+    //also applies several other options due to difficulties when calling from here
     monsters.setEnemizer(applied, check, hex)
-    console.log('About to call setStarter')
-    monsters.setStarter(applied, check, hex)
-    console.log('Supposedly called setStarter')
     util.setAppliedOptions(applied, check)
 
     const checksum = check.sum()
@@ -784,6 +778,24 @@
       option.innerText = monster.name
       elems.starter.appendChild(option)
     })
+    // Load elements
+    monsters.allElements.forEach(function(element) {
+      const option = document.createElement('option')
+      option.value = element.ID
+      option.innerText = element.name
+      if (element.name === "Tri") {
+        option.innerText += " (no spells)"
+      }
+      elems.starterElement.appendChild(option)
+    })
+    // Load hidden spell options
+    monsters.hiddenSpellOptions.forEach(function(spell) {
+      const option = document.createElement('option')
+      option.value = spell.ID
+      option.innerText = spell.name
+      elems.hiddenSpells.appendChild(option)
+    })
+
     const url = new URL(window.location.href)
     if (url.protocol !== 'file:') {
       fetch(new Request('package.json')).then(function(response) {
@@ -843,10 +855,10 @@
       elems.nonnativeSpellsLevel.checked = applied.nonnativeSpellsLevel
       nonnativeSpellsLevelChange()
       elems.nonnativeSpellsLevel.disabled = true
-      elems.starterElement.checked = applied.starterElement
+      elems.starterElement.value = applied.starterElement
       starterElementChange()
       elems.starterElement.disabled = true
-      elems.hiddenSpells.checked = applied.hiddenSpells
+      elems.hiddenSpells.value = applied.hiddenSpells
       hiddenSpellsChange()
       elems.hiddenSpells.disabled = true
       elems.singleRoom.checked = applied.singleRoom
@@ -885,8 +897,8 @@
       loadOption('barongs', barongsChange, false)
       loadOption('starter', starterChange, 0x02)
       loadOption('nonnativeSpellsLevel', nonnativeSpellsLevelChange, false)
-      loadOption('starterElement', starterElementChange, false)
-      loadOption('hiddenSpells', hiddenSpellsChange, false)
+      loadOption('starterElement', starterElementChange, util.getDefaultFromList(monsters.allElements).ID)
+      loadOption('hiddenSpells', hiddenSpellsChange, util.getDefaultFromList(monsters.hiddenSpellOptions).ID)
       loadOption('singleRoom', singleRoomChange, false)
     }
     loadOption('appendSeed', appendSeedChange, true)

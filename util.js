@@ -126,14 +126,15 @@
     let i = 0
     while (i < randomize.length) {
       let c = randomize[i++]
+      let arg
+      let start
       switch (c) {
       case 'P':
         // Check for an argument.
         if (randomize[i] !== ':') {
           throw new Error('Expected argument')
         }
-        let arg
-        let start
+
         // Parse the arg name.
         start = ++i
         while (i < randomize.length
@@ -166,19 +167,18 @@
         if (randomize[i] !== ':') {
           throw new Error('Expected argument')
         }
-        let arg2
-        let start2
+
         // Parse the arg name.
-        start2 = ++i
+        start = ++i
         while (i < randomize.length
                && [',', ':'].indexOf(randomize[i]) === -1) {
           i++
         }
-        arg2 = randomize.slice(start2, i)
-        if (!arg2.length) {
+        arg = randomize.slice(start, i)
+        if (!arg.length) {
           throw new Error('Expected argument')
         }
-        options.starter = arg2
+        options.starter = arg
         if (randomize[i] === ',') {
           i++
         }
@@ -187,10 +187,46 @@
         options.nonnativeSpellsLevel = true
         break
       case 'E':
-        options.starterElement = true
+        // Check for an argument.
+        if (randomize[i] !== ':') {
+          throw new Error('Expected argument')
+        }
+
+        // Parse the arg name.
+        start = ++i
+        while (i < randomize.length
+               && [',', ':'].indexOf(randomize[i]) === -1) {
+          i++
+        }
+        arg = randomize.slice(start, i)
+        if (!arg.length) {
+          throw new Error('Expected argument')
+        }
+        options.starterElement = arg
+        if (randomize[i] === ',') {
+          i++
+        }
         break
       case 'h':
-        options.hiddenSpells = true
+        // Check for an argument.
+        if (randomize[i] !== ':') {
+          throw new Error('Expected argument')
+        }
+
+        // Parse the arg name.
+        start = ++i
+        while (i < randomize.length
+               && [',', ':'].indexOf(randomize[i]) === -1) {
+          i++
+        }
+        arg = randomize.slice(start, i)
+        if (!arg.length) {
+          throw new Error('Expected argument')
+        }
+        options.hiddenSpells = arg
+        if (randomize[i] === ',') {
+          i++
+        }
         break
       case 's':
         options.singleRoom = true
@@ -247,21 +283,17 @@
         }
       } else if ('starter' in options) {
         randomize += 'S:' + options.starter + ','
-        delete options.preset
+        delete options.starter
       } else if ('nonnativeSpellsLevel' in options) {
         if (options.nonnativeSpellsLevel) {
           randomize += 'n'
         }
         delete options.nonnativeSpellsLevel
       } else if ('starterElement' in options) {
-        if (options.starterElement) {
-          randomize += 'E'
-        }
+        randomize += 'E:' + options.starterElement + ','
         delete options.starterElement
       } else if ('hiddenSpells' in options) {
-        if (options.hiddenSpells) {
-          randomize += 'h'
-        }
+        randomize += 'h:' + options.hiddenSpells + ','
         delete options.hiddenSpells
       } else if ('singleRoom' in options) {
         if (options.singleRoom) {
@@ -467,6 +499,10 @@
       data.writeByte(0xb946de, 0x00)
       data.writeWord(0xb946df, 0x8002221e) //skip to address -1
     }
+    //if (options.experimentalChanges) {
+      //always make cursor start at New Game
+      //data.writeInstruction(0x43a920, 0x01000224)
+    //}
   }
 
   function saltSeed(version, options, seed) {
@@ -623,8 +659,8 @@
     this.barongs = false
     this.starter = 0x02
     this.nonnativeSpellsLevel = false
-    this.starterElement = false
-    this.hiddenSpells = false
+    this.starterElement = -3
+    this.hiddenSpells = 0
     this.singleRoom = false
   }
 
@@ -669,6 +705,12 @@
       hiddenSpells,
       singleRoom,
     )
+  }
+
+  function getDefaultFromList(someList) {
+    return someList.filter(function(obj) {
+      return obj.isDefault
+    })[0]
   }
 
   //LinearCongruentialGenerator
@@ -724,6 +766,7 @@
     shuffled: shuffled,
     Preset: Preset,
     PresetBuilder: PresetBuilder,
+    getDefaultFromList: getDefaultFromList,
     LCG: LCG,
     lcgConstants: lcgConstants,
   }
