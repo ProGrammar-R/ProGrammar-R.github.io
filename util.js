@@ -1,16 +1,13 @@
 (function(self) {
 
   let constants
-  let items
   let sjcl
 
   if (self) {
     constants = self.adRando.constants
-    items = self.adRando.items
     sjcl = self.sjcl
   } else {
     constants = require('./constants')
-    items = require('./items')
     sjcl = require('sjcl')
   }
 
@@ -228,6 +225,9 @@
           i++
         }
         break
+ 		  case 'I':
+        options.startingItems = true
+        break
       case 's':
         options.singleRoom = true
         break
@@ -295,6 +295,11 @@
       } else if ('hiddenSpells' in options) {
         randomize += 'h:' + options.hiddenSpells + ','
         delete options.hiddenSpells
+      } else if ('startingItems' in options) {
+        if (options.startingItems) {
+          randomize += 'I'
+        }
+        delete options.startingItems
       } else if ('singleRoom' in options) {
         if (options.singleRoom) {
           randomize += 's'
@@ -554,6 +559,7 @@
     nonnativeSpellsLevel,
     starterElement,
     hiddenSpells,
+    startingItems,
     singleRoom,
   ) {
     this.id = id
@@ -569,6 +575,7 @@
     this.nonnativeSpellsLevel = nonnativeSpellsLevel,
     this.starterElement = starterElement,
     this.hiddenSpells = hiddenSpells,
+    this.startingItems = startingItems,
     this.singleRoom = singleRoom
   }
 
@@ -661,6 +668,7 @@
     this.nonnativeSpellsLevel = false
     this.starterElement = -3
     this.hiddenSpells = 0
+    this.startingItems = false
     this.singleRoom = false
   }
 
@@ -688,6 +696,7 @@
     const nonnativeSpellsLevel = self.nonnativeSpellsLevel
     const starterElement = self.starterElement
     const hiddenSpells = self.hiddenSpells
+    const startingItems = self.startingItems
     const singleRoom = self.singleRoom
     return new Preset(
       self.metadata.id,
@@ -703,6 +712,7 @@
       nonnativeSpellsLevel,
       starterElement,
       hiddenSpells,
+      startingItems,
       singleRoom,
     )
   }
@@ -749,8 +759,6 @@
     return (rolled % (upper + 1 - lower)) + lower
   }
 
-  lcgConstants = {modulus: 0x1fffFFFFffff, multiplier: 0x5DEECE66D, increment: 11,}
-
   const exports = {
     assert: assert,
     bufToHex: bufToHex,
@@ -768,7 +776,6 @@
     PresetBuilder: PresetBuilder,
     getDefaultFromList: getDefaultFromList,
     LCG: LCG,
-    lcgConstants: lcgConstants,
   }
   if (self) {
     self.adRando = Object.assign(self.adRando || {}, {

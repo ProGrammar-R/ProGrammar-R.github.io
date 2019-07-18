@@ -145,7 +145,7 @@
       let f = 1
       let s = 0
       let lcgSeed = hex.length > 0 ? Math.abs(hex[s++]) : 15;
-      let lcg = new util.LCG(util.lcgConstants.modulus, util.lcgConstants.multiplier, util.lcgConstants.increment, lcgSeed)
+      let lcg = new util.LCG(constants.lcgConstants.modulus, constants.lcgConstants.multiplier, constants.lcgConstants.increment, lcgSeed)
       let barongFloorLSD = options.barongs ? lcg.rollBetween(0,9) : normalBarongFloorLSD
       while (f < 40) {
         let floorMonsters = []

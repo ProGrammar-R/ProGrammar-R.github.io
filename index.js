@@ -6,6 +6,7 @@
   let constants
   let util
   let presets
+  let items
   let monsters
 
   let info
@@ -26,12 +27,14 @@
     constants = adRando.constants
     util = adRando.util
     presets = adRando.presets
+    items = adRando.items
     monsters = adRando.monsters
   } else {
     version = require('./package').version
     constants = require('./constants')
     util = require('./util')
     presets = require('./presets')
+    items = require('./items')
     monsters = require('./monsters')
   }
 
@@ -141,6 +144,7 @@
       elems.nonnativeSpellsLevel.disabled = true
       elems.starterElement.disabled = true
       elems.hiddenSpells.disabled = true
+      elems.startingItems.disabled = true
       elems.singleRoom.disabled = true
       presetIdChange()
     } else {
@@ -153,6 +157,7 @@
       elems.nonnativeSpellsLevel.disabled = false
       elems.starterElement.disabled = false
       elems.hiddenSpells.disabled = false
+      elems.startingItems.disabled = false
       elems.singleRoom.disabled = false
     }
   }
@@ -172,6 +177,7 @@
       elems.nonnativeSpellsLevel.checked = !!options.nonnativeSpellsLevel
       elems.starterElement.value = options.starterElement
       elems.hiddenSpells.value = options.hiddenSpells
+      elems.startingItems.checked = !!options.startingItems
       elems.singleRoom.checked = !!options.singleRoom
     }
   }
@@ -217,6 +223,10 @@
 
   function hiddenSpellsChange() {
     localStorage.setItem('hiddenSpells', elems.hiddenSpells.value)
+  }
+
+  function startingItemsChange() {
+    localStorage.setItem('startingItems', elems.startingItems.checked)
   }
 
   function singleRoomChange() {
@@ -285,6 +295,7 @@
       nonnativeSpellsLevel: elems.nonnativeSpellsLevel.checked,
       starterElement: elems.starterElement.value,
       hiddenSpells: elems.hiddenSpells.value,
+      startingItems: elems.startingItems.checked,
       singleRoom: elems.singleRoom.checked,
     }
     return options
@@ -363,6 +374,7 @@
     elems.nonnativeSpellsLevel.disabled = false
     elems.starterElement.disabled = false
     elems.hiddenSpells.disabled = false
+    elems.startingItems.disabled = false
     elems.singleRoom.disabled = false
     elems.clear.classList.add('hidden')
     presetChange()
@@ -673,6 +685,7 @@
     let hex = util.setSeedAzureDreams(check, seed)
     //also applies several other options due to difficulties when calling from here
     monsters.setEnemizer(applied, check, hex)
+    adRando.items.setStartingItems(options, check, hex)
     util.setAppliedOptions(applied, check)
 
     const checksum = check.sum()
@@ -731,6 +744,7 @@
       nonnativeSpellsLevel: document.getElementById('non-native-spells-level'),
       starterElement: document.getElementById('starter-element'),
       hiddenSpells: document.getElementById('hidden-spells'),
+      startingItems: document.getElementById('starting-items'),
       singleRoom: document.getElementById('single-room'),
       download: document.getElementById('download'),
       downloadCue: document.getElementById('downloadCue'),
@@ -757,6 +771,7 @@
     elems.nonnativeSpellsLevel.addEventListener('change', nonnativeSpellsLevelChange)
     elems.starterElement.addEventListener('change', starterElementChange)
     elems.hiddenSpells.addEventListener('change', hiddenSpellsChange)
+    elems.startingItems.addEventListener('change', startingItemsChange)
     elems.singleRoom.addEventListener('change', singleRoomChange)
     elems.copy.addEventListener('click', copyHandler)
     elems.makeCue.addEventListener('click', makeCueHandler)
@@ -861,6 +876,9 @@
       elems.hiddenSpells.value = applied.hiddenSpells
       hiddenSpellsChange()
       elems.hiddenSpells.disabled = true
+      elems.startingItems.checked = applied.startingItems
+      startingItemsChange()
+      elems.startingItems.disabled = true
       elems.singleRoom.checked = applied.singleRoom
       singleRoomChange()
       elems.singleRoom.disabled = true
@@ -899,6 +917,7 @@
       loadOption('nonnativeSpellsLevel', nonnativeSpellsLevelChange, false)
       loadOption('starterElement', starterElementChange, util.getDefaultFromList(monsters.allElements).ID)
       loadOption('hiddenSpells', hiddenSpellsChange, util.getDefaultFromList(monsters.hiddenSpellOptions).ID)
+      loadOption('startingItems', startingItemsChange, false)
       loadOption('singleRoom', singleRoomChange, false)
     }
     loadOption('appendSeed', appendSeedChange, true)

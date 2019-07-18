@@ -1,8 +1,8 @@
 importScripts('https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.1/seedrandom.min.js')
 importScripts('https://cdnjs.cloudflare.com/ajax/libs/sjcl/1.0.8/sjcl.min.js')
 importScripts("constants.js")
-importScripts("items.js")
 importScripts("util.js")
+importScripts("items.js")
 importScripts("monsters.js")
 importScripts("presets/safe.js")
 importScripts("ecc-edc-recalc-js/index.js")
@@ -24,6 +24,7 @@ self.addEventListener('message', function(message) {
     const options = self.adRando.util.Preset.options(data.options)
     let hex = adRando.util.setSeedAzureDreams(check, data.seed)
     adRando.monsters.setEnemizer(options, check, hex)
+    adRando.items.setStartingItems(options, check, hex)
     adRando.util.setAppliedOptions(options, check)
     const checksum = check.sum()
     if (data.checksum && data.checksum !== checksum) {
