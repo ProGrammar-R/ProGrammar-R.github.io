@@ -10,29 +10,37 @@
   }
 
   const startingItemWidth = 6
-  const randomItemHexSeed = 8
+  const randomItemHexSeed = 5
 
   const TYPE = constants.TYPE
 
+  const itemOffsets = {
+    bitfield: 0,
+    itemName: 4,
+    description: 8,
+    buyPrice: 16,
+    sellPrice: 18,
+  }
+
   const items = [
     //Ball
-    { name: 'Fire',       type: TYPE.BALL, id: 0x01, modifiers: 0x05, inPool: true,},
-    { name: 'Blaze',      type: TYPE.BALL, id: 0x02, modifiers: 0x05, inPool: true,},
-    { name: 'Flame',      type: TYPE.BALL, id: 0x03, modifiers: 0x05, inPool: true,},
-    { name: 'Pillar',     type: TYPE.BALL, id: 0x04, modifiers: 0x05, inPool: true,},
-    { name: 'Poison',     type: TYPE.BALL, id: 0x05, modifiers: 0x05, inPool: true,},
-    { name: 'Water',      type: TYPE.BALL, id: 0x06, modifiers: 0x05, inPool: true,},
-    { name: 'Repel',      type: TYPE.BALL, id: 0x07, modifiers: 0x05, inPool: true,},
-    { name: 'Ice Rock',   type: TYPE.BALL, id: 0x08, modifiers: 0x05, inPool: true,},
-    { name: 'Recovery',   type: TYPE.BALL, id: 0x09, modifiers: 0x05, inPool: true,},
-    { name: 'DeForth',    type: TYPE.BALL, id: 0x0A, modifiers: 0x05, inPool: true,},
-    { name: 'Blinder',    type: TYPE.BALL, id: 0x0B, modifiers: 0x05, inPool: true,},
-    { name: 'Binding',    type: TYPE.BALL, id: 0x0C, modifiers: 0x05, inPool: true,},
-    { name: 'Sleep',      type: TYPE.BALL, id: 0x0D, modifiers: 0x05, inPool: true,},
-    { name: 'Weak',       type: TYPE.BALL, id: 0x0E, modifiers: 0x05, inPool: true,},
-    { name: 'LaGrave',    type: TYPE.BALL, id: 0x0F, modifiers: 0x05, inPool: true,},
-    //{ name: 'Unknown (No Name)', type: TYPE.BALL, id: 0x10, modifiers: 0x00, inPool: false,},
-    { name: 'Acid Rain',  type: TYPE.BALL, id: 0x11, modifiers: 0x01, inPool: true,},
+    { name: 'Fire',       type: TYPE.BALL, id: 0x01, modifiers: 0x05, inPool: true, address: 0x5ecd4,},
+    { name: 'Blaze',      type: TYPE.BALL, id: 0x02, modifiers: 0x05, inPool: true, address: 0x5ece8,},
+    { name: 'Flame',      type: TYPE.BALL, id: 0x03, modifiers: 0x05, inPool: true, address: 0x5ecfc,},
+    { name: 'Pillar',     type: TYPE.BALL, id: 0x04, modifiers: 0x05, inPool: true, address: 0x5ed10,},
+    { name: 'Poison',     type: TYPE.BALL, id: 0x05, modifiers: 0x05, inPool: true, address: 0x5ed24,},
+    { name: 'Water',      type: TYPE.BALL, id: 0x06, modifiers: 0x05, inPool: true, address: 0x5ed38,},
+    { name: 'Repel',      type: TYPE.BALL, id: 0x07, modifiers: 0x05, inPool: true, address: 0x5ed4c,},
+    { name: 'Ice Rock',   type: TYPE.BALL, id: 0x08, modifiers: 0x05, inPool: true, address: 0x5ed60,},
+    { name: 'Recovery',   type: TYPE.BALL, id: 0x09, modifiers: 0x05, inPool: true, address: 0x5ed74,},
+    { name: 'DeForth',    type: TYPE.BALL, id: 0x0A, modifiers: 0x05, inPool: true, address: 0x5ed88,},
+    { name: 'Blinder',    type: TYPE.BALL, id: 0x0B, modifiers: 0x05, inPool: true, address: 0x5ed9c,},
+    { name: 'Binding',    type: TYPE.BALL, id: 0x0C, modifiers: 0x05, inPool: true, address: 0x5edb0,},
+    { name: 'Sleep',      type: TYPE.BALL, id: 0x0D, modifiers: 0x05, inPool: true, address: 0x5edc4,},
+    { name: 'Weak',       type: TYPE.BALL, id: 0x0E, modifiers: 0x05, inPool: true, address: 0x5edd8,},
+    { name: 'LoGrave',    type: TYPE.BALL, id: 0x0F, modifiers: 0x05, inPool: true, address: 0x5edec,},
+    //{ name: 'Unknown (No Name)', type: TYPE.BALL, id: 0x10, modifiers: 0x00, inPool: false, address: 0x5ee00,},
+    { name: 'Acid Rain',  type: TYPE.BALL, id: 0x11, modifiers: 0x01, inPool: true, address: 0x5ee14,},
     //Sword
     { name: 'Gold Sword',     type: TYPE.SWORD, id: 0x01, modifiers: 0x00, inPool: true,},
     { name: 'Copper Sword',   type: TYPE.SWORD, id: 0x02, modifiers: 0x00, inPool: true,},
@@ -122,6 +130,12 @@
     })
   }
 
+  function itemFromID(id, type) {
+    return items.filter(function(item) {
+      return item.id == id && item.type == type
+    })[0]
+  }
+
   function setStartingItems(options, data, hex) {
     if (options.startingItems) {
       let lcgSeed = hex.length > randomItemHexSeed ? Math.abs(hex[randomItemHexSeed]) : 15;
@@ -145,6 +159,8 @@
       let eggs = itemsByType(TYPE.EGG)
       let eggIndex = lcg.rollBetween(0, eggs.length-1)
       setItem(startingItemIndex++, eggs[eggIndex], data)
+
+      writeMissingBallNames(data)
     }
   }
 
@@ -157,6 +173,25 @@
     data.writeByte(itemAddress++, item.type)
     data.writeByte(itemAddress++, defaultState)
     data.writeByte(itemAddress++, item.modifiers)
+  }
+
+  function writeMissingBallNames(data) {
+    const defaultBuyPrice = 0x64
+    const defaultSellPrice =0x01f4
+    //ball A
+    const ballAaddress = itemFromID(0xA, TYPE.BALL).address
+    data.writeByte(ballAaddress + itemOffsets.bitfield, 0x12)
+    data.writeWord(ballAaddress + itemOffsets.itemName, 0x8002dbd8)
+    data.writeWord(ballAaddress + itemOffsets.description, 0x8002db98)
+    data.writeShort(ballAaddress + itemOffsets.buyPrice, defaultBuyPrice)
+    data.writeShort(ballAaddress + itemOffsets.sellPrice, defaultSellPrice)
+    //ball F
+    const ballFaddress = itemFromID(0xF, TYPE.BALL).address
+    data.writeByte(ballFaddress + itemOffsets.bitfield, 0x14)
+    data.writeWord(ballFaddress + itemOffsets.itemName, 0x8002d730)
+    data.writeWord(ballFaddress + itemOffsets.description, 0x8002d6fc)
+    data.writeShort(ballFaddress + itemOffsets.buyPrice, defaultBuyPrice)
+    data.writeShort(ballFaddress + itemOffsets.sellPrice, defaultSellPrice)
   }
 
   const exports = {items: items,
