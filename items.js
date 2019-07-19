@@ -24,23 +24,23 @@
 
   const items = [
     //Ball
-    { name: 'Fire',       type: TYPE.BALL, id: 0x01, modifiers: 0x05, inPool: true, address: 0x5ecd4,},
-    { name: 'Blaze',      type: TYPE.BALL, id: 0x02, modifiers: 0x05, inPool: true, address: 0x5ece8,},
-    { name: 'Flame',      type: TYPE.BALL, id: 0x03, modifiers: 0x05, inPool: true, address: 0x5ecfc,},
-    { name: 'Pillar',     type: TYPE.BALL, id: 0x04, modifiers: 0x05, inPool: true, address: 0x5ed10,},
-    { name: 'Poison',     type: TYPE.BALL, id: 0x05, modifiers: 0x05, inPool: true, address: 0x5ed24,},
-    { name: 'Water',      type: TYPE.BALL, id: 0x06, modifiers: 0x05, inPool: true, address: 0x5ed38,},
-    { name: 'Repel',      type: TYPE.BALL, id: 0x07, modifiers: 0x05, inPool: true, address: 0x5ed4c,},
-    { name: 'Ice Rock',   type: TYPE.BALL, id: 0x08, modifiers: 0x05, inPool: true, address: 0x5ed60,},
-    { name: 'Recovery',   type: TYPE.BALL, id: 0x09, modifiers: 0x05, inPool: true, address: 0x5ed74,},
-    { name: 'DeForth',    type: TYPE.BALL, id: 0x0A, modifiers: 0x05, inPool: true, address: 0x5ed88,},
-    { name: 'Blinder',    type: TYPE.BALL, id: 0x0B, modifiers: 0x05, inPool: true, address: 0x5ed9c,},
-    { name: 'Binding',    type: TYPE.BALL, id: 0x0C, modifiers: 0x05, inPool: true, address: 0x5edb0,},
-    { name: 'Sleep',      type: TYPE.BALL, id: 0x0D, modifiers: 0x05, inPool: true, address: 0x5edc4,},
-    { name: 'Weak',       type: TYPE.BALL, id: 0x0E, modifiers: 0x05, inPool: true, address: 0x5edd8,},
-    { name: 'LoGrave',    type: TYPE.BALL, id: 0x0F, modifiers: 0x05, inPool: true, address: 0x5edec,},
-    //{ name: 'Unknown (No Name)', type: TYPE.BALL, id: 0x10, modifiers: 0x00, inPool: false, address: 0x5ee00,},
-    { name: 'Acid Rain',  type: TYPE.BALL, id: 0x11, modifiers: 0x01, inPool: true, address: 0x5ee14,},
+    { name: 'Fire',       type: TYPE.BALL, id: 0x01, modifiers: 0x05, inPool: true, address: 0x5ecd4, spellId: 0x01,},
+    { name: 'Blaze',      type: TYPE.BALL, id: 0x02, modifiers: 0x05, inPool: true, address: 0x5ece8, spellId: 0x04,},
+    { name: 'Flame',      type: TYPE.BALL, id: 0x03, modifiers: 0x05, inPool: true, address: 0x5ecfc, spellId: 0x07,},
+    { name: 'Pillar',     type: TYPE.BALL, id: 0x04, modifiers: 0x05, inPool: true, address: 0x5ed10, spellId: 0x0a,},
+    { name: 'Poison',     type: TYPE.BALL, id: 0x05, modifiers: 0x05, inPool: true, address: 0x5ed24, spellId: 0x0d,},
+    { name: 'Water',      type: TYPE.BALL, id: 0x06, modifiers: 0x05, inPool: true, address: 0x5ed38, spellId: 0x11,},
+    { name: 'Repel',      type: TYPE.BALL, id: 0x07, modifiers: 0x05, inPool: true, address: 0x5ed4c, spellId: 0x14,},
+    { name: 'Ice Rock',   type: TYPE.BALL, id: 0x08, modifiers: 0x05, inPool: true, address: 0x5ed60, spellId: 0x17,},
+    { name: 'Recovery',   type: TYPE.BALL, id: 0x09, modifiers: 0x05, inPool: true, address: 0x5ed74, spellId: 0x1a,},
+    { name: 'DeForth',    type: TYPE.BALL, id: 0x0A, modifiers: 0x05, inPool: true, address: 0x5ed88, spellId: 0x1d,},
+    { name: 'Blinder',    type: TYPE.BALL, id: 0x0B, modifiers: 0x05, inPool: true, address: 0x5ed9c, spellId: 0x21,},
+    { name: 'Binding',    type: TYPE.BALL, id: 0x0C, modifiers: 0x05, inPool: true, address: 0x5edb0, spellId: 0x24,},
+    { name: 'Sleep',      type: TYPE.BALL, id: 0x0D, modifiers: 0x05, inPool: true, address: 0x5edc4, spellId: 0x27,},
+    { name: 'Weak',       type: TYPE.BALL, id: 0x0E, modifiers: 0x05, inPool: true, address: 0x5edd8, spellId: 0x2a,},
+    { name: 'LoGrave',    type: TYPE.BALL, id: 0x0F, modifiers: 0x05, inPool: true, address: 0x5edec, spellId: 0x2d,},
+    { name: 'LeoGrave',   type: TYPE.BALL, id: 0x10, modifiers: 0x05, inPool: true, address: 0x5ee00, spellId: 0x2c,},
+    { name: 'Acid Rain',  type: TYPE.BALL, id: 0x11, modifiers: 0x01, inPool: true, address: 0x5ee14, spellId: 0x31,},
     //Sword
     { name: 'Gold Sword',     type: TYPE.SWORD, id: 0x01, modifiers: 0x00, inPool: true,},
     { name: 'Copper Sword',   type: TYPE.SWORD, id: 0x02, modifiers: 0x00, inPool: true,},
@@ -161,6 +161,7 @@
       setItem(startingItemIndex++, eggs[eggIndex], data)
 
       writeMissingBallNames(data)
+      allowAnyBalls(data)
     }
   }
 
@@ -192,6 +193,28 @@
     data.writeWord(ballFaddress + itemOffsets.description, 0x8002d6fc)
     data.writeShort(ballFaddress + itemOffsets.buyPrice, defaultBuyPrice)
     data.writeShort(ballFaddress + itemOffsets.sellPrice, defaultSellPrice)
+    //ball 10
+    const ball10address = itemFromID(0x10, TYPE.BALL).address
+    data.writeByte(ball10address + itemOffsets.bitfield, 0x12)
+    data.writeWord(ball10address + itemOffsets.itemName, 0x8002d770)
+    data.writeWord(ball10address + itemOffsets.description, 0x8002d740)
+    data.writeShort(ball10address + itemOffsets.buyPrice, defaultBuyPrice)
+    data.writeShort(ball10address + itemOffsets.sellPrice, defaultSellPrice)
+  }
+
+  function allowAnyBalls(data) {
+    let balls = itemsByType(TYPE.BALL)
+    balls.forEach(function(ball) {
+      data.writeByte(ball.address + itemOffsets.buyPrice, ball.spellId)
+    })
+		//write custom code
+		let addressWhereGetBallsSpellId = 0x1c98df0
+		data.writeInstruction(addressWhereGetBallsSpellId, 0x10004290)
+		var i;
+		for (i = 0; i < 7; i++) {
+			addressWhereGetBallsSpellId += 4
+			data.writeInstruction(addressWhereGetBallsSpellId, 0x00000000)
+		}
   }
 
   const exports = {items: items,
