@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-    <title>Azure Dreams PS1 De-randomizer</title>
+    <title>Azure Dreams PS1 (De-)Randomizer</title>
     <link rel="stylesheet"
           href="https://unpkg.com/purecss@1.0.0/build/pure-min.css">
     <link rel="stylesheet"
@@ -12,7 +12,7 @@
   <body>
     <div id="version"></div>
     <div id="content">
-      <h1>Azure Dreams PS1 De-randomizer</h1>
+      <h1>Azure Dreams PS1 (De-)Randomizer</h1>
       <div>
         by pro_grammar
       </div>
@@ -23,7 +23,7 @@
         </p>
         <div class="pure-u-14-24">
           <fieldset>
-            <legend>Randomizations</legend>
+            <legend>Gameplay options</legend>
             <div class="pure-g">
               <div class="pure-u-12-24">
                 <label for="seed">Seed:</label>
@@ -109,7 +109,7 @@
             </div>
           </fieldset>
           <fieldset>
-            <legend>Options</legend>
+            <legend>Other Options</legend>
             <div class="pure-g">
               <div class="pure-u-1">
                 <input id="append-seed" type="checkbox">
@@ -147,7 +147,7 @@
       <hr>
       <h2><a name="help">Help</a></h2>
       <p>
-        This de-randomizer targets the original NTSC-U release of
+        This (de-)randomizer targets the original NTSC-U release of
         <a href="http://redump.org/disc/2424/"><i>Azure Dreams</i> (SLUS-00614)</a>. You will need an image of your game
         disc in BIN/CUE format.
       </p>
@@ -162,14 +162,14 @@
       <hr>
       <h2><a name="about">About</a></h2>
       <p>
-        This de-randomizer sets the each floor layout based off of the floor number, number of climbs up the tower,
+        The de-randomizer sets the each floor layout based off of the floor number, number of climbs up the tower,
         and a random seed. As such, each trip up the tower should be unique but consistent with anyone else using the same seed.
       </p>
       <p>
         Some randomization and other options are also available, but only tutorial and intro skips are enabled under the "Safe" preset.
       </p>
       <p>
-        This de-randomizer is a fan project and is not affiliated with Konami/KCET, the developer and publisher of Azure Dreams.
+        This (de-)randomizer is a fan project and is not affiliated with Konami/KCET, the developer and publisher of Azure Dreams.
         Please support the official release.
       </p>
       <hr>
@@ -190,14 +190,19 @@
       <p>
         Please report any other issues, especially inconsistent spawns of a given floor on the same trip up the tower using
         <a href="https://github.com/ProGrammar-R/ProGrammar-R.github.io/issues/new">GitHub issues</a>
-        or the #un-randomizer channel in the <a href="https://discordapp.com/invite/m2dB3m7">Azure Dreams Speedruns</a> discord.
+        or the #randomizer channel in the <a href="https://discordapp.com/invite/m2dB3m7">Azure Dreams Speedruns</a> discord.
       </p>
       <hr>
       <h2><a name="changelog">Changelog</a></h2>
       <h3><time>July 19, 2019</time></h3>
       <ul>
+        <li>v1.5.3 Removed Ultimate egg from the itemizer egg pool, due to it <a href="https://gfycat.com/foolhardyflimsyguineapig">instantly disappearing from one's inventory</a> upon getting it.
+        Thanks to Baldwin for reporting this.</li>
+      </ul>
+      <h3><time>July 19, 2019</time></h3>
+      <ul>
         <li>v1.5.2-beta Itemizer can give one more new possible starting ball. Marked as beta because this is implemented a little bit more experimentally, but will allow for more possibilities in the future.</li>
-        <li>v1.5.1 Itemizer now actually gives random starting items. Added two otherwise unused balls to the pool of potential starting balls.</li>
+        <li>v1.5.1 Itemizer now actually gives random starting items. Added two otherwise unused balls to the pool of potential starting balls. Thanks to Sand_Knight_ for reporting this.</li>
       </ul>
       <h3><time>July 18, 2019</time></h3>
       <ul>

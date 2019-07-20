@@ -77,7 +77,7 @@
     { name: 'Earth Shield',   type: TYPE.SHIELD, id: 0x0A, modifiers: 0x00, inPool: true,},
     { name: 'Live Shield',    type: TYPE.SHIELD, id: 0x0B, modifiers: 0x00, inPool: true,},
     //Egg
-    { name: 'Ultimate Egg', type: TYPE.EGG, id: 0x01, modifiers: 0x14, inPool: true,},
+    { name: 'Ultimate Egg', type: TYPE.EGG, id: 0x01, modifiers: 0x14, inPool: false,},
     { name: 'Kewne Egg',    type: TYPE.EGG, id: 0x02, modifiers: 0x14, inPool: true,},
     { name: 'Dragon Egg',   type: TYPE.EGG, id: 0x03, modifiers: 0x14, inPool: true,},
     { name: 'Kid Egg',      type: TYPE.EGG, id: 0x04, modifiers: 0x14, inPool: true,},
