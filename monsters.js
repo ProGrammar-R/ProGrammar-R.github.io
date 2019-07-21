@@ -4,8 +4,10 @@
 
   if (self) {
     util = self.adRando.util
+    constants = self.adRando.constants
   } else {
     util = require('./util')
+    constants = require('./constants')
   }
 
   const randomStarterOptionValue = 0
