@@ -490,19 +490,24 @@
       data.writeInstruction(0x315489c, 0x544e0508)
     }
     if (options.introSkip) {
-      //skip from koh's birth to waking up, with a movie in between
-      data.writeByte(0xbac401, 0x3e)
-      data.writeByte(0xbac402, 0x00)
-      data.writeWord(0xbac403, 0x800187b3) //skip to address -1
+      //skip from angel to intro video before waking up
+      data.writeByte(0xee5f84, 0x05)
 
-      //from waking up, instead give a pita fruit
-      data.writeByte(0xb946d8, 0x0c)
-      data.writeInstruction(0xb946d9, 0x16002e79)
+      let wakeAddress = 0xb946d8
+      //from waking up, mark priest scene as done
+      data.writeByte(wakeAddress++, 0x0c)
+      data.writeWord(wakeAddress, 0x0014)
+      wakeAddress += 2
+
+      //now get a pita fruit
+      data.writeByte(wakeAddress++, 0x0c)
+      data.writeInstruction(wakeAddress, 0x16002e79)
+      wakeAddress += 4
 
       //skip from there to end when leaving house
-      data.writeByte(0xb946dd, 0x3e)
-      data.writeByte(0xb946de, 0x00)
-      data.writeWord(0xb946df, 0x8002221e) //skip to address -1
+      data.writeByte(wakeAddress++, 0x3e)
+      data.writeByte(wakeAddress++, 0x00)
+      data.writeWord(wakeAddress, 0x8002221e) //skip to address -1
     }
     //if (options.experimentalChanges) {
       //always make cursor start at New Game
