@@ -441,7 +441,7 @@
                 {data: 0x0000043c, toSeed: true,},
                 {data: 0x00008434, toSeed: true,},
                 {data: 0x8e66000C, toSeed: false,},
-                {data: 0x42280600, toSeed: false,},
+                {data: 0xc2280600, toSeed: false,},
                 {data: 0x26800402, toSeed: false,},
                 {data: 0x0180033c, toSeed: false,},
                 {data: 0x2c02658c, toSeed: false,},
@@ -548,48 +548,52 @@
       data.writeByte(0x1c9a534, top)
 
       //custom routine
-      const spawnCodeAddresses = [0x1ea7990,0x21816e0,]
+      const spawnCodeAddresses = [0x1ea795c,0x21816ac,]
       spawnCodeAddresses.forEach(function(spawnCodeAddr) {
-        let spawnCodeAddrNext = spawnCodeAddr + 4
-        //move previous instructions down
-        const instructionsToMove = 12;
-        for (let i = 0; i < instructionsToMove; i++) {
-          data.writeWord(spawnCodeAddr+0x14, data.readWord(spawnCodeAddr))
-          spawnCodeAddr -= 4
-        }
         //move new instructions in place
-        const newSpawnCodeAbove = [
-          0x27000624, //li   a2,39
-          0x033c0700, //sra	a3,a3,0x10
+        const newSpawnCode = [
+          0x28000624, //li    a2,40
+          0x033c0700, //sra	  a3,a3,0x10
           0x1b00e600, //divu  a3,a2
           0x1000a627, //addiu	a2,sp,16
           0x00000000, //nop
-          0x10380000, //mfhi a3
-          0x12800000, //mflo s0
-        ]
-        for (let i = newSpawnCodeAbove.length - 1; i >= 0; i--) {
-          data.writeInstruction(spawnCodeAddr, newSpawnCodeAbove[i])
-          spawnCodeAddr -= 4
-        }
-        const newSpawnCodeBelow = [
-          0x28000324, //li  v1,40
+          0x10380000, //mfhi  a3
+          0x12800000, //mflo  s0
+          0x2000bfaf, //sw	  ra,32(sp)
+          0xb5fd000c, //                      jal	0x8003f6d4
+          0x5e3fe724, //                      addiu	a3,a3,16222                 ; a3 = floor number + 0x3f5e
+          0x06000424, //                      li	a0,6                            ; a0 = 6
+          0x1000a527, //                      addiu	a1,sp,16
+          0x3ff9000c, //                      jal	0x8003e4fc
+          0x21300000, //                      move	a2,zero                         ; a2 = 0
+          0xc8fc000c, //                      jal	0x8003f320
+          0x00000000, //                      nop
+          0x0880023c, //                      lui	v0,0x8008                       ; v0 = 0x80080000
+          0x7834428c, //                      lw	v0,13432(v0)                    ; v0 = $80083478
+          0x00a02626, //                      addiu	a2,s1,-24576                ; a2 = 0x8014a000
+          0x28000324, //li    v1,40
           0x19007000, //multu v1,s0
-          0x0080033c, //luiv1,32768
+          0x10000324, //li    v1,16
           0x00000000, //nop
-          0x12800000, //mflos0
+          0x12800000, //mflo  s0
+                      //loop:
+          0x0000c490, //lbu	  a0,0(a2)
+          0x0100c590, //lbu   a1,1(a2)
+          0x02008014, //bnez	a0,2
+          0x00000000, //nop
+          0x20000424, //li    a0,20
 
-          0x0000c490, //lbu	a0,0(a2)
-          0x0100c590, //lbua1,1(a2)
-          0x000044a0, //sba0,0(v0)
-          0x2128b000, //addua1,a1,s0
-          0x0001a42c, //sltiua0,a1,256
-          0x0200801c, //bgtza0,8
+          0x000044a0, //sb    a0,0(v0)
+          0x2128b000, //addu  a1,a1,s0
+          0x0001a42c, //sltiu a0,a1,256
+          0x0200801c, //bgtz  a0,8
           0x00000000, //nop
-          0xff000524, //lia1,255
-          0x010045a0, //sba1,1(v0)
-          0x0400c624, //addiua2,a2,4
-          0xf5ff4014, //bnezv1,
-          0x42180300, //srlv1,v1,1
+          0xff000524, //li    a1,255
+          0x010045a0, //sb    a1,1(v0)
+          0x0200c624, //addiu a2,a2,2
+          0x02004224, //addiu v0,v0,2
+          0xf1ff6014, //bnez  v1,loop
+          0xffff6324, //addiu	v1,v1,-1
           0x00a03026, //addiu	s0,s1,-24576
 
           0x00000000,
@@ -597,21 +601,10 @@
           0x00000000,
           0x00000000,
           0x00000000,
-
-          0x00000000,
-          0x00000000,
-          0x00000000,
-          0x00000000,
-          0x00000000,
-
-          0x00000000,
-          0x00000000,
-          0x00000000,
-          0x00000000,
         ]
-        newSpawnCodeBelow.forEach(function(instruction) {
-            data.writeInstruction(spawnCodeAddrNext, instruction)
-            spawnCodeAddrNext += 4
+        newSpawnCode.forEach(function(instruction) {
+            data.writeInstruction(spawnCodeAddr, instruction)
+            spawnCodeAddr += 4
           }
         )
       })
