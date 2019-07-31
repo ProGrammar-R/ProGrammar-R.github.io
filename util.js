@@ -87,6 +87,10 @@
     return (this.readByte(address + 1) << 8) + (this.readByte(address + 0))
   }
 
+  checked.prototype.readWord = function readWord(address) {
+    return (this.readShort(address + 2) << 16) + (this.readShort(address + 0))
+  }
+
   checked.prototype.writeByte = function writeByte(address, val) {
     if (this.data) {
       this.data[address] = val
@@ -231,6 +235,9 @@
       case 's':
         options.singleRoom = true
         break
+      case 'N':
+        options.endurance = true
+        break
       default:
         throw new Error('Invalid randomization: ' + c)
       }
@@ -305,6 +312,11 @@
           randomize += 's'
         }
         delete options.singleRoom
+      } else if ('endurance' in options) {
+        if (options.endurance) {
+          randomize += 'N'
+        }
+        delete options.endurance
       } else {
         const unknown = Object.getOwnPropertyNames(options).pop()
         throw new Error('Unknown options: ' + unknown)
@@ -509,6 +521,101 @@
       data.writeByte(wakeAddress++, 0x00)
       data.writeWord(wakeAddress, 0x8002221e) //skip to address -1
     }
+    if (options.endurance) {
+      const top = 0x63
+      //8001788c
+      data.writeByte(0x1ea5974, top)
+      data.writeByte(0x217f6c4, top)
+      //80018f58
+      data.writeByte(0x1ea72a0, top)
+      data.writeByte(0x1ea72c8, top)
+      data.writeByte(0x2180ff0, top)
+      data.writeByte(0x2181018, top)
+      //8001f48c
+      data.writeByte(0x1eae744, top)
+      data.writeByte(0x2188494, top)
+      //8003e16c
+      data.writeByte(0x21f94, top + 1)
+      data.writeByte(0x21f9c, top)
+      //800b0618
+      data.writeByte(0x1c859e0, top)
+      //800bcffc
+      data.writeByte(0x1c942a4, top)
+      data.writeByte(0x1c94354, top)
+      //800c0330
+      data.writeByte(0x1c97cf8, top)
+      //800c26ac
+      data.writeByte(0x1c9a534, top)
+
+      //custom routine
+      const spawnCodeAddresses = [0x1ea7990,0x21816e0,]
+      spawnCodeAddresses.forEach(function(spawnCodeAddr) {
+        let spawnCodeAddrNext = spawnCodeAddr + 4
+        //move previous instructions down
+        const instructionsToMove = 12;
+        for (let i = 0; i < instructionsToMove; i++) {
+          data.writeWord(spawnCodeAddr+0x14, data.readWord(spawnCodeAddr))
+          spawnCodeAddr -= 4
+        }
+        //move new instructions in place
+        const newSpawnCodeAbove = [
+          0x27000624, //li   a2,39
+          0x033c0700, //sra	a3,a3,0x10
+          0x1b00e600, //divu  a3,a2
+          0x1000a627, //addiu	a2,sp,16
+          0x00000000, //nop
+          0x10380000, //mfhi a3
+          0x12800000, //mflo s0
+        ]
+        for (let i = newSpawnCodeAbove.length - 1; i >= 0; i--) {
+          data.writeInstruction(spawnCodeAddr, newSpawnCodeAbove[i])
+          spawnCodeAddr -= 4
+        }
+        const newSpawnCodeBelow = [
+          0x28000324, //li  v1,40
+          0x19007000, //multu v1,s0
+          0x0080033c, //luiv1,32768
+          0x00000000, //nop
+          0x12800000, //mflos0
+
+          0x0000c490, //lbu	a0,0(a2)
+          0x0100c590, //lbua1,1(a2)
+          0x000044a0, //sba0,0(v0)
+          0x2128b000, //addua1,a1,s0
+          0x0001a42c, //sltiua0,a1,256
+          0x0200801c, //bgtza0,8
+          0x00000000, //nop
+          0xff000524, //lia1,255
+          0x010045a0, //sba1,1(v0)
+          0x0400c624, //addiua2,a2,4
+          0xf5ff4014, //bnezv1,
+          0x42180300, //srlv1,v1,1
+          0x00a03026, //addiu	s0,s1,-24576
+
+          0x00000000,
+          0x00000000,
+          0x00000000,
+          0x00000000,
+          0x00000000,
+
+          0x00000000,
+          0x00000000,
+          0x00000000,
+          0x00000000,
+          0x00000000,
+
+          0x00000000,
+          0x00000000,
+          0x00000000,
+          0x00000000,
+        ]
+        newSpawnCodeBelow.forEach(function(instruction) {
+            data.writeInstruction(spawnCodeAddrNext, instruction)
+            spawnCodeAddrNext += 4
+          }
+        )
+      })
+    }
     //if (options.experimentalChanges) {
       //always make cursor start at New Game
       //data.writeInstruction(0x43a920, 0x01000224)
@@ -566,6 +673,7 @@
     hiddenSpells,
     startingItems,
     singleRoom,
+    endurance,
   ) {
     this.id = id
     this.name = name
@@ -581,7 +689,8 @@
     this.starterElement = starterElement,
     this.hiddenSpells = hiddenSpells,
     this.startingItems = startingItems,
-    this.singleRoom = singleRoom
+    this.singleRoom = singleRoom,
+    this.endurance = endurance
   }
 
   function clone(obj) {
@@ -675,6 +784,7 @@
     this.hiddenSpells = 0
     this.startingItems = false
     this.singleRoom = false
+    this.endurance = false
   }
 
   // Convert lock sets into strings.
@@ -703,6 +813,7 @@
     const hiddenSpells = self.hiddenSpells
     const startingItems = self.startingItems
     const singleRoom = self.singleRoom
+    const endurance = self.endurance
     return new Preset(
       self.metadata.id,
       self.metadata.name,
@@ -719,6 +830,7 @@
       hiddenSpells,
       startingItems,
       singleRoom,
+      endurance,
     )
   }
 

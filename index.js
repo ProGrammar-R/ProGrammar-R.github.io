@@ -146,6 +146,7 @@
       elems.hiddenSpells.disabled = true
       elems.startingItems.disabled = true
       elems.singleRoom.disabled = true
+      elems.endurance.disabled = true
       presetIdChange()
     } else {
       elems.presetSelect.classList.add('hide')
@@ -159,6 +160,7 @@
       elems.hiddenSpells.disabled = false
       elems.startingItems.disabled = false
       elems.singleRoom.disabled = false
+      elems.endurance.disabled = false
     }
   }
 
@@ -179,6 +181,7 @@
       elems.hiddenSpells.value = options.hiddenSpells
       elems.startingItems.checked = !!options.startingItems
       elems.singleRoom.checked = !!options.singleRoom
+      elems.endurance.checked = !!options.endurance
     }
   }
 
@@ -231,6 +234,10 @@
 
   function singleRoomChange() {
     localStorage.setItem('singleRoom', elems.singleRoom.checked)
+  }
+
+  function enduranceChange() {
+    localStorage.setItem('endurance', elems.endurance.checked)
   }
 
   function appendSeedChange() {
@@ -297,6 +304,7 @@
       hiddenSpells: elems.hiddenSpells.value,
       startingItems: elems.startingItems.checked,
       singleRoom: elems.singleRoom.checked,
+      endurance: elems.endurance.checked,
     }
     return options
   }
@@ -376,6 +384,7 @@
     elems.hiddenSpells.disabled = false
     elems.startingItems.disabled = false
     elems.singleRoom.disabled = false
+    elems.endurance.disabled = false
     elems.clear.classList.add('hidden')
     presetChange()
   }
@@ -746,6 +755,7 @@
       hiddenSpells: document.getElementById('hidden-spells'),
       startingItems: document.getElementById('starting-items'),
       singleRoom: document.getElementById('single-room'),
+      endurance: document.getElementById('endurance'),
       download: document.getElementById('download'),
       downloadCue: document.getElementById('downloadCue'),
       loader: document.getElementById('loader'),
@@ -773,6 +783,7 @@
     elems.hiddenSpells.addEventListener('change', hiddenSpellsChange)
     elems.startingItems.addEventListener('change', startingItemsChange)
     elems.singleRoom.addEventListener('change', singleRoomChange)
+    elems.endurance.addEventListener('change', enduranceChange)
     elems.copy.addEventListener('click', copyHandler)
     elems.makeCue.addEventListener('click', makeCueHandler)
     // Load presets
@@ -882,6 +893,9 @@
       elems.singleRoom.checked = applied.singleRoom
       singleRoomChange()
       elems.singleRoom.disabled = true
+      elems.endurance.checked = applied.endurance
+      enduranceChange()
+      elems.endurance.disabled = true
       elems.clear.classList.remove('hidden')
       const baseUrl = url.origin + url.pathname
       window.history.replaceState({}, document.title, baseUrl)
@@ -919,6 +933,7 @@
       loadOption('hiddenSpells', hiddenSpellsChange, util.getDefaultFromList(monsters.hiddenSpellOptions).ID)
       loadOption('startingItems', startingItemsChange, false)
       loadOption('singleRoom', singleRoomChange, false)
+      loadOption('endurance', enduranceChange, false)
     }
     loadOption('appendSeed', appendSeedChange, true)
     loadOption('experimentalChanges', experimentalChangesChange, false)
