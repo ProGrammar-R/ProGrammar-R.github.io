@@ -24,23 +24,23 @@
 
   const items = [
     //Ball
-    { name: 'Fire',       type: TYPE.BALL, id: 0x01, modifiers: 0x05, inPool: true, address: 0x5ecd4, spellId: 0x01,},
-    { name: 'Blaze',      type: TYPE.BALL, id: 0x02, modifiers: 0x05, inPool: true, address: 0x5ece8, spellId: 0x04,},
-    { name: 'Flame',      type: TYPE.BALL, id: 0x03, modifiers: 0x05, inPool: true, address: 0x5ecfc, spellId: 0x07,},
-    { name: 'Pillar',     type: TYPE.BALL, id: 0x04, modifiers: 0x05, inPool: true, address: 0x5ed10, spellId: 0x0a,},
-    { name: 'Poison',     type: TYPE.BALL, id: 0x05, modifiers: 0x05, inPool: true, address: 0x5ed24, spellId: 0x0d,},
-    { name: 'Water',      type: TYPE.BALL, id: 0x06, modifiers: 0x05, inPool: true, address: 0x5ed38, spellId: 0x11,},
-    { name: 'Repel',      type: TYPE.BALL, id: 0x07, modifiers: 0x05, inPool: true, address: 0x5ed4c, spellId: 0x14,},
-    { name: 'Ice Rock',   type: TYPE.BALL, id: 0x08, modifiers: 0x05, inPool: true, address: 0x5ed60, spellId: 0x17,},
-    { name: 'Recovery',   type: TYPE.BALL, id: 0x09, modifiers: 0x05, inPool: true, address: 0x5ed74, spellId: 0x1a,},
-    { name: 'DeForth',    type: TYPE.BALL, id: 0x0A, modifiers: 0x05, inPool: true, address: 0x5ed88, spellId: 0x1d,},
-    { name: 'Blinder',    type: TYPE.BALL, id: 0x0B, modifiers: 0x05, inPool: true, address: 0x5ed9c, spellId: 0x21,},
-    { name: 'Binding',    type: TYPE.BALL, id: 0x0C, modifiers: 0x05, inPool: true, address: 0x5edb0, spellId: 0x24,},
-    { name: 'Sleep',      type: TYPE.BALL, id: 0x0D, modifiers: 0x05, inPool: true, address: 0x5edc4, spellId: 0x27,},
-    { name: 'Weak',       type: TYPE.BALL, id: 0x0E, modifiers: 0x05, inPool: true, address: 0x5edd8, spellId: 0x2a,},
-    { name: 'LoGrave',    type: TYPE.BALL, id: 0x0F, modifiers: 0x05, inPool: true, address: 0x5edec, spellId: 0x2d,},
-    { name: 'LeoGrave',   type: TYPE.BALL, id: 0x10, modifiers: 0x05, inPool: true, address: 0x5ee00, spellId: 0x2c,},
-    { name: 'Acid Rain',  type: TYPE.BALL, id: 0x11, modifiers: 0x01, inPool: true, address: 0x5ee14, spellId: 0x31,},
+    { name: 'Fire',       type: TYPE.BALL, id: 0x01, modifiers: 0x05, inPool: true, address: 0x5ecd4, spellId: 0x01, names: [0, 0x8002E3E8, 0, 0x8002E39C],          descriptions: [0, 0x8002E3B0, 0, 0x8002E364],},
+    { name: 'Blaze',      type: TYPE.BALL, id: 0x02, modifiers: 0x05, inPool: true, address: 0x5ece8, spellId: 0x04, names: [0, 0x8002E314, 0, 0x8002E2D0],          descriptions: [0, 0x8002E2E0, 0, 0x8002E2A0],},
+    { name: 'Flame',      type: TYPE.BALL, id: 0x03, modifiers: 0x05, inPool: true, address: 0x5ecfc, spellId: 0x07, names: [0, 0x8002E264, 0, 0x8002E218],          descriptions: [0, 0x8002E228, 0, 0x8002E1E0],},
+    { name: 'Pillar',     type: TYPE.BALL, id: 0x04, modifiers: 0x05, inPool: true, address: 0x5ed10, spellId: 0x0a, names: [0, 0x8002E184, 0, 0x8002E138],          descriptions: [0, 0x8002E148, 0, 0x8002E10C],},
+    { name: 'Poison',     type: TYPE.BALL, id: 0x05, modifiers: 0x05, inPool: true, address: 0x5ed24, spellId: 0x0d, names: [0, 0x8002E0B8, 0, 0x8002E078],          descriptions: [0, 0x8002E08C, 0, 0x8002E048],},
+    { name: 'Water',      type: TYPE.BALL, id: 0x06, modifiers: 0x05, inPool: true, address: 0x5ed38, spellId: 0x11, names: [0x8002E038, 0, 0, 0x8002DF6C],          descriptions: [0x8002DFFC, 0, 0, 0x8002DF2C],},
+    { name: 'Repel',      type: TYPE.BALL, id: 0x07, modifiers: 0x05, inPool: true, address: 0x5ed4c, spellId: 0x14, names: [0x8002DEFC, 0, 0, 0x8002DE64],          descriptions: [0x8002DEC4, 0, 0, 0x8002DE2C],},
+    { name: 'Ice Rock',   type: TYPE.BALL, id: 0x08, modifiers: 0x05, inPool: true, address: 0x5ed60, spellId: 0x17, names: [0x8002DE1C, 0, 0, 0x8002DD58],          descriptions: [0x8002DDE0, 0, 0, 0x8002DD20],},
+    { name: 'Recovery',   type: TYPE.BALL, id: 0x09, modifiers: 0x05, inPool: true, address: 0x5ed74, spellId: 0x1a, names: [0x8002DCF8, 0, 0, 0x8002DC6C],          descriptions: [0x8002DCBC, 0, 0, 0x8002DC34],},
+    { name: 'DeForth',    type: TYPE.BALL, id: 0x0A, modifiers: 0x05, inPool: true, address: 0x5ed88, spellId: 0x1d, names: [0x8002DC20, 0x8002DBD8, 0, 0x8002DB84], descriptions: [0x8002DBE8, 0x8002DB98, 0, 0x8002DB4C],},
+    { name: 'Blinder',    type: TYPE.BALL, id: 0x0B, modifiers: 0x05, inPool: true, address: 0x5ed9c, spellId: 0x21, names: [0x8002DB3C, 0x8002DAF4, 0, 0],          descriptions: [0x8002DB04, 0x8002DAB8, 0, 0],},
+    { name: 'Binding',    type: TYPE.BALL, id: 0x0C, modifiers: 0x05, inPool: true, address: 0x5edb0, spellId: 0x24, names: [0x8002DA60, 0x8002DA10, 0, 0],          descriptions: [0x8002DA20, 0x8002D9D0, 0, 0],},
+    { name: 'Sleep',      type: TYPE.BALL, id: 0x0D, modifiers: 0x05, inPool: true, address: 0x5edc4, spellId: 0x27, names: [0x8002D974, 0x8002D930, 0, 0],          descriptions: [0x8002D940, 0x8002D8FC, 0, 0],},
+    { name: 'Weak',       type: TYPE.BALL, id: 0x0E, modifiers: 0x05, inPool: true, address: 0x5edd8, spellId: 0x2a, names: [0x8002D8A8, 0x8002D864, 0, 0],          descriptions: [0x8002D874, 0x8002D820, 0, 0],},
+    { name: 'LoGrave',    type: TYPE.BALL, id: 0x0F, modifiers: 0x05, inPool: true, address: 0x5edec, spellId: 0x2d, names: [0x8002D7C0, 0x8002D770, 0, 0x8002D730], descriptions: [0x8002D784, 0x8002D740, 0, 0x8002D6FC],},
+    { name: 'LeoGrave',   type: TYPE.BALL, id: 0x10, modifiers: 0x05, inPool: true, address: 0x5ee00, spellId: 0x2c, names: [0x8002D7C0, 0x8002D770, 0, 0x8002D730], descriptions: [0x8002D784, 0x8002D740, 0, 0x8002D6FC],},
+    { name: 'Acid Rain',  type: TYPE.BALL, id: 0x11, modifiers: 0x01, inPool: true, address: 0x5ee14, spellId: 0x31, names: [0, 0, 0, 0],                            descriptions: [0, 0, 0, 0]},
     //Sword
     { name: 'Gold Sword',     type: TYPE.SWORD, id: 0x01, modifiers: 0x00, inPool: true,},
     { name: 'Copper Sword',   type: TYPE.SWORD, id: 0x02, modifiers: 0x00, inPool: true,},
@@ -137,9 +137,9 @@
   }
 
   function setStartingItems(options, data, hex) {
+    let lcgSeed = hex.length > randomItemHexSeed ? Math.abs(hex[randomItemHexSeed]) : 15;
+    let lcg = new util.LCG(constants.lcgConstants.modulus, constants.lcgConstants.multiplier, constants.lcgConstants.increment, lcgSeed)
     if (options.startingItems) {
-      let lcgSeed = hex.length > randomItemHexSeed ? Math.abs(hex[randomItemHexSeed]) : 15;
-      let lcg = new util.LCG(constants.lcgConstants.modulus, constants.lcgConstants.multiplier, constants.lcgConstants.increment, lcgSeed)
       let startingItemIndex = 0
       //randomize weapon
       let swords = itemsByType(TYPE.SWORD)
@@ -163,6 +163,18 @@
       writeMissingBallNames(data)
       allowAnyBalls(data)
     }
+    if (options.ballElements) {
+      let balls = itemsByType(TYPE.BALL)
+      //length - 2 to avoid touching acid rain ball
+  		for (i = 0; i < balls.length - 2; i++) {
+        let newElement = lcg.rollBetween(1, 3)
+        //want value to be any of 1,2,4
+        if (newElement == 3) {
+          newElement++
+        }
+        setBallToElement(balls[i], newElement, data)
+		  }
+    }
   }
 
   function setItem(startingItemIndex, item, data) {
@@ -177,29 +189,34 @@
   }
 
   function writeMissingBallNames(data) {
-    const defaultBuyPrice = 0x64
-    const defaultSellPrice =0x01f4
-    //ball A
-    const ballAaddress = itemFromID(0xA, TYPE.BALL).address
-    data.writeByte(ballAaddress + itemOffsets.bitfield, 0x12)
-    data.writeWord(ballAaddress + itemOffsets.itemName, 0x8002dbd8)
-    data.writeWord(ballAaddress + itemOffsets.description, 0x8002db98)
-    data.writeShort(ballAaddress + itemOffsets.buyPrice, defaultBuyPrice)
-    data.writeShort(ballAaddress + itemOffsets.sellPrice, defaultSellPrice)
-    //ball F
-    const ballFaddress = itemFromID(0xF, TYPE.BALL).address
-    data.writeByte(ballFaddress + itemOffsets.bitfield, 0x14)
-    data.writeWord(ballFaddress + itemOffsets.itemName, 0x8002d730)
-    data.writeWord(ballFaddress + itemOffsets.description, 0x8002d6fc)
-    data.writeShort(ballFaddress + itemOffsets.buyPrice, defaultBuyPrice)
-    data.writeShort(ballFaddress + itemOffsets.sellPrice, defaultSellPrice)
-    //ball 10
-    const ball10address = itemFromID(0x10, TYPE.BALL).address
-    data.writeByte(ball10address + itemOffsets.bitfield, 0x12)
-    data.writeWord(ball10address + itemOffsets.itemName, 0x8002d770)
-    data.writeWord(ball10address + itemOffsets.description, 0x8002d740)
-    data.writeShort(ball10address + itemOffsets.buyPrice, defaultBuyPrice)
-    data.writeShort(ball10address + itemOffsets.sellPrice, defaultSellPrice)
+    setBallToElement(0x0A, 0x2, data)
+    setBallToElement(0x0F, 0x4, data)
+    setBallToElement(0x10, 0x2, data)
+  }
+
+  function setBallToElement(ball, element, data) {
+    let ballItem = itemFromID(ball, TYPE.BALL)
+    let ballBitfield = data.readByte(ballItem.address + itemOffsets.bitfield)
+    // if ball is not normally in game, give it default buy/sell prices
+    if (ballBitfield & 0x00010000 != 0) {
+      const defaultBuyPrice = 0x64
+      const defaultSellPrice = 0x01f4
+      data.writeShort(ballItem.address + itemOffsets.buyPrice, defaultBuyPrice)
+      data.writeShort(ballItem.address + itemOffsets.sellPrice, defaultSellPrice)
+    }
+
+    //set ball's new element
+    data.writeByte(ballItem.address + itemOffsets.bitfield, (0xFFFF0000 & ballBitfield) | element)
+    let newBallName = ballItem.names[element - 1]
+    //if new name is 0, keep old name
+    if (newBallName != 0) {
+      data.writeWord(ballItem.address + itemOffsets.itemName, newBallName)
+    }
+    //if new name is 0, keep old name
+    let newBallDesc = ballItem.descriptions[element - 1]
+    if (newBallDesc != 0) {
+      data.writeWord(ballItem.address + itemOffsets.description, newBallDesc)
+    }
   }
 
   function allowAnyBalls(data) {

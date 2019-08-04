@@ -145,6 +145,7 @@
       elems.starterElement.disabled = true
       elems.hiddenSpells.disabled = true
       elems.startingItems.disabled = true
+      elems.ballElements.disabled = true
       elems.singleRoom.disabled = true
       elems.endurance.disabled = true
       presetIdChange()
@@ -159,6 +160,7 @@
       elems.starterElement.disabled = false
       elems.hiddenSpells.disabled = false
       elems.startingItems.disabled = false
+      elems.ballElements.disabled = false
       elems.singleRoom.disabled = false
       elems.endurance.disabled = false
     }
@@ -180,6 +182,7 @@
       elems.starterElement.value = options.starterElement
       elems.hiddenSpells.value = options.hiddenSpells
       elems.startingItems.checked = !!options.startingItems
+      elems.ballElements.checked = !!options.ballElements
       elems.singleRoom.checked = !!options.singleRoom
       elems.endurance.checked = !!options.endurance
     }
@@ -230,6 +233,10 @@
 
   function startingItemsChange() {
     localStorage.setItem('startingItems', elems.startingItems.checked)
+  }
+
+  function ballElementsChange() {
+    localStorage.setItem('ballElements', elems.ballElements.checked)
   }
 
   function singleRoomChange() {
@@ -303,6 +310,7 @@
       starterElement: elems.starterElement.value,
       hiddenSpells: elems.hiddenSpells.value,
       startingItems: elems.startingItems.checked,
+      ballElements: elems.ballElements.checked,
       singleRoom: elems.singleRoom.checked,
       endurance: elems.endurance.checked,
     }
@@ -383,6 +391,7 @@
     elems.starterElement.disabled = false
     elems.hiddenSpells.disabled = false
     elems.startingItems.disabled = false
+    elems.ballElements.disabled = false
     elems.singleRoom.disabled = false
     elems.endurance.disabled = false
     elems.clear.classList.add('hidden')
@@ -754,6 +763,7 @@
       starterElement: document.getElementById('starter-element'),
       hiddenSpells: document.getElementById('hidden-spells'),
       startingItems: document.getElementById('starting-items'),
+      ballElements: document.getElementById('ball-elements'),
       singleRoom: document.getElementById('single-room'),
       endurance: document.getElementById('endurance'),
       download: document.getElementById('download'),
@@ -782,6 +792,7 @@
     elems.starterElement.addEventListener('change', starterElementChange)
     elems.hiddenSpells.addEventListener('change', hiddenSpellsChange)
     elems.startingItems.addEventListener('change', startingItemsChange)
+    elems.ballElements.addEventListener('change', ballElementsChange)
     elems.singleRoom.addEventListener('change', singleRoomChange)
     elems.endurance.addEventListener('change', enduranceChange)
     elems.copy.addEventListener('click', copyHandler)
@@ -890,6 +901,9 @@
       elems.startingItems.checked = applied.startingItems
       startingItemsChange()
       elems.startingItems.disabled = true
+      elems.ballElements.checked = applied.ballElements
+      ballElementsChange()
+      elems.ballElements.disabled = true
       elems.singleRoom.checked = applied.singleRoom
       singleRoomChange()
       elems.singleRoom.disabled = true
@@ -932,6 +946,7 @@
       loadOption('starterElement', starterElementChange, util.getDefaultFromList(monsters.allElements).ID)
       loadOption('hiddenSpells', hiddenSpellsChange, util.getDefaultFromList(monsters.hiddenSpellOptions).ID)
       loadOption('startingItems', startingItemsChange, false)
+      loadOption('ballElements', ballElementsChange, false)
       loadOption('singleRoom', singleRoomChange, false)
       loadOption('endurance', enduranceChange, false)
     }

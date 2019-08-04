@@ -229,8 +229,11 @@
           i++
         }
         break
- 		  case 'I':
+	    case 'I':
         options.startingItems = true
+        break
+      case 'B':
+        options.ballElements = true
         break
       case 's':
         options.singleRoom = true
@@ -307,6 +310,11 @@
           randomize += 'I'
         }
         delete options.startingItems
+      } else if ('ballElements' in options) {
+        if (options.ballElements) {
+          randomize += 'B'
+        }
+        delete options.ballElements
       } else if ('singleRoom' in options) {
         if (options.singleRoom) {
           randomize += 's'
@@ -665,6 +673,7 @@
     starterElement,
     hiddenSpells,
     startingItems,
+    ballElements,
     singleRoom,
     endurance,
   ) {
@@ -682,6 +691,7 @@
     this.starterElement = starterElement,
     this.hiddenSpells = hiddenSpells,
     this.startingItems = startingItems,
+    this.ballElements = ballElements,
     this.singleRoom = singleRoom,
     this.endurance = endurance
   }
@@ -776,6 +786,7 @@
     this.starterElement = -3
     this.hiddenSpells = 0
     this.startingItems = false
+    this.ballElements = false
     this.singleRoom = false
     this.endurance = false
   }
@@ -805,6 +816,7 @@
     const starterElement = self.starterElement
     const hiddenSpells = self.hiddenSpells
     const startingItems = self.startingItems
+    const ballElements = self.ballElements
     const singleRoom = self.singleRoom
     const endurance = self.endurance
     return new Preset(
@@ -822,6 +834,7 @@
       starterElement,
       hiddenSpells,
       startingItems,
+      ballElements,
       singleRoom,
       endurance,
     )
