@@ -139,41 +139,43 @@
   function setStartingItems(options, data, hex) {
     let lcgSeed = hex.length > randomItemHexSeed ? Math.abs(hex[randomItemHexSeed]) : 15;
     let lcg = new util.LCG(constants.lcgConstants.modulus, constants.lcgConstants.multiplier, constants.lcgConstants.increment, lcgSeed)
-    if (options.startingItems) {
-      let startingItemIndex = 0
-      //randomize weapon
-      let swords = itemsByType(TYPE.SWORD)
-      let wands = itemsByType(TYPE.WAND)
-      let weapons = swords.concat(wands)
-      let weaponIndex = lcg.rollBetween(0, weapons.length-1)
-      setItem(startingItemIndex++, weapons[weaponIndex], data)
-      //randomize shield
-      let shields = itemsByType(TYPE.SHIELD)
-      let shieldIndex = lcg.rollBetween(0, shields.length-1)
-      setItem(startingItemIndex++, shields[shieldIndex], data)
-      //randomize ball
-      let balls = itemsByType(TYPE.BALL)
-      let ballIndex = lcg.rollBetween(0, balls.length-1)
-      setItem(startingItemIndex++, balls[ballIndex], data)
-      //randomize egg
-      let eggs = itemsByType(TYPE.EGG)
-      let eggIndex = lcg.rollBetween(0, eggs.length-1)
-      setItem(startingItemIndex++, eggs[eggIndex], data)
-
-      writeMissingBallNames(data)
+    if (options.startingItems || options.ballElements) {
       allowAnyBalls(data)
-    }
-    if (options.ballElements) {
-      let balls = itemsByType(TYPE.BALL)
-      //length - 2 to avoid touching acid rain ball
-  		for (i = 0; i < balls.length - 2; i++) {
-        let newElement = lcg.rollBetween(1, 3)
-        //want value to be any of 1,2,4
-        if (newElement == 3) {
-          newElement++
-        }
-        setBallToElement(balls[i], newElement, data)
-		  }
+      if (options.startingItems) {
+        let startingItemIndex = 0
+        //randomize weapon
+        let swords = itemsByType(TYPE.SWORD)
+        let wands = itemsByType(TYPE.WAND)
+        let weapons = swords.concat(wands)
+        let weaponIndex = lcg.rollBetween(0, weapons.length-1)
+        setItem(startingItemIndex++, weapons[weaponIndex], data)
+        //randomize shield
+        let shields = itemsByType(TYPE.SHIELD)
+        let shieldIndex = lcg.rollBetween(0, shields.length-1)
+        setItem(startingItemIndex++, shields[shieldIndex], data)
+        //randomize ball
+        let balls = itemsByType(TYPE.BALL)
+        let ballIndex = lcg.rollBetween(0, balls.length-1)
+        setItem(startingItemIndex++, balls[ballIndex], data)
+        //randomize egg
+        let eggs = itemsByType(TYPE.EGG)
+        let eggIndex = lcg.rollBetween(0, eggs.length-1)
+        setItem(startingItemIndex++, eggs[eggIndex], data)
+
+        writeMissingBallNames(data)
+      }
+      if (options.ballElements) {
+        let balls = itemsByType(TYPE.BALL)
+        //length - 2 to avoid touching acid rain ball
+    		for (i = 0; i < balls.length - 2; i++) {
+          let newElement = lcg.rollBetween(1, 3)
+          //want value to be any of 1,2,4  FIXME replace with actual elements reference
+          if (newElement == 3) {
+            newElement++
+          }
+          setBallToElement(balls[i].id, newElement, data)
+		    }
+      }
     }
   }
 
@@ -198,15 +200,13 @@
     let ballItem = itemFromID(ball, TYPE.BALL)
     let ballBitfield = data.readByte(ballItem.address + itemOffsets.bitfield)
     // if ball is not normally in game, give it default buy/sell prices
-    if (ballBitfield & 0x00010000 != 0) {
-      const defaultBuyPrice = 0x64
+    if (ballBitfield & 0x10 != 0) {
       const defaultSellPrice = 0x01f4
-      data.writeShort(ballItem.address + itemOffsets.buyPrice, defaultBuyPrice)
       data.writeShort(ballItem.address + itemOffsets.sellPrice, defaultSellPrice)
     }
 
     //set ball's new element
-    data.writeByte(ballItem.address + itemOffsets.bitfield, (0xFFFF0000 & ballBitfield) | element)
+    data.writeByte(ballItem.address + itemOffsets.bitfield, (0xF0 & ballBitfield) | element)
     let newBallName = ballItem.names[element - 1]
     //if new name is 0, keep old name
     if (newBallName != 0) {
@@ -217,6 +217,23 @@
     if (newBallDesc != 0) {
       data.writeWord(ballItem.address + itemOffsets.description, newBallDesc)
     }
+
+    //need to change buy price since reusing that field as actual spell
+    let newSpellId = ballItem.spellId
+    //FIXME replace with actual elements reference
+    let spellElement = ((ballItem.spellId - 1) % 3) + 1
+    if (spellElement == 3) {
+      spellElement++
+    }
+    while (spellElement < element) {
+      spellElement *= 2
+      newSpellId++
+    }
+    while (spellElement > element) {
+      spellElement /= 2
+      newSpellId--
+    }
+    data.writeByte(ballItem.address + itemOffsets.buyPrice, newSpellId)
   }
 
   function allowAnyBalls(data) {
