@@ -5,6 +5,7 @@
   let version
   let constants
   let util
+  let text
   let presets
   let items
   let monsters
@@ -22,10 +23,18 @@
 
   let worker
   if (window) {
-    worker = new Worker('worker.js')
+    /*if (isRunningLocally()) {
+      worker = new Worker(URL.createObjectURL(new Blob(["("+adRando.worker.workerFunction.toString()+")()"], {type: 'text/javascript'})));
+      worker.onmessage = function(e) {
+        console.log('Message received from worker');
+      }
+    } else {*/
+      worker = new Worker('worker.js')
+    //}
     worker.addEventListener('message', workerMessage);
     constants = adRando.constants
     util = adRando.util
+    text = adRando.text
     presets = adRando.presets
     items = adRando.items
     monsters = adRando.monsters
@@ -33,9 +42,20 @@
     version = require('./package').version
     constants = require('./constants')
     util = require('./util')
+    text = require('./text')
     presets = require('./presets')
     items = require('./items')
     monsters = require('./monsters')
+  }
+
+  function isRunningLocally() {
+    if (window) {
+      const url = new URL(window.location.href)
+      return url.hostname === 'localhost'
+        || url.hostname.match(/^dev\./)
+        || url.protocol === 'file:'
+    }
+    return false
   }
 
   function loadOption(name, changeHandler, defaultValue) {
@@ -701,6 +721,7 @@
       process.exit(1)
     }
     let hex = util.setSeedAzureDreams(check, seed)
+    text.writeTextToFile(check, constants.romAddresses.angelFirstWord, "Azure Dreams Randomizer\\nSeed: "+seed.toString()+"\\nhttps://programmar-r.github.io/\\p\\c"+"\\3".repeat(13))
     //also applies several other options due to difficulties when calling from here
     monsters.setEnemizer(applied, check, hex)
     adRando.items.setStartingItems(options, check, hex)
@@ -931,9 +952,7 @@
     if (path.match(/index\.html$/)) {
       path = path.slice(0, path.length - 10)
     }
-    if (url.hostname === 'localhost'
-        || url.hostname.match(/^dev\./)
-        || url.protocol === 'file:') {
+    if (isRunningLocally()) {
       document.getElementById('dev-border').classList.add('dev')
     }
     if (!elems.preset.checked) {

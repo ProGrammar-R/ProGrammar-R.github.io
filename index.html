@@ -140,16 +140,16 @@
                  class="pure-button pure-button-primary"
                  disabled="disabled"
                  value="Randomize">
-          <input id="copy"
-                 type="submit"
-                 class="pure-button"
-                 disabled="disabled"
-                 value="Copy seed">
           <input id="makeCue"
                  type="submit"
                  class="pure-button"
                  disabled="disabled"
                  value="Create CUE">
+          <input id="copy"
+                 type="submit"
+                 class="pure-button"
+                 disabled="disabled"
+                 value="Copy seed">
         </p>
         <a id="download" style="display:none"></a>
         <a id="downloadCue" style="display:none"></a>
@@ -164,9 +164,15 @@
         disc in BIN/CUE format.
       </p>
       <p>
+        To use this site, first put your BIN file into the top box.
+        Next, choose whatever options you want to use. If you cannot change any options, either a preset is selected (uncheck "Preset" to change options) or the link you clicked contained a seed
+        (in which case you should use the same settings as the other person).
+        Now click Randomize and a new BIN file will be created.
+      </p>
+      <p>
         If the seed name is appended to your randomized image filename after
-        downloading, you will need to modify your cue file track listing to
-        reference the new filename. You can also create a new cue file using the feature above, assuming the bin file uses mode 2 encoding.
+        downloading, you will need create a new CUE file using the Create CUE button
+        (or modify your CUE file track listing to reference the new filename).
       </p>
       <p>
         Do not overwrite your original BIN file; keep it somewhere safe or you may need to obtain it again from your original disc.
@@ -174,7 +180,7 @@
       <hr>
       <h2><a name="about">About</a></h2>
       <p>
-        The de-randomizer sets the each floor layout based off of the floor number, number of climbs up the tower,
+        The (de-)randomizer sets the each floor layout based off of the floor number, number of climbs up the tower,
         and a random seed. As such, each trip up the tower should be unique but consistent with anyone else using the same seed.
       </p>
       <p>
@@ -189,13 +195,17 @@
       <ul>
         <li><a href="https://sotn.io/">SotN Randomizer</a>, from which this project is derived
                (under the terms of the <a href="https://github.com/3snowp7im/SotN-Randomizer/blob/master/LICENSE">WTFPL</a> - thanks Wild Mouse)</li>
-        <li><a href="https://discord.gg/fEzBz8">Azure Dreams Speedruns</a>, an AD discord server</li>
+        <li><a href="https://discord.gg/fEzBz8">Azure Dreams Speedruns</a>, an AD discord server. All are welcome, from casual fans to speedrunners.</li>
         <li><a href="https://www.mozilla.org/en-US/MPL/">Mozilla Public License 2.0</a>, the license under which this software is released</li>
       </ul>
       <hr>
       <h2><a name="bugs">Bugs</a></h2>
       <p>
-        Known issues: when using a URL generated using "Copy seed", the "Safe" preset still applies regardless of the flags selected. I suggest passing the seed and list of flags separately until I fix this.
+        All known issues are limitations of the original game:
+        <ul>
+          <li>When randomizing starting items, eggs of evolved monsters will show up in-game as just " egg" [sic].</li>
+          <li>Defeating enemies on the highest floors in endurance mode can give you too much EXP and cause the game to crash.</li>
+        </ul>
       </p>
       <p>
         Please report any other issues, especially inconsistent spawns of a given floor on the same trip up the tower using
@@ -204,6 +214,11 @@
       </p>
       <hr>
       <h2><a name="changelog">Changelog</a></h2>
+      <h3><time>August 9, 2019</time></h3>
+      <ul>
+        <li>v1.6.2 Fixed URLs generated when pressing "Copy seed", so link sharing should now work. Seed is now embedded into angel's opening text.
+        Adjusted help text based on most commonly received questions</li>
+      </ul>
       <h3><time>August 4, 2019</time></h3>
       <ul>
         <li>v1.6.1-beta Added option to randomize spell ball elements. Balls with non-native elements use the name and description of the corresponding spell.</li>
@@ -287,8 +302,9 @@
     </div>
     <div id="dev-border"></div>
     <script src="constants.js"></script>
-    <script src="items.js"></script>
     <script src="util.js"></script>
+    <script src="items.js"></script>
+    <script src="text.js"></script>
     <script src="monsters.js"></script>
     <script src="presets/safe.js"></script>
     <script src="presets/index.js"></script>

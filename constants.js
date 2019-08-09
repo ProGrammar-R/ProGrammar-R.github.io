@@ -40,6 +40,10 @@
     'USABLE',
   ]
 
+  const romAddresses = {
+    angelFirstWord: 0xee5f97
+  }
+
   const ZONE = {
     ST0:  0,  // Final Stage: Bloodlines
     ARE:  1,  // Colosseum
@@ -90,6 +94,7 @@
     defaultOptions: defaultOptions,
     TYPE: TYPE,
     typeNames: typeNames,
+    romAddresses: romAddresses,
     ZONE: ZONE,
     lcgConstants: lcgConstants,
     tileIdOffset: 0x80,

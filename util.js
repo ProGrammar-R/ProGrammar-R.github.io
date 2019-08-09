@@ -108,6 +108,10 @@
     this.writeShort(address + 2, val >>> 16)
   }
 
+  checked.prototype.writeLEShort = function writeLEShort(address, val) {
+    this.writeShort(address, changeEndianShort(val))
+  }
+
   checked.prototype.writeInstruction = function writeInstruction(address, val) {
     this.writeWord(address, changeEndianWord(val))
   }
@@ -354,7 +358,7 @@
   }
 
   function optionsToUrl(options, checksum, seed, baseUrl) {
-    options = constants.defaultOptions
+    options = optionsToString(options)
     const args = []
     if (options !== constants.defaultOptions) {
       args.push(options)
