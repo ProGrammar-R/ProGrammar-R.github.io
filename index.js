@@ -23,14 +23,7 @@
 
   let worker
   if (window) {
-    /*if (isRunningLocally()) {
-      worker = new Worker(URL.createObjectURL(new Blob(["("+adRando.worker.workerFunction.toString()+")()"], {type: 'text/javascript'})));
-      worker.onmessage = function(e) {
-        console.log('Message received from worker');
-      }
-    } else {*/
-      worker = new Worker('worker.js')
-    //}
+    worker = new Worker('worker.js')
     worker.addEventListener('message', workerMessage);
     constants = adRando.constants
     util = adRando.util
@@ -164,6 +157,7 @@
       elems.nonnativeSpellsLevel.disabled = true
       elems.starterElement.disabled = true
       elems.hiddenSpells.disabled = true
+      elems.newBalls.disabled = true
       elems.startingItems.disabled = true
       elems.ballElements.disabled = true
       elems.singleRoom.disabled = true
@@ -179,6 +173,7 @@
       elems.nonnativeSpellsLevel.disabled = false
       elems.starterElement.disabled = false
       elems.hiddenSpells.disabled = false
+      elems.newBalls.disabled = false
       elems.startingItems.disabled = false
       elems.ballElements.disabled = false
       elems.singleRoom.disabled = false
@@ -201,10 +196,11 @@
       elems.nonnativeSpellsLevel.checked = !!options.nonnativeSpellsLevel
       elems.starterElement.value = options.starterElement
       elems.hiddenSpells.value = options.hiddenSpells
+      elems.newBalls.checked = !!options.newBalls
       elems.startingItems.checked = !!options.startingItems
       elems.ballElements.checked = !!options.ballElements
       elems.singleRoom.checked = !!options.singleRoom
-      elems.endurance.checked = !!options.endurance
+      elems.endurance.value = options.endurance
     }
   }
 
@@ -251,6 +247,10 @@
     localStorage.setItem('hiddenSpells', elems.hiddenSpells.value)
   }
 
+  function newBallsChange() {
+    localStorage.setItem('newBalls', elems.newBalls.checked)
+  }
+
   function startingItemsChange() {
     localStorage.setItem('startingItems', elems.startingItems.checked)
   }
@@ -264,7 +264,7 @@
   }
 
   function enduranceChange() {
-    localStorage.setItem('endurance', elems.endurance.checked)
+    localStorage.setItem('endurance', elems.endurance.value)
   }
 
   function appendSeedChange() {
@@ -329,10 +329,11 @@
       nonnativeSpellsLevel: elems.nonnativeSpellsLevel.checked,
       starterElement: elems.starterElement.value,
       hiddenSpells: elems.hiddenSpells.value,
+      newBalls: elems.newBalls.checked,
       startingItems: elems.startingItems.checked,
       ballElements: elems.ballElements.checked,
       singleRoom: elems.singleRoom.checked,
-      endurance: elems.endurance.checked,
+      endurance: elems.endurance.value,
     }
     return options
   }
@@ -410,6 +411,7 @@
     elems.nonnativeSpellsLevel.disabled = false
     elems.starterElement.disabled = false
     elems.hiddenSpells.disabled = false
+    elems.newBalls.disabled = false
     elems.startingItems.disabled = false
     elems.ballElements.disabled = false
     elems.singleRoom.disabled = false
@@ -722,6 +724,7 @@
     }
     let hex = util.setSeedAzureDreams(check, seed)
     text.writeTextToFile(check, constants.romAddresses.angelFirstWord, "Azure Dreams Randomizer\\nSeed: "+seed.toString()+"\\nhttps://programmar-r.github.io/\\p\\c"+"\\3".repeat(13))
+    //text.writeBattleTextToFile(check, constants.romAddresses.isExhaustedBattleText, "collapsed.\\p\\0")
     //also applies several other options due to difficulties when calling from here
     monsters.setEnemizer(applied, check, hex)
     adRando.items.setStartingItems(options, check, hex)
@@ -783,6 +786,7 @@
       nonnativeSpellsLevel: document.getElementById('non-native-spells-level'),
       starterElement: document.getElementById('starter-element'),
       hiddenSpells: document.getElementById('hidden-spells'),
+      newBalls: document.getElementById('new-balls'),
       startingItems: document.getElementById('starting-items'),
       ballElements: document.getElementById('ball-elements'),
       singleRoom: document.getElementById('single-room'),
@@ -812,6 +816,7 @@
     elems.nonnativeSpellsLevel.addEventListener('change', nonnativeSpellsLevelChange)
     elems.starterElement.addEventListener('change', starterElementChange)
     elems.hiddenSpells.addEventListener('change', hiddenSpellsChange)
+    elems.newBalls.addEventListener('change', newBallsChange)
     elems.startingItems.addEventListener('change', startingItemsChange)
     elems.ballElements.addEventListener('change', ballElementsChange)
     elems.singleRoom.addEventListener('change', singleRoomChange)
@@ -919,6 +924,9 @@
       elems.hiddenSpells.value = applied.hiddenSpells
       hiddenSpellsChange()
       elems.hiddenSpells.disabled = true
+      elems.newBalls.checked = applied.newBalls
+      newBallsChange()
+      elems.newBalls.disabled = true
       elems.startingItems.checked = applied.startingItems
       startingItemsChange()
       elems.startingItems.disabled = true
@@ -928,7 +936,7 @@
       elems.singleRoom.checked = applied.singleRoom
       singleRoomChange()
       elems.singleRoom.disabled = true
-      elems.endurance.checked = applied.endurance
+      elems.endurance.value = applied.endurance
       enduranceChange()
       elems.endurance.disabled = true
       elems.clear.classList.remove('hidden')
@@ -964,10 +972,11 @@
       loadOption('nonnativeSpellsLevel', nonnativeSpellsLevelChange, false)
       loadOption('starterElement', starterElementChange, util.getDefaultFromList(monsters.allElements).ID)
       loadOption('hiddenSpells', hiddenSpellsChange, util.getDefaultFromList(monsters.hiddenSpellOptions).ID)
+      loadOption('newBalls', newBallsChange, false)
       loadOption('startingItems', startingItemsChange, false)
       loadOption('ballElements', ballElementsChange, false)
       loadOption('singleRoom', singleRoomChange, false)
-      loadOption('endurance', enduranceChange, false)
+      loadOption('endurance', enduranceChange, 0)
     }
     loadOption('appendSeed', appendSeedChange, true)
     loadOption('experimentalChanges', experimentalChangesChange, false)

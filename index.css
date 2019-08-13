@@ -93,6 +93,10 @@ fieldset .pure-g .pure-u-12-24, fieldset .pure-g .pure-u-1 {
     visibility: hidden;
 }
 
+select:disabled {
+    color: graytext;
+}
+
 #loader {
     height: 4px;
     width: 100%;

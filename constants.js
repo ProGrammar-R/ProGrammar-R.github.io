@@ -41,7 +41,8 @@
   ]
 
   const romAddresses = {
-    angelFirstWord: 0xee5f97
+    angelFirstWord: 0xee5f97,
+    isExhaustedBattleText: 0x1cbcc3c,
   }
 
   const ZONE = {

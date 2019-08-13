@@ -233,7 +233,9 @@
           i++
         }
         break
-	    case 'I':
+	  	case 'w':
+        options.newBalls = true
+	  	case 'I':
         options.startingItems = true
         break
       case 'B':
@@ -243,7 +245,25 @@
         options.singleRoom = true
         break
       case 'N':
-        options.endurance = true
+        // Check for an argument.
+        if (randomize[i] !== ':') {
+          throw new Error('Expected argument')
+        }
+
+        // Parse the arg name.
+        start = ++i
+        while (i < randomize.length
+               && [',', ':'].indexOf(randomize[i]) === -1) {
+          i++
+        }
+        arg = randomize.slice(start, i)
+        if (!arg.length) {
+          throw new Error('Expected argument')
+        }
+        options.endurance = arg
+        if (randomize[i] === ',') {
+          i++
+        }
         break
       default:
         throw new Error('Invalid randomization: ' + c)
@@ -309,6 +329,11 @@
       } else if ('hiddenSpells' in options) {
         randomize += 'h:' + options.hiddenSpells + ','
         delete options.hiddenSpells
+      } else if ('newBalls' in options) {
+        if (options.newBalls) {
+          randomize += 'w'
+        }
+        delete options.newBalls
       } else if ('startingItems' in options) {
         if (options.startingItems) {
           randomize += 'I'
@@ -325,9 +350,7 @@
         }
         delete options.singleRoom
       } else if ('endurance' in options) {
-        if (options.endurance) {
-          randomize += 'N'
-        }
+        randomize += 'N:' + options.endurance + ','
         delete options.endurance
       } else {
         const unknown = Object.getOwnPropertyNames(options).pop()
@@ -533,7 +556,7 @@
       data.writeByte(wakeAddress++, 0x00)
       data.writeWord(wakeAddress, 0x8002221e) //skip to address -1
     }
-    if (options.endurance) {
+    if (options.endurance >= 0) {
       const top = 0x63
       //8001788c
       data.writeByte(0x1ea5974, top)
@@ -564,58 +587,61 @@
       spawnCodeAddresses.forEach(function(spawnCodeAddr) {
         //move new instructions in place
         const newSpawnCode = [
-          0x28000624, //li    a2,40
-          0x033c0700, //sra	  a3,a3,0x10
-          0x1b00e600, //divu  a3,a2
-          0x1000a627, //addiu	a2,sp,16
-          0x00000000, //nop
-          0x10380000, //mfhi  a3
-          0x12800000, //mflo  s0
-          0x2000bfaf, //sw	  ra,32(sp)
-          0xb5fd000c, //                      jal	0x8003f6d4
-          0x5e3fe724, //                      addiu	a3,a3,16222                 ; a3 = floor number + 0x3f5e
-          0x06000424, //                      li	a0,6                            ; a0 = 6
-          0x1000a527, //                      addiu	a1,sp,16
-          0x3ff9000c, //                      jal	0x8003e4fc
-          0x21300000, //                      move	a2,zero                         ; a2 = 0
-          0xc8fc000c, //                      jal	0x8003f320
-          0x00000000, //                      nop
-          0x0880023c, //                      lui	v0,0x8008                       ; v0 = 0x80080000
-          0x7834428c, //                      lw	v0,13432(v0)                    ; v0 = $80083478
-          0x00a02626, //                      addiu	a2,s1,-24576                ; a2 = 0x8014a000
-          0x28000324, //li    v1,40
-          0x19007000, //multu v1,s0
-          0x10000324, //li    v1,16
-          0x00000000, //nop
-          0x12800000, //mflo  s0
+          {instruction: 0x28000624, setsDifficulty: false,}, //li    a2,40
+          {instruction: 0x033c0700, setsDifficulty: false,}, //sra	  a3,a3,0x10
+          {instruction: 0x1b00e600, setsDifficulty: false,}, //divu  a3,a2
+          {instruction: 0x1000a627, setsDifficulty: false,}, //addiu	a2,sp,16
+          {instruction: 0x00000000, setsDifficulty: false,}, //nop
+          {instruction: 0x10380000, setsDifficulty: false,}, //mfhi  a3
+          {instruction: 0x12800000, setsDifficulty: false,}, //mflo  s0
+          {instruction: 0x2000bfaf, setsDifficulty: false,}, //sw	  ra,32(sp)
+          {instruction: 0xb5fd000c, setsDifficulty: false,}, //                      jal	0x8003f6d4
+          {instruction: 0x5e3fe724, setsDifficulty: false,}, //                      addiu	a3,a3,16222                 ; a3 = floor number + 0x3f5e
+          {instruction: 0x06000424, setsDifficulty: false,}, //                      li	a0,6                            ; a0 = 6
+          {instruction: 0x1000a527, setsDifficulty: false,}, //                      addiu	a1,sp,16
+          {instruction: 0x3ff9000c, setsDifficulty: false,}, //                      jal	0x8003e4fc
+          {instruction: 0x21300000, setsDifficulty: false,}, //                      move	a2,zero                         ; a2 = 0
+          {instruction: 0xc8fc000c, setsDifficulty: false,}, //                      jal	0x8003f320
+          {instruction: 0x00000000, setsDifficulty: false,}, //                      nop
+          {instruction: 0x0880023c, setsDifficulty: false,}, //                      lui	v0,0x8008                       ; v0 = 0x80080000
+          {instruction: 0x7834428c, setsDifficulty: false,}, //                      lw	v0,13432(v0)                    ; v0 = $80083478
+          {instruction: 0x00a02626, setsDifficulty: false,}, //                      addiu	a2,s1,-24576                ; a2 = 0x8014a000
+          {instruction: 0x28000324, setsDifficulty: true,},  //li    v1,40
+          {instruction: 0x19007000, setsDifficulty: false,}, //multu v1,s0
+          {instruction: 0x10000324, setsDifficulty: false,}, //li    v1,16
+          {instruction: 0x00000000, setsDifficulty: false,}, //nop
+          {instruction: 0x12800000, setsDifficulty: false,}, //mflo  s0
                       //loop:
-          0x0000c490, //lbu	  a0,0(a2)
-          0x0100c590, //lbu   a1,1(a2)
-          0x02008014, //bnez	a0,2
-          0x00000000, //nop
-          0x20000424, //li    a0,20
+          {instruction: 0x0000c490, setsDifficulty: false,}, //lbu	  a0,0(a2)
+          {instruction: 0x0100c590, setsDifficulty: false,}, //lbu   a1,1(a2)
+          {instruction: 0x02008014, setsDifficulty: false,}, //bnez	a0,2
+          {instruction: 0x00000000, setsDifficulty: false,}, //nop
+          {instruction: 0x20000424, setsDifficulty: false,}, //li    a0,20
 
-          0x000044a0, //sb    a0,0(v0)
-          0x2128b000, //addu  a1,a1,s0
-          0x0001a42c, //sltiu a0,a1,256
-          0x0200801c, //bgtz  a0,8
-          0x00000000, //nop
-          0xff000524, //li    a1,255
-          0x010045a0, //sb    a1,1(v0)
-          0x0200c624, //addiu a2,a2,2
-          0x02004224, //addiu v0,v0,2
-          0xf1ff6014, //bnez  v1,loop
-          0xffff6324, //addiu	v1,v1,-1
-          0x00a03026, //addiu	s0,s1,-24576
+          {instruction: 0x000044a0, setsDifficulty: false,}, //sb    a0,0(v0)
+          {instruction: 0x2128b000, setsDifficulty: false,}, //addu  a1,a1,s0
+          {instruction: 0x0001a42c, setsDifficulty: false,}, //sltiu a0,a1,256
+          {instruction: 0x0200801c, setsDifficulty: false,}, //bgtz  a0,8
+          {instruction: 0x00000000, setsDifficulty: false,}, //nop
+          {instruction: 0xff000524, setsDifficulty: false,}, //li    a1,255
+          {instruction: 0x010045a0, setsDifficulty: false,}, //sb    a1,1(v0)
+          {instruction: 0x0200c624, setsDifficulty: false,}, //addiu a2,a2,2
+          {instruction: 0x02004224, setsDifficulty: false,}, //addiu v0,v0,2
+          {instruction: 0xf1ff6014, setsDifficulty: false,}, //bnez  v1,loop
+          {instruction: 0xffff6324, setsDifficulty: false,}, //addiu	v1,v1,-1
+          {instruction: 0x00a03026, setsDifficulty: false,}, //addiu	s0,s1,-24576
 
-          0x00000000,
-          0x00000000,
-          0x00000000,
-          0x00000000,
-          0x00000000,
+          {instruction: 0x00000000, setsDifficulty: false,}, //nop
+          {instruction: 0x00000000, setsDifficulty: false,}, //nop
+          {instruction: 0x00000000, setsDifficulty: false,}, //nop
+          {instruction: 0x00000000, setsDifficulty: false,}, //nop
+          {instruction: 0x00000000, setsDifficulty: false,}, //nop
         ]
         newSpawnCode.forEach(function(instruction) {
-            data.writeInstruction(spawnCodeAddr, instruction)
+            data.writeInstruction(spawnCodeAddr, instruction.instruction)
+            if (instruction.setsDifficulty) {
+            	data.writeByte(spawnCodeAddr, options.endurance & 0xff)
+            }
             spawnCodeAddr += 4
           }
         )
@@ -676,6 +702,7 @@
     nonnativeSpellsLevel,
     starterElement,
     hiddenSpells,
+    newBalls,
     startingItems,
     ballElements,
     singleRoom,
@@ -694,6 +721,7 @@
     this.nonnativeSpellsLevel = nonnativeSpellsLevel,
     this.starterElement = starterElement,
     this.hiddenSpells = hiddenSpells,
+    this.newBalls = newBalls,
     this.startingItems = startingItems,
     this.ballElements = ballElements,
     this.singleRoom = singleRoom,
@@ -789,10 +817,11 @@
     this.nonnativeSpellsLevel = false
     this.starterElement = -3
     this.hiddenSpells = 0
+    this.newBalls = false
     this.startingItems = false
     this.ballElements = false
     this.singleRoom = false
-    this.endurance = false
+    this.endurance = 0
   }
 
   // Convert lock sets into strings.
@@ -819,6 +848,7 @@
     const nonnativeSpellsLevel = self.nonnativeSpellsLevel
     const starterElement = self.starterElement
     const hiddenSpells = self.hiddenSpells
+    const newBalls = self.newBalls
     const startingItems = self.startingItems
     const ballElements = self.ballElements
     const singleRoom = self.singleRoom
@@ -837,6 +867,7 @@
       nonnativeSpellsLevel,
       starterElement,
       hiddenSpells,
+      newBalls,
       startingItems,
       ballElements,
       singleRoom,

@@ -70,7 +70,7 @@
               </div>
               <div class="pure-u-12-24">
                 <input id="barongs" type="checkbox">
-                <label for="barongs">Randomize Barongs floors</label>
+                <label for="barongs">Randomize Barong floors</label>
               </div>
               <div class="pure-u-12-24">
                 <input id="ball-elements" type="checkbox">
@@ -92,9 +92,13 @@
                 <label for="hidden-spells">Dormant spells awakened for</label>
                 <select id="hidden-spells"></select>
               </div>
-              <div class="pure-u-1">
+              <div class="pure-u-12-24">
                 <input id="non-native-spells-level" type="checkbox">
-                <label for="non-native-spells-level">Spells always level up regardless of monster's element</label>
+                <label for="non-native-spells-level">Spells level up regardless of monster's element</label>
+              </div>
+              <div class="pure-u-12-24">
+                <input id="new-balls" type="checkbox">
+                <label for="new-balls">Add new spell balls</label>
               </div>
               <div class="pure-u-1">
                 <br>
@@ -104,9 +108,14 @@
                 <input id="single-room" type="checkbox">
                 <label for="single-room">All single-room floors</label>
               </div>
-              <div class="pure-u-12-24">
-                <input id="endurance" type="checkbox">
+              <div id="endurance-select" class="pure-u-12-24">
                 <label for="endurance">Endurance mode (99 floors)</label>
+                <select id="endurance">
+                  <option value=0>Off</option>
+                  <option value=30>Easy (+30)</option>
+                  <option value=40>Normal (+40)</option>
+                  <option value=50>Hard (+50)</option>
+                </select>
               </div>
               <div class="pure-u-1" hidden="hidden">
                 <input id="experimental-changes" type="checkbox">
@@ -214,6 +223,11 @@
       </p>
       <hr>
       <h2><a name="changelog">Changelog</a></h2>
+      <h3><time>August 12, 2019</time></h3>
+      <ul>
+        <li>v1.6.3 Made endurance mode have three difficulties as defined by the enemy scaling, where "Normal" was the previous version of endurance mode.
+        Added option to add new spell balls, which will now only appear as possible starting items in itemizer if this is checked.</li>
+      </ul>
       <h3><time>August 9, 2019</time></h3>
       <ul>
         <li>v1.6.2 Fixed URLs generated when pressing "Copy seed", so link sharing should now work. Seed is now embedded into angel's opening text.
