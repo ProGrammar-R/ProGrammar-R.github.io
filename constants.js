@@ -43,6 +43,8 @@
   const romAddresses = {
     angelFirstWord: 0xee5f97,
     isExhaustedBattleText: 0x1cbcc3c,
+    pauseAfterDeathText: 0x55b71,
+    pauseAfterDeathCode: 0x1c5e470,
   }
 
   const ZONE = {

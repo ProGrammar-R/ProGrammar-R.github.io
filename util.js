@@ -653,6 +653,29 @@
     //}
   }
 
+  function pauseAfterDeath(data) {
+    // write text that is directed to after death to introduce a pause
+    data.writeLEShort(constants.romAddresses.pauseAfterDeathText, 0x1101)
+
+    // now add a new condition for exiting, which is done such that if the demo were to die, it might also be possible for it to exit to Koh's house or crash
+    let pauseCodeAddr = constants.romAddresses.pauseAfterDeathCode
+    const pauseCode = [
+          {instruction: 0x0880023c,}, //lui v0,0x8008
+          {instruction: 0xe02a428c,}, //lw v0,0x2ae0(v0) (is story text cursor on 00?)
+          {instruction: 0x00000000,}, //nop
+          {instruction: 0x00004290,}, //lbu v0,0(v0)
+          {instruction: 0x00000000,}, //nop
+          {instruction: 0x3400401c,}, //bgtz	v0,0x8008e250
+          {instruction: 0x960002a6,}, //sh	v0,150(s0)
+          {instruction: 0x6a380208,}, //j 0x8008e1a8
+         ]
+    pauseCode.forEach(function(instruction) {
+        data.writeInstruction(pauseCodeAddr, instruction.instruction)
+        pauseCodeAddr += 4
+      }
+    )
+  }
+
   function saltSeed(version, options, seed) {
     const str = JSON.stringify({
       version: version,
@@ -926,6 +949,7 @@
     optionsFromUrl: optionsFromUrl,
     optionsToUrl: optionsToUrl,
     setSeedAzureDreams: setSeedAzureDreams,
+    pauseAfterDeath: pauseAfterDeath,
     saltSeed: saltSeed,
     setAppliedOptions: setAppliedOptions,
     restoreFile: restoreFile,
