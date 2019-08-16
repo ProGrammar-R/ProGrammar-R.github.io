@@ -54,10 +54,10 @@
   function loadOption(name, changeHandler, defaultValue) {
     const value = localStorage.getItem(name)
     if (typeof(value) === 'string') {
-      if (name === 'starter' || name === 'hiddenSpells' || name === 'starterElement') {
-        elems[name].value = value
-      } else {
+      if (value === 'true' || value === 'false') {
         elems[name].checked = value === 'true'
+      } else {
+        elems[name].value = value
       }
     } else {
       elems[name].checked = defaultValue
