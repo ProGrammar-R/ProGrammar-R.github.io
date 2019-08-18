@@ -946,6 +946,7 @@
     numToHex: numToHex,
     checked: checked,
     optionsFromString: optionsFromString,
+    optionsToString: optionsToString,
     optionsFromUrl: optionsFromUrl,
     optionsToUrl: optionsToUrl,
     setSeedAzureDreams: setSeedAzureDreams,
