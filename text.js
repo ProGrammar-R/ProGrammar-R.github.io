@@ -211,7 +211,12 @@
       }
       toConvert = ""
     }
+    return address + offset
+  }
+
+  function ensureNextCharIsValid(data, address) {
     //attempt to fix some slight offset issues
+    let offset = 0
     let nextByte = data.readByte(address + offset)
     let nextByteIsValid = false
     for (var i = 0; i < validTextBytes.length; i++) {
@@ -223,7 +228,15 @@
     if (!nextByteIsValid) {
       data.writeByte(address + offset++, 0x03)
     }
-    return offset
+    return address + offset
+  }
+
+  function fillTextToNextPrompt(data, address) {
+    let offset = 0
+    while (data.readByte(address + offset) !== 0x11) {
+      data.writeByte(address + offset++, 0x03)
+    }
+    return address + offset
   }
 
   function writeBattleTextToFile(data, address, text) {
@@ -244,11 +257,21 @@
       }
       toConvert = ""
     }
+    return address + offset
+  }
+
+  function embedSeedAndFlagsInAngelText(data, seed, options) {
+    let nextAddress = writeTextToFile(data, constants.romAddresses.angelFirstWord, "Azure Dreams Randomizer\\nhttps://programmar-r.github.io/\\p\\c"
+    nextAddress = writeTextToFile(data, nextAddress, "Seed: " + seed.toString())
+    let optionString = util.optionsToString(options)
+    nextAddress = writeTextToFile(data, nextAddress, "\\nFlags: " optionString + "\\p\\c")
+    fillTextToNextPrompt(data, nextAddress)
   }
 
   const exports = {
     writeTextToFile: writeTextToFile,
     writeBattleTextToFile: writeBattleTextToFile,
+    embedSeedAndFlagsInAngelText: embedSeedAndFlagsInAngelText,
   }
   if (self) {
     self.adRando = Object.assign(self.adRando || {}, {
