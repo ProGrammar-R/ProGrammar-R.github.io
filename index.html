@@ -25,19 +25,13 @@
           <fieldset>
             <legend>Gameplay options</legend>
             <div class="pure-g">
-              <div class="pure-u-12-24">
+              <div class="pure-u-1">
                 <label for="seed">Seed:</label>
                 <input id="seed" type="text" placeholder="Optional">
               </div>
               <div class="pure-u-12-24">
-                <input id="derandomize" type="checkbox">
-                <label for="derandomize">De-randomize floors</label>
-              </div>
-              <div class="pure-u-12-24">
                 <input id="preset" type="checkbox">
                 <label for="preset">Preset</label>
-              </div>
-              <div id="preset-select" class="pure-u-12-24">
                 <select id="preset-id"></select>
                 <span class="tooltip-wrapper">
                   <span class="tooltip-indicator">?</span>
@@ -47,7 +41,12 @@
                   </span>
                 </span>
               </div>
+              <div class="pure-u-12-24">
+                <input id="derandomize" type="checkbox">
+                <label for="derandomize">Seeded tower (de-randomize floors)</label>
+              </div>
               <div class="pure-u-1">
+              <br>
                 <em>Skips</em>
               </div>
               <div class="pure-u-12-24">
@@ -82,13 +81,13 @@
                 <input id="ball-elements" type="checkbox">
                 <label for="ball-elements">Randomize spell ball elements</label>
               </div>
-              <div id="eggs-select" class="pure-u-12-24">
-                <label for="eggs">Randomize eggs</label>
-                <select id="eggs">
-                  <option value=0>Off</option>
-                  <option value=1>Match monsters</option>
-                  <option value=2>Random/option>
-                </select>
+              <div class="pure-u-12-24">
+                <input id="monster-elements" type="checkbox">
+                <label for="monster-elements">Randomize monster elements</label>
+              </div>
+              <div class="pure-u-12-24">
+                <input id="eggomizer" type="checkbox">
+                <label for="eggomizer">Randomize eggs</label>
               </div>
               <div id="starter-select" class="pure-u-12-24">
                 <label for="starter">Starting monster</label>
@@ -240,7 +239,7 @@
       <h2><a name="changelog">Changelog</a></h2>
       <h3><time>August xx, 2019</time></h3>
       <ul>
-        <li>v1.6.5 Added options to randomize eggs, make tutorial faster, and disable de-randomization.</li>
+        <li>v1.7.0 Added options to randomize eggs and enemy elements, make tutorial faster, and disable de-randomization.</li>
       </ul>
       <h3><time>August 14, 2019</time></h3>
       <ul>

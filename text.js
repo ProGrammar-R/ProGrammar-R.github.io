@@ -261,10 +261,10 @@
   }
 
   function embedSeedAndFlagsInAngelText(data, seed, options) {
-    let nextAddress = writeTextToFile(data, constants.romAddresses.angelFirstWord, "Azure Dreams Randomizer\\nhttps://programmar-r.github.io/\\p\\c"
+    let nextAddress = writeTextToFile(data, constants.romAddresses.angelFirstWord, "Azure Dreams Randomizer\\nhttps://programmar-r.github.io/\\p\\c")
     nextAddress = writeTextToFile(data, nextAddress, "Seed: " + seed.toString())
     let optionString = util.optionsToString(options)
-    nextAddress = writeTextToFile(data, nextAddress, "\\nFlags: " optionString + "\\p\\c")
+    //nextAddress = writeTextToFile(data, nextAddress, "\\nFlags: " optionString + "\\p\\c") FIXME
     fillTextToNextPrompt(data, nextAddress)
   }
 

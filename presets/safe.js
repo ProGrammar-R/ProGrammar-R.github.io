@@ -25,7 +25,8 @@
   const builder = new PresetBuilder(metadata)
 
   builder.tutorialSkip = true
-  builder.singleRoom = false
+  builder.introSkip = true
+  builder.derandomize = true
 
   // Export.
   const preset = builder.build()

@@ -240,10 +240,11 @@
     })
     setHiddenSpellsAvailable(options, data, starter)
     setRandomStarterElement(options, data, hex, starter)
+    randomizeMonsterElements(options, data, hex, starter)
   }
 
   function setRandomStarterElement(options, data, hex, starterId) {
-    let initialElementAddress = initialStatsAddress + starterId * initialStatsRowLength + initialStatsElementOffset
+    let initialElementAddress = getElementStatAddressForMonster(starterId)
     let starterElement = data.readByte(initialElementAddress)
     let starterDefaultElement = starterElement
     let tri = elementFromName("Tri").ID
@@ -318,6 +319,33 @@
         }
       })
     }
+  }
+
+  function randomizeMonsterElements(options, data, hex, starterId) {
+    const loadMonsterNopReferenceAddress = 0x2aa6a64
+    const getPaletteForMonsterAddress = 0x272bc
+    if (options.monsterElements) {
+      //override reference to loadMonsterNop with call to load monster palette
+      data.writeWord(loadMonsterNopReferenceAddress, 0x80042984)
+      //override check to only set friendly colors with nop
+      data.writeWord(getPaletteForMonsterAddress + 12, 0x00000000)
+
+      let lcgSeed = hex.length > 0 ? Math.abs(hex[0]) : 15;
+      let lcg = new util.LCG(constants.lcgConstants.modulus, constants.lcgConstants.multiplier, constants.lcgConstants.increment, lcgSeed)
+      let tri = elementFromName("Tri").ID
+      let primaryElements = getPrimaryElements()
+
+      allMonsters.forEach(function(monster) {
+        let initialElementAddress = getElementStatAddressForMonster(monster.ID)
+        if (monster.ID != starterId && data.readByte(initialElementAddress) != tri) {
+          data.writeByte(initialElementAddress, primaryElements[lcg.rollBetween(0, 2)].ID)
+        }
+      })
+    }
+  }
+
+  function getElementStatAddressForMonster(monsterID) {
+    return initialStatsAddress + monsterID * initialStatsRowLength + initialStatsElementOffset
   }
 
   const exports = {

@@ -155,11 +155,17 @@
           i++
         }
         break
+      case 'd':
+        options.derandomize = true
+        break
       case 't':
         options.tutorialSkip = true
         break
       case 'i':
         options.introSkip = true
+        break
+      case 'f':
+        options.fastTutorial = true
         break
       case 'e':
         options.enemizer = true
@@ -241,6 +247,12 @@
       case 'B':
         options.ballElements = true
         break
+      case 'm':
+        options.monsterElements = true
+        break
+      case 'g':
+        options.eggomizer = true
+        break
       case 's':
         options.singleRoom = true
         break
@@ -292,6 +304,11 @@
           randomize += ','
         }
         delete options.preset
+      } else if ('derandomize' in options) {
+        if (options.derandomize) {
+          randomize += 'd'
+        }
+        delete options.tutorialSkip
       } else if ('tutorialSkip' in options) {
         if (options.tutorialSkip) {
           randomize += 't'
@@ -302,6 +319,11 @@
           randomize += 'i'
         }
         delete options.introSkip
+      } else if ('fastTutorial' in options) {
+        if (options.fastTutorial) {
+          randomize += 'f'
+        }
+        delete options.fastTutorial
       } else if ('enemizer' in options) {
         if (options.enemizer) {
           randomize += 'e'
@@ -344,6 +366,16 @@
           randomize += 'B'
         }
         delete options.ballElements
+      } else if ('monsterElements' in options) {
+        if (options.monsterElements) {
+          randomize += 'm'
+        }
+        delete options.monsterElements
+      } else if ('eggomizer' in options) {
+        if (options.eggomizer) {
+          randomize += 'g'
+        }
+        delete options.eggomizer
       } else if ('singleRoom' in options) {
         if (options.singleRoom) {
           randomize += 's'
@@ -424,98 +456,101 @@
     '9': 0x8258,
   }
 
-  function setSeedAzureDreams(data, seed) {
-    //fix RNG sources
+  function setSeedAzureDreams(data, options, seed) {
+    //very important
+    data.writeInstruction(0x1c5879c,0x82778271)
+    data.writeInstruction(0x1c587a0,0x826d8266)
+
     data.writeInstruction(0x6f44ac,0x82718274)
     data.writeInstruction(0x6f44b0,0x826d826d)
     data.writeInstruction(0x6f44b4,0x82710061)
     data.writeByte(0x20efd72,0x71)
     data.writeByte(0x20efd79,0x74)
     data.writeInstruction(0x20efd7a,0x826d826d)
-    data.writeShort(0x1c6de68,0x1468)
-
-    //overwrite call to check_for_koh_icons to just return a constant v0 = 0
-    data.writeInstruction(0x1ea692c,0x8c66000c)
-    data.writeInstruction(0x218067c,0x8c66000c)
-
-    //overwrite first alt RNG to call custom routine
-    data.writeInstruction(0x1ea6e8c,0x7266000c)
-    data.writeInstruction(0x2180bdc,0x7266000c)
-
-    //very important
-    data.writeInstruction(0x1c5879c,0x82778271)
-    data.writeInstruction(0x1c587a0,0x826d8266)
-
-    //overwrite setting seed
-    data.writeInstruction(0x1ea6e8c+0x30,0x5c33b08c)
-    data.writeInstruction(0x1ea6e8c+0x34,0x00000000)
-    data.writeInstruction(0x1ea6e8c+0x38,0x00000000)
-    data.writeInstruction(0x2180bdc+0x30,0x5c33b08c)
-    data.writeInstruction(0x2180bdc+0x34,0x00000000)
-    data.writeInstruction(0x2180bdc+0x38,0x00000000)
-
-    const addresses = [
-      {start: 0x1ea7f70,},
-      {start: 0x2181cc0,}
-    ]
 
     let hex = sjcl.hash.sha256.hash(seed)
 
-    //write custom routine
-    var routine = [
-                {data: 0x0880033c, toSeed: false,},
-                {data: 0x6c146684, toSeed: false,},
-                {data: 0xe8ffbd27, toSeed: false,},
-                {data: 0x1400bfaf, toSeed: false,},
-                {data: 0x1000b0af, toSeed: false,},
-                {data: 0x0000043c, toSeed: true,},
-                {data: 0x00008434, toSeed: true,},
-                {data: 0x8e66000C, toSeed: false,},
-                {data: 0x2128c000, toSeed: false,},
-                {data: 0x21808000, toSeed: false,},
-                {data: 0x0000043c, toSeed: true,},
-                {data: 0x00008434, toSeed: true,},
-                {data: 0x8e66000C, toSeed: false,},
-                {data: 0xc2280600, toSeed: false,},
-                {data: 0x26800402, toSeed: false,},
-                {data: 0x0180033c, toSeed: false,},
-                {data: 0x2c02658c, toSeed: false,},
-                {data: 0x0000043c, toSeed: true,},
-                {data: 0x8e66000C, toSeed: false,},
-                {data: 0x00008434, toSeed: true,},
-                {data: 0x26800402, toSeed: false,},
-                {data: 0x0880033c, toSeed: false,},
-                {data: 0x5c3370ac, toSeed: false,},
-                {data: 0x1400bf8f, toSeed: false,},
-                {data: 0x1000b08f, toSeed: false,},
-                {data: 0x1800bd27, toSeed: false,},
-                {data: 0x0800e003, toSeed: false,},
-                {data: 0x00000224, toSeed: false,},
-                {data: 0x1f00a530, toSeed: false,},
-                {data: 0xffff023c, toSeed: false,},
-                {data: 0xffff4234, toSeed: false,},
-                {data: 0x0610a200, toSeed: false,},
-                {data: 0x26104200, toSeed: false,},
-                {data: 0x24108200, toSeed: false,},
-                {data: 0x0620a400, toSeed: false,},
-                {data: 0x0800e003, toSeed: false,},
-                {data: 0x25208200, toSeed: false,}]
+    if (options.derandomize) {
+      //fix RNG sources
+      data.writeShort(0x1c6de68,0x1468)
 
-    addresses.forEach(function(address) {
-      let a = 0
-      let v = 0
-      let s = 0
-      while (v < routine.length) {
-        let toWrite = routine[v].data
-        if (routine[v].toSeed) {
-          let seedVal = hex[s++] & 0xffff
-          toWrite = toWrite | (seedVal << 16)
+      //overwrite call to check_for_koh_icons to just return a constant v0 = 0
+      data.writeInstruction(0x1ea692c,0x8c66000c)
+      data.writeInstruction(0x218067c,0x8c66000c)
+
+      //overwrite first alt RNG to call custom routine
+      data.writeInstruction(0x1ea6e8c,0x7266000c)
+      data.writeInstruction(0x2180bdc,0x7266000c)
+
+      //overwrite setting seed
+      data.writeInstruction(0x1ea6e8c+0x30,0x5c33b08c)
+      data.writeInstruction(0x1ea6e8c+0x34,0x00000000)
+      data.writeInstruction(0x1ea6e8c+0x38,0x00000000)
+      data.writeInstruction(0x2180bdc+0x30,0x5c33b08c)
+      data.writeInstruction(0x2180bdc+0x34,0x00000000)
+      data.writeInstruction(0x2180bdc+0x38,0x00000000)
+
+      const addresses = [
+        {start: 0x1ea7f70,},
+        {start: 0x2181cc0,}
+      ]
+
+      //write custom routine
+      var routine = [
+                  {data: 0x0880033c, toSeed: false,},
+                  {data: 0x6c146684, toSeed: false,},
+                  {data: 0xe8ffbd27, toSeed: false,},
+                  {data: 0x1400bfaf, toSeed: false,},
+                  {data: 0x1000b0af, toSeed: false,},
+                  {data: 0x0000043c, toSeed: true,},
+                  {data: 0x00008434, toSeed: true,},
+                  {data: 0x8e66000C, toSeed: false,},
+                  {data: 0x2128c000, toSeed: false,},
+                  {data: 0x21808000, toSeed: false,},
+                  {data: 0x0000043c, toSeed: true,},
+                  {data: 0x00008434, toSeed: true,},
+                  {data: 0x8e66000C, toSeed: false,},
+                  {data: 0xc2280600, toSeed: false,},
+                  {data: 0x26800402, toSeed: false,},
+                  {data: 0x0180033c, toSeed: false,},
+                  {data: 0x2c02658c, toSeed: false,},
+                  {data: 0x0000043c, toSeed: true,},
+                  {data: 0x8e66000C, toSeed: false,},
+                  {data: 0x00008434, toSeed: true,},
+                  {data: 0x26800402, toSeed: false,},
+                  {data: 0x0880033c, toSeed: false,},
+                  {data: 0x5c3370ac, toSeed: false,},
+                  {data: 0x1400bf8f, toSeed: false,},
+                  {data: 0x1000b08f, toSeed: false,},
+                  {data: 0x1800bd27, toSeed: false,},
+                  {data: 0x0800e003, toSeed: false,},
+                  {data: 0x00000224, toSeed: false,},
+                  {data: 0x1f00a530, toSeed: false,},
+                  {data: 0xffff023c, toSeed: false,},
+                  {data: 0xffff4234, toSeed: false,},
+                  {data: 0x0610a200, toSeed: false,},
+                  {data: 0x26104200, toSeed: false,},
+                  {data: 0x24108200, toSeed: false,},
+                  {data: 0x0620a400, toSeed: false,},
+                  {data: 0x0800e003, toSeed: false,},
+                  {data: 0x25208200, toSeed: false,}]
+
+      addresses.forEach(function(address) {
+        let a = 0
+        let v = 0
+        let s = 0
+        while (v < routine.length) {
+          let toWrite = routine[v].data
+          if (routine[v].toSeed) {
+            let seedVal = hex[s++] & 0xffff
+            toWrite = toWrite | (seedVal << 16)
+          }
+          data.writeInstruction(address.start + a, toWrite)
+          a = a + 4
+          v++
         }
-        data.writeInstruction(address.start + a, toWrite)
-        a = a + 4
-        v++
-      }
-    })
+      })
+    }
     return hex
   }
 
@@ -717,8 +752,10 @@
     description,
     author,
     weight,
+    derandomize,
     tutorialSkip,
     introSkip,
+    fastTutorial,
     enemizer,
     barongs,
     starter,
@@ -728,6 +765,8 @@
     newBalls,
     startingItems,
     ballElements,
+    monsterElements,
+    eggomizer,
     singleRoom,
     endurance,
   ) {
@@ -736,8 +775,10 @@
     this.description = description
     this.author = author
     this.weight = weight
+    this.derandomize = derandomize
     this.tutorialSkip = tutorialSkip
     this.introSkip = introSkip
+    this.fastTutorial = fastTutorial
     this.enemizer = enemizer,
     this.barongs = barongs,
     this.starter = starter,
@@ -747,6 +788,8 @@
     this.newBalls = newBalls,
     this.startingItems = startingItems,
     this.ballElements = ballElements,
+    this.monsterElements = monsterElements,
+    this.eggomizer = eggomizer,
     this.singleRoom = singleRoom,
     this.endurance = endurance
   }
@@ -832,8 +875,10 @@
   // Helper class to create relic location locks.
   function PresetBuilder(metadata) {
     this.metadata = metadata
+    this.derandomize = true
     this.tutorialSkip = true
     this.introSkip = true
+    this.fastTutorial = false
     this.enemizer = false
     this.barongs = false
     this.starter = 0x02
@@ -843,6 +888,8 @@
     this.newBalls = false
     this.startingItems = false
     this.ballElements = false
+    this.monsterElements = false
+    this.eggomizer = false
     this.singleRoom = false
     this.endurance = 0
   }
@@ -863,8 +910,10 @@
         }
       })
     }
+    const derandomize = self.derandomize
     const tutorialSkip = self.tutorialSkip
     const introSkip = self.introSkip
+    const fastTutorial = self.fastTutorial
     const enemizer = self.enemizer
     const barongs = self.barongs
     const starter = self.starter
@@ -874,6 +923,8 @@
     const newBalls = self.newBalls
     const startingItems = self.startingItems
     const ballElements = self.ballElements
+    const monsterElements = self.monsterElements
+    const eggomizer = self.eggomizer
     const singleRoom = self.singleRoom
     const endurance = self.endurance
     return new Preset(
@@ -882,8 +933,10 @@
       self.metadata.description,
       self.metadata.author,
       self.metadata.weight || 0,
+      derandomize,
       tutorialSkip,
       introSkip,
+      fastTutorial,
       enemizer,
       barongs,
       starter,
@@ -893,6 +946,8 @@
       newBalls,
       startingItems,
       ballElements,
+      monsterElements,
+      eggomizer,
       singleRoom,
       endurance,
     )

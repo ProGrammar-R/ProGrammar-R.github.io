@@ -148,9 +148,11 @@
   function presetChange() {
     localStorage.setItem('preset', elems.preset.checked)
     if (elems.preset.checked) {
-      elems.presetSelect.classList.remove('hide')
+      elems.presetId.classList.remove('hide')
+      elems.derandomize.disabled = true
       elems.tutorialSkip.disabled = true
       elems.introSkip.disabled = true
+      elems.fastTutorial.disabled = true
       elems.enemizer.disabled = true
       elems.barongs.disabled = true
       elems.starter.disabled = true
@@ -160,13 +162,17 @@
       elems.newBalls.disabled = true
       elems.startingItems.disabled = true
       elems.ballElements.disabled = true
+      elems.monsterElements.disabled = true
+      elems.eggomizer.disabled = true
       elems.singleRoom.disabled = true
       elems.endurance.disabled = true
       presetIdChange()
     } else {
-      elems.presetSelect.classList.add('hide')
+      elems.presetId.classList.add('hide')
+      elems.derandomize.disabled = false
       elems.tutorialSkip.disabled = false
       elems.introSkip.disabled = false
+      elems.fastTutorial.disabled = false
       elems.enemizer.disabled = false
       elems.barongs.disabled = !elems.enemizer.checked
       elems.starter.disabled = false
@@ -176,6 +182,8 @@
       elems.newBalls.disabled = false
       elems.startingItems.disabled = false
       elems.ballElements.disabled = false
+      elems.monsterElements.disabled = false
+      elems.eggomizer.disabled = false
       elems.singleRoom.disabled = false
       elems.endurance.disabled = false
     }
@@ -188,8 +196,10 @@
     localStorage.setItem('presetId', preset.id)
     if (elems.preset.checked) {
       const options = preset.options()
+      elems.derandomize.checked = !!options.derandomize
       elems.tutorialSkip.checked = !!options.tutorialSkip
       elems.introSkip.checked = !!options.introSkip
+      elems.fastTutorial.checked = !!options.fastTutorial
       elems.enemizer.checked = !!options.enemizer
       elems.barongs.checked = !!options.barongs
       elems.starter.value = options.starter
@@ -199,9 +209,15 @@
       elems.newBalls.checked = !!options.newBalls
       elems.startingItems.checked = !!options.startingItems
       elems.ballElements.checked = !!options.ballElements
+      elems.monsterElements.checked = !!options.monsterElements
+      elems.eggomizer.checked = !!options.eggomizer
       elems.singleRoom.checked = !!options.singleRoom
       elems.endurance.value = options.endurance
     }
+  }
+
+  function derandomizeChange() {
+    localStorage.setItem('derandomize', elems.derandomize.checked)
   }
 
   function tutorialSkipChange() {
@@ -210,6 +226,10 @@
 
   function introSkipChange() {
     localStorage.setItem('introSkip', elems.introSkip.checked)
+  }
+
+  function fastTutorialChange() {
+    localStorage.setItem('fastTutorial', elems.fastTutorial.checked)
   }
 
   function enemizerChange() {
@@ -257,6 +277,14 @@
 
   function ballElementsChange() {
     localStorage.setItem('ballElements', elems.ballElements.checked)
+  }
+
+  function monsterElementsChange() {
+    localStorage.setItem('monsterElements', elems.monsterElements.checked)
+  }
+
+  function eggomizerChange() {
+    localStorage.setItem('eggomizer', elems.eggomizer.checked)
   }
 
   function singleRoomChange() {
@@ -321,8 +349,10 @@
       return {preset: presets[elems.presetId.selectedIndex].id}
     }
     const options = {
+      derandomize: elems.derandomize.checked,
       tutorialSkip: elems.tutorialSkip.checked,
       introSkip: elems.introSkip.checked,
+      fastTutorial: elems.fastTutorial.checked,
       enemizer: elems.enemizer.checked,
       barongs: elems.barongs.checked,
       starter: elems.starter.value,
@@ -332,6 +362,8 @@
       newBalls: elems.newBalls.checked,
       startingItems: elems.startingItems.checked,
       ballElements: elems.ballElements.checked,
+      monsterElements: elems.monsterElements.checked,
+      eggomizer: elems.eggomizer.checked,
       singleRoom: elems.singleRoom.checked,
       endurance: elems.endurance.value,
     }
@@ -403,8 +435,10 @@
     elems.seed.disabled = false
     elems.preset.disabled = false
     elems.presetId.disabled = false
+    elems.derandomize.disabled = false
     elems.tutorialSkip.disabled = false
     elems.introSkip.disabled = false
+    elems.fastTutorial.disabled = false
     elems.enemizer.disabled = false
     setBarongsBasedOnEnemizer(true)
     elems.starter.disabled = false
@@ -414,6 +448,8 @@
     elems.newBalls.disabled = false
     elems.startingItems.disabled = false
     elems.ballElements.disabled = false
+    elems.monsterElements.disabled = false
+    elems.eggomizer.disabled = false
     elems.singleRoom.disabled = false
     elems.endurance.disabled = false
     elems.clear.classList.add('hidden')
@@ -722,13 +758,13 @@
       console.error('\n' + err.message)
       process.exit(1)
     }
-    let hex = util.setSeedAzureDreams(check, seed)
+    let hex = util.setSeedAzureDreams(check, applied, seed)
     text.writeTextToFile(check, constants.romAddresses.angelFirstWord, "Azure Dreams Randomizer\\nSeed: "+seed.toString()+"\\nhttps://programmar-r.github.io/\\p\\c"+"\\3".repeat(13))
     //text.writeBattleTextToFile(check, constants.romAddresses.isExhaustedBattleText, "collapsed.\\p\\0")
     util.pauseAfterDeath(check)
     //also applies several other options due to difficulties when calling from here
     monsters.setEnemizer(applied, check, hex)
-    adRando.items.setStartingItems(options, check, hex)
+    adRando.items.setStartingItems(applied, check, hex)
     util.setAppliedOptions(applied, check)
 
     const checksum = check.sum()
@@ -772,15 +808,17 @@
       randomize: document.getElementById('randomize'),
       seed: document.getElementById('seed'),
       preset: document.getElementById('preset'),
-      presetSelect: document.getElementById('preset-select'),
+      //presetSelect: document.getElementById('preset-select'),
       presetId: document.getElementById('preset-id'),
       presetDescription: document.getElementById('preset-description'),
       presetAuthor: document.getElementById('preset-author'),
       clear: document.getElementById('clear'),
       appendSeed: document.getElementById('append-seed'),
       experimentalChanges: document.getElementById('experimental-changes'),
+      derandomize: document.getElementById('derandomize'),
       tutorialSkip: document.getElementById('tutorial-skip'),
       introSkip: document.getElementById('intro-skip'),
+      fastTutorial: document.getElementById('fast-tutorial'),
       enemizer: document.getElementById('enemizer'),
       barongs: document.getElementById('barongs'),
       starter: document.getElementById('starter'),
@@ -790,6 +828,8 @@
       newBalls: document.getElementById('new-balls'),
       startingItems: document.getElementById('starting-items'),
       ballElements: document.getElementById('ball-elements'),
+      monsterElements: document.getElementById('monster-elements'),
+      eggomizer: document.getElementById('eggomizer'),
       singleRoom: document.getElementById('single-room'),
       endurance: document.getElementById('endurance'),
       download: document.getElementById('download'),
@@ -809,8 +849,10 @@
     elems.clear.addEventListener('click', clearHandler)
     elems.appendSeed.addEventListener('change', appendSeedChange)
     elems.experimentalChanges.addEventListener('change', experimentalChangesChange)
+    elems.derandomize.addEventListener('change', derandomizeChange)
     elems.tutorialSkip.addEventListener('change', tutorialSkipChange)
     elems.introSkip.addEventListener('change', introSkipChange)
+    elems.fastTutorial.addEventListener('change', fastTutorialChange)
     elems.enemizer.addEventListener('change', enemizerChange)
     elems.barongs.addEventListener('change', barongsChange)
     elems.starter.addEventListener('change', starterChange)
@@ -820,6 +862,8 @@
     elems.newBalls.addEventListener('change', newBallsChange)
     elems.startingItems.addEventListener('change', startingItemsChange)
     elems.ballElements.addEventListener('change', ballElementsChange)
+    elems.monsterElements.addEventListener('change', monsterElementsChange)
+    elems.eggomizer.addEventListener('change', eggomizerChange)
     elems.singleRoom.addEventListener('change', singleRoomChange)
     elems.endurance.addEventListener('change', enduranceChange)
     elems.copy.addEventListener('click', copyHandler)
@@ -901,12 +945,18 @@
       presetChange()
       elems.preset.disabled = true
       elems.presetId.disabled = true
+      elems.derandomize.checked = applied.derandomize
+      derandomizeChange()
+      elems.derandomize.disabled = true
       elems.tutorialSkip.checked = applied.tutorialSkip
       tutorialSkipChange()
       elems.tutorialSkip.disabled = true
       elems.introSkip.checked = applied.introSkip
       introSkipChange()
       elems.introSkip.disabled = true
+      elems.fastTutorial.checked = applied.fastTutorial
+      fastTutorialChange()
+      elems.fastTutorial.disabled = true
       elems.enemizer.checked = applied.enemizer
       enemizerChange()
       elems.enemizer.disabled = true
@@ -934,6 +984,12 @@
       elems.ballElements.checked = applied.ballElements
       ballElementsChange()
       elems.ballElements.disabled = true
+      elems.monsterElements.checked = applied.monsterElements
+      monsterElementsChange()
+      elems.monsterElements.disabled = true
+      elems.eggomizer.checked = applied.eggomizer
+      eggomizerChange()
+      elems.eggomizer.disabled = true
       elems.singleRoom.checked = applied.singleRoom
       singleRoomChange()
       elems.singleRoom.disabled = true
@@ -965,8 +1021,10 @@
       document.getElementById('dev-border').classList.add('dev')
     }
     if (!elems.preset.checked) {
+      loadOption('derandomize', derandomizeChange, true)
       loadOption('tutorialSkip', tutorialSkipChange, true)
       loadOption('introSkip', introSkipChange, true)
+      loadOption('fastTutorial', fastTutorialChange, false)
       loadOption('enemizer', enemizerChange, false)
       loadOption('barongs', barongsChange, false)
       loadOption('starter', starterChange, 0x02)
@@ -976,6 +1034,8 @@
       loadOption('newBalls', newBallsChange, false)
       loadOption('startingItems', startingItemsChange, false)
       loadOption('ballElements', ballElementsChange, false)
+      loadOption('monsterElements', monsterElementsChange, false)
+      loadOption('eggomizer', eggomizerChange, false)
       loadOption('singleRoom', singleRoomChange, false)
       loadOption('endurance', enduranceChange, 0)
     }

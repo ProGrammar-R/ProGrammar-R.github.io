@@ -24,6 +24,8 @@
   }
 
   const items = [
+    //Sword
+    { name: 'Medicinal',  type: TYPE.HERB, id: 0x0F, modifiers: 0x00, inPool: true,},
     //Ball
     { name: 'Fire',       type: TYPE.BALL, id: 0x01, modifiers: 0x05, inPool: true,  address: 0x5ecd4, spellId: 0x01, names: [0, 0x8002E3E8, 0, 0x8002E39C],          descriptions: [0, 0x8002E3B0, 0, 0x8002E364],},
     { name: 'Blaze',      type: TYPE.BALL, id: 0x02, modifiers: 0x05, inPool: true,  address: 0x5ece8, spellId: 0x04, names: [0, 0x8002E314, 0, 0x8002E2D0],          descriptions: [0, 0x8002E2E0, 0, 0x8002E2A0],},
@@ -140,32 +142,45 @@
   function setStartingItems(options, data, hex) {
     let lcgSeed = hex.length > randomItemHexSeed ? Math.abs(hex[randomItemHexSeed]) : 15;
     let lcg = new util.LCG(constants.lcgConstants.modulus, constants.lcgConstants.multiplier, constants.lcgConstants.increment, lcgSeed)
-    if (options.startingItems || options.ballElements) {
+    if (options.startingItems || options.ballElements || options.newBalls || options.fastTutorial) {
       allowAnyBalls(data)
-      if (options.startingItems) {
-        let startingItemIndex = 0
-        //randomize weapon
-        let swords = itemsByType(TYPE.SWORD, false)
-        let wands = itemsByType(TYPE.WAND, false)
-        let weapons = swords.concat(wands)
-        let weaponIndex = lcg.rollBetween(0, weapons.length-1)
-        setItem(startingItemIndex++, weapons[weaponIndex], data)
-        //randomize shield
-        let shields = itemsByType(TYPE.SHIELD, false)
-        let shieldIndex = lcg.rollBetween(0, shields.length-1)
-        setItem(startingItemIndex++, shields[shieldIndex], data)
-        //randomize ball
-        let balls = itemsByType(TYPE.BALL, options.newBalls)
-        let ballIndex = lcg.rollBetween(0, balls.length-1)
-        setItem(startingItemIndex++, balls[ballIndex], data)
-        //randomize egg
-        let eggs = itemsByType(TYPE.EGG, false)
-        let eggIndex = lcg.rollBetween(0, eggs.length-1)
-        setItem(startingItemIndex++, eggs[eggIndex], data)
-        if (options.newBalls) {
-          writeMissingBallNames(data, options.newBalls)
-        }
+      const defaultWeaponIndex = 1
+      const defaultShieldIndex = 0
+      const defaultBallIndex = 0
+      const defaultEggIndex = 0x13
+
+      let startingItemIndex = 0
+      //randomize weapon
+      let swords = itemsByType(TYPE.SWORD, false)
+      let wands = itemsByType(TYPE.WAND, false)
+      let weapons = swords.concat(wands)
+      let weaponIndex = options.startingItems ? lcg.rollBetween(0, weapons.length-1) : defaultWeaponIndex
+      setItem(startingItemIndex++, weapons[weaponIndex], data, 0, options)
+      //randomize shield
+      let shields = itemsByType(TYPE.SHIELD, false)
+      let shieldIndex = options.startingItems ? lcg.rollBetween(0, shields.length-1) : defaultShieldIndex
+      setItem(startingItemIndex++, shields[shieldIndex], data, 1, options)
+      //randomize ball
+      let balls = itemsByType(TYPE.BALL, options.newBalls)
+      let ballIndex = options.startingItems ? lcg.rollBetween(0, balls.length-1) : defaultBallIndex
+      setItem(startingItemIndex++, balls[ballIndex], data, 2, options)
+      //randomize egg
+      let eggs = itemsByType(TYPE.EGG, false)
+      let eggIndex = options.startingItems ? lcg.rollBetween(0, eggs.length-1) : defaultEggIndex
+      setItem(startingItemIndex++, eggs[eggIndex], data, 3, options)
+
+      if (options.newBalls) {
+        writeMissingBallNames(data, options.newBalls)
       }
+      //set medicial
+      let medicinalHerb = itemsByType(TYPE.HERB, false)[0]
+      setItem(startingItemIndex++, medicinalHerb, data, 4, options)
+
+      //if fast tutorial, move elevator Y coordinate
+      if (options.fastTutorial) {
+        data.writeByte(0x248cf73, 0x31)
+      }
+
       if (options.ballElements) {
         let balls = itemsByType(TYPE.BALL, options.newBalls)
         //length - 2 to avoid touching acid rain ball
@@ -179,16 +194,38 @@
         }
       }
     }
+    if (options.eggomizer != 0) {
+      const floorMonsterAddress = 0x24638e8
+      const floorEggOffset = 32
+      const addressIncrement = 0x930
+      let eggs = itemsByType(TYPE.EGG, false)
+
+      for (i = 0; i < 39; i++) {
+        let floorEggAddress = floorMonsterAddress + i * addressIncrement + floorEggOffset
+        for (j = 0; j < 32; j++) {
+          let eggIndex = lcg.rollBetween(0, eggs.length-1)
+          data.writeByte(floorEggAddress++, eggs[eggIndex].ID)
+        }
+      }
+    }
   }
 
-  function setItem(startingItemIndex, item, data) {
+  function setItem(startingItemIndex, item, data, itemIndex, options) {
     const startingItemsAddress = 0x248CF78
     const itemIdOffset = 2
     const defaultState = 0
-    let itemAddress = startingItemsAddress + startingItemIndex * startingItemWidth + itemIdOffset
+    const newX = 0x1f
+    const startingNewY = 0x36
+    let itemAddress = startingItemsAddress + startingItemIndex * startingItemWidth
+    if (options.fastTutorial) {
+      data.writeByte(itemAddress++, newX)
+      data.writeByte(itemAddress++, startingNewY - itemIndex)
+    } else {
+      itemAddress += itemIdOffset
+    }
     data.writeByte(itemAddress++, item.id)
     data.writeByte(itemAddress++, item.type)
-    data.writeByte(itemAddress++, defaultState)
+    data.writeByte(itemAddress++, options.startingItems ? defaultState : 0x80)
     data.writeByte(itemAddress++, item.modifiers)
   }
 
