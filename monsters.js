@@ -325,6 +325,7 @@
     const loadMonsterNopReferenceAddress = 0x2aa6a64
     const getPaletteForMonsterAddress = 0x272bc
     const loadMonsterNopAddress = 0x1c7e068
+    const loadMonsterOntoStackAddress = loadMonsterNopAddress + 8
 
     const loadMonsterNopReferenceAddresses =
       [0x1cbb588,0x1cbc954,0x1cbec80,0x1cbece8,0x1cbed44,0x1cbeda0,0x1cbf10c,0x1cbf118,0x26a1e08,0x26a8c48,0x26afa88,0x26b68c8,0x26bd708,0x26c4548,0x26cb388,0x26d42c8,0x26db108,0x26e1f48,0x26e8d88,0x26efbc8,0x26f6a08,
@@ -369,13 +370,27 @@
         data.writeWord(address, 0x800a9c08)
       })
       //override check to only set friendly colors with nop
-      data.writeWord(getPaletteForMonsterAddress + 12, 0x00000000)
+      data.writeInstruction(getPaletteForMonsterAddress + 0x0c, 0x00000000) //nop
+      //introduce special logic for no-status monsters
+      data.writeInstruction(getPaletteForMonsterAddress + 0x34, 0x14004290) //lbu	v0,20(v0)
+      data.writeInstruction(getPaletteForMonsterAddress + 0x38, 0x0200a010) //beqz	a1,0x80042a2c
+      data.writeInstruction(getPaletteForMonsterAddress + 0x3c, 0x21184000) //move	v1,v0
+      data.writeInstruction(getPaletteForMonsterAddress + 0x40, 0x24184500) //and	v1,v0,a1
+
       //override load_monster_nop and start of load_monster_onto_stack with call to set monster palette
       data.writeInstruction(loadMonsterNopAddress + 0x00, 0xd8ffbd27) //addiu	sp,sp,-40
       data.writeInstruction(loadMonsterNopAddress + 0x04, 0x2000bfaf) //sw	ra,32(sp)
+      data.writeInstruction(loadMonsterNopAddress + 0x08, 0x1c00b3af) //sw	s3,28(sp)
+      data.writeInstruction(loadMonsterNopAddress + 0x0c, 0x21988000) //move	s3,a0
+      data.writeInstruction(loadMonsterNopAddress + 0x10, 0x1800b2af) //sw	s2,24(sp)
+      data.writeInstruction(loadMonsterNopAddress + 0x14, 0x2190a000) //move	s2,a1
+      data.writeInstruction(loadMonsterNopAddress + 0x18, 0x1400b1af) //sw	s1,20(sp)
+      data.writeInstruction(loadMonsterNopAddress + 0x1c, 0x2188c000) //move	s1,a2
+      data.writeInstruction(loadMonsterNopAddress + 0x20, 0x1000b0af) //sw	s0,16(sp)
+      data.writeInstruction(loadMonsterNopAddress + 0x24, 0x610a010c) //jal 0x80042984
+      data.writeInstruction(loadMonsterNopAddress + 0x28, 0x20008424) //addiu	a0,a0,32
 
-      data.writeInstruction(loadMonsterNopAddress + 8, 0x610a010c) //jal 0x80042984
-      data.writeInstruction(loadMonsterNopAddress + 0x40, 0x00000000) //nop
+      data.writeInstruction(loadMonsterNopAddress + 0x40, 0x20007026) //addiu	s0,s3,32
 
       //override jals to load_monster_onto_stack with newly created start
       loadMonsterOntoStackJalAddresses.forEach(function(address) {
