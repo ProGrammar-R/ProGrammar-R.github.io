@@ -761,7 +761,7 @@
     let hex = util.setSeedAzureDreams(check, applied, seed)
     text.writeTextToFile(check, constants.romAddresses.angelFirstWord, "Azure Dreams Randomizer\\nSeed: "+seed.toString()+"\\nhttps://programmar-r.github.io/\\p\\c"+"\\3".repeat(13))
     //text.writeBattleTextToFile(check, constants.romAddresses.isExhaustedBattleText, "collapsed.\\p\\0")
-    util.pauseAfterDeath(check)
+    //util.pauseAfterDeath(check)
     //also applies several other options due to difficulties when calling from here
     monsters.setEnemizer(applied, check, hex)
     adRando.items.setStartingItems(applied, check, hex)
