@@ -308,7 +308,7 @@
         if (options.derandomize) {
           randomize += 'd'
         }
-        delete options.tutorialSkip
+        delete options.derandomize
       } else if ('tutorialSkip' in options) {
         if (options.tutorialSkip) {
           randomize += 't'
