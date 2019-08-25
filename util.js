@@ -591,7 +591,7 @@
       data.writeByte(wakeAddress++, 0x00)
       data.writeWord(wakeAddress, 0x8002221e) //skip to address -1
     }
-    if (options.endurance >= 0) {
+    if (options.endurance > 0) {
       const top = 0x63
       //8001788c
       data.writeByte(0x1ea5974, top)

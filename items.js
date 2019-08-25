@@ -204,7 +204,7 @@
         let floorEggAddress = floorMonsterAddress + i * addressIncrement + floorEggOffset
         for (j = 0; j < 32; j++) {
           let eggIndex = lcg.rollBetween(0, eggs.length-1)
-          data.writeByte(floorEggAddress++, eggs[eggIndex].ID)
+          data.writeByte(floorEggAddress++, eggs[eggIndex].id)
         }
       }
     }
