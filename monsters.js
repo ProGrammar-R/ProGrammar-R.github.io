@@ -400,8 +400,12 @@
       let lcg = new util.LCG(constants.lcgConstants.modulus, constants.lcgConstants.multiplier, constants.lcgConstants.increment, lcgSeed)
       let randomizeElement = elementFromName("Randomize").ID
 
+      //don't change Kewne or Hikewne because they don't change palette
+      let kewne = monsterFromName("Kewne").ID
+      let hikewne = monsterFromName("Hikewne").ID
+
       allMonsters.forEach(function(monster) {
-        if (monster.ID != starterId) {
+        if (monster.ID != starterId && monster.ID != kewne && monster.ID != hikewne) {
           setMonsterToElement(randomizeElement, data, lcg.roll(), monster.ID)
         }
       })
