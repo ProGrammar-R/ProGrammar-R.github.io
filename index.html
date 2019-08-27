@@ -229,7 +229,6 @@
         Known issues:
         <ul>
           <li>If Koh dies on the demo screen, the game can enter an abnormal state where town objects don't load. If this happens, restart and start the game before the demo plays.</li>
-          <li>Some battle text boxes have a prompt for button input when they shouldn't.</li>
           <li>When randomizing starting items, eggs of evolved monsters or Kewne will show up in-game as just " egg" [sic].</li>
           <li>Defeating enemies on the highest floors in endurance mode can give you too much EXP and cause the game to crash.</li>
         </ul>
@@ -241,9 +240,14 @@
       </p>
       <hr>
       <h2><a name="changelog">Changelog</a></h2>
+      <h3><time>August 27, 2019</time></h3>
+      <ul>
+        <li>v1.7.3 Fixed bug in original game that meant when randomizing monster elements, Manoevas wouldn't copy palettes of target monsters.
+                   Kewne's and Hikewne's elements will no longer be randomized in when selecting enemizer + monster element randomization since they do not change palette when changing element.</li>
+      </ul>
       <h3><time>August 25, 2019</time></h3>
       <ul>
-        <li>v1.7.2 Removed pause after death to try to resolve softlocks.</li>
+        <li>v1.7.2 Removed pause after death to resolve softlocks.</li>
       </ul>
       <h3><time>August 25, 2019</time></h3>
       <ul>
@@ -255,7 +259,7 @@
       </ul>
       <h3><time>August 14, 2019</time></h3>
       <ul>
-        <li>v1.6.4 Introduced a pause after Koh dies that players have to press a button to clear, so commentators have an easier way to see what floor a player died on.</li>
+        <li>v1.6.4 <del>Introduced a pause after Koh dies that players have to press a button to clear, so commentators have an easier way to see what floor a player died on.</del> Removed in v1.7.2</li>
       </ul>
       <h3><time>August 12, 2019</time></h3>
       <ul>
