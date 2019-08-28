@@ -1,6 +1,6 @@
 (function(window) {
-  const releaseBaseUrl = 'https://ProGrammar-R.github.io/'
-  const devBaseUrl = 'https://ProGrammar-R.github.io/'
+  const releaseBaseUrl = 'https://adrando.com/'
+  const devBaseUrl = 'https://adrando.com/'
 
   let version
   let constants
@@ -759,7 +759,7 @@
       process.exit(1)
     }
     let hex = util.setSeedAzureDreams(check, applied, seed)
-    text.writeTextToFile(check, constants.romAddresses.angelFirstWord, "Azure Dreams Randomizer\\nSeed: "+seed.toString()+"\\nhttps://programmar-r.github.io/\\p\\c"+"\\3".repeat(13))
+    text.embedSeedAndFlagsInAngelText(check, applied, seed)
     //text.writeBattleTextToFile(check, constants.romAddresses.isExhaustedBattleText, "collapsed.\\p\\0")
     //util.pauseAfterDeath(check)
     //also applies several other options due to difficulties when calling from here

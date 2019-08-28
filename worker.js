@@ -24,7 +24,7 @@ self.addEventListener('message', function(message) {
     ))
     const options = self.adRando.util.Preset.options(data.options)
     let hex = adRando.util.setSeedAzureDreams(check, options, data.seed)
-    adRando.text.writeTextToFile(check, adRando.constants.romAddresses.angelFirstWord, "Azure Dreams Randomizer\\nSeed: "+data.seed.toString()+"\\nhttps://programmar-r.github.io/\\p\\c"+"\\3".repeat(13))
+    adRando.text.embedSeedAndFlagsInAngelText(check, options, data.seed)
     //adRando.util.pauseAfterDeath(check)
     //adRando.text.writeBattleTextToFile(check, adRando.constants.romAddresses.isExhaustedBattleText, "collapsed.\\p\\0")
     adRando.monsters.setEnemizer(options, check, hex)
