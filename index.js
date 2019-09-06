@@ -243,7 +243,7 @@
       elems.barongs.disabled = true
       barongsChange()
     } else {
-      elems.barongs.disabled = elems.preset.checked
+      elems.barongs.disabled = elems.preset.checked || elems.seed.disabled
     }
   }
 

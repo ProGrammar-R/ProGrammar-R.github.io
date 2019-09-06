@@ -623,13 +623,13 @@
         //move new instructions in place
         const newSpawnCode = [
           {instruction: 0x28000624, setsDifficulty: false,}, //li    a2,40
-          {instruction: 0x033c0700, setsDifficulty: false,}, //sra	  a3,a3,0x10
+          {instruction: 0x033c0700, setsDifficulty: false,}, //sra   a3,a3,0x10
           {instruction: 0x1b00e600, setsDifficulty: false,}, //divu  a3,a2
-          {instruction: 0x1000a627, setsDifficulty: false,}, //addiu	a2,sp,16
+          {instruction: 0x1000a627, setsDifficulty: false,}, //addiu a2,sp,16
           {instruction: 0x00000000, setsDifficulty: false,}, //nop
           {instruction: 0x10380000, setsDifficulty: false,}, //mfhi  a3
           {instruction: 0x12800000, setsDifficulty: false,}, //mflo  s0
-          {instruction: 0x2000bfaf, setsDifficulty: false,}, //sw	  ra,32(sp)
+          {instruction: 0x2000bfaf, setsDifficulty: false,}, //sw    ra,32(sp)
           {instruction: 0xb5fd000c, setsDifficulty: false,}, //                      jal	0x8003f6d4
           {instruction: 0x5e3fe724, setsDifficulty: false,}, //                      addiu	a3,a3,16222                 ; a3 = floor number + 0x3f5e
           {instruction: 0x06000424, setsDifficulty: false,}, //                      li	a0,6                            ; a0 = 6
@@ -647,9 +647,9 @@
           {instruction: 0x00000000, setsDifficulty: false,}, //nop
           {instruction: 0x12800000, setsDifficulty: false,}, //mflo  s0
                       //loop:
-          {instruction: 0x0000c490, setsDifficulty: false,}, //lbu	  a0,0(a2)
+          {instruction: 0x0000c490, setsDifficulty: false,}, //lbu   a0,0(a2)
           {instruction: 0x0100c590, setsDifficulty: false,}, //lbu   a1,1(a2)
-          {instruction: 0x02008014, setsDifficulty: false,}, //bnez	a0,2
+          {instruction: 0x02008014, setsDifficulty: false,}, //bnez  a0,2
           {instruction: 0x00000000, setsDifficulty: false,}, //nop
           {instruction: 0x20000424, setsDifficulty: false,}, //li    a0,20
 
@@ -663,8 +663,8 @@
           {instruction: 0x0200c624, setsDifficulty: false,}, //addiu a2,a2,2
           {instruction: 0x02004224, setsDifficulty: false,}, //addiu v0,v0,2
           {instruction: 0xf1ff6014, setsDifficulty: false,}, //bnez  v1,loop
-          {instruction: 0xffff6324, setsDifficulty: false,}, //addiu	v1,v1,-1
-          {instruction: 0x00a03026, setsDifficulty: false,}, //addiu	s0,s1,-24576
+          {instruction: 0xffff6324, setsDifficulty: false,}, //addiu v1,v1,-1
+          {instruction: 0x00a03026, setsDifficulty: false,}, //addiu s0,s1,-24576
 
           {instruction: 0x00000000, setsDifficulty: false,}, //nop
           {instruction: 0x00000000, setsDifficulty: false,}, //nop
