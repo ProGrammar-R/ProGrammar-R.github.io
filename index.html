@@ -136,23 +136,21 @@
                 </select>
               </div>
               <div class="pure-u-12-24">
-                <div>
+                <div hidden>
                   <input id="boss" type="checkbox">
                   <label for="boss">True boss fight</label>
                 </div>
               </div>
-              <div class="pure-u-12-24">
-                <div id="time-difficulty-container">
-                  <label for="time-difficulty">Enemy levels</label>
-                  <select id="time-difficulty">
-                    <option value=0>are unchanged</option>
-                    <option value=5>+1 per 17 minutes</option>
-                    <option value=4>+1 per 8 minutes</option>
-                    <option value=3>+1 per 4 minutes</option>
-                    <option value=2>+1 per 2 minutes</option>
-                    <option value=1>+1 every minute</option>
-                  </select>
-                </div>
+              <div id="time-difficulty-select" class="pure-u-12-24">
+                <label for="time-difficulty">Enemy levels</label>
+                <select id="time-difficulty">
+                  <option value=0>are unchanged</option>
+                  <option value=5>+1 per 18 minutes</option>
+                  <option value=4>+1 per 9 minutes</option>
+                  <option value=3>+1 per 4 minutes</option>
+                  <option value=2>+1 per 2 minutes</option>
+                  <option value=1>+1 every minute</option>
+                </select>
               </div>
               <div class="pure-u-1" hidden>
                 <input id="experimental-changes" type="checkbox">
@@ -253,7 +251,7 @@
         <ul>
           <li>If Koh dies on the demo screen, the game can enter an abnormal state where town objects don't load. If this happens, restart and start the game before the demo plays.</li>
           <li>When randomizing starting items, eggs of evolved monsters or Kewne will show up in-game as just " egg" [sic].</li>
-          <li>Defeating enemies on the highest floors in endurance mode can give you too much EXP and cause the game to crash.</li>
+          <li>Defeating enemies on the highest floors in Normal/Hard endurance mode can give you too much EXP and cause the game to crash.</li>
         </ul>
       </p>
       <p>
@@ -263,7 +261,7 @@
       </p>
       <hr>
       <h2><a name="changelog">Changelog</a></h2>
-      <h3><time>September 6, 2019</time></h3>
+      <h3><time>September 8, 2019</time></h3>
       <ul>
         <li>v1.8.0 Added time difficulty mode, where monster difficulties increase over time (tracked since game first loads). Options that require another option will now be hidden if the prerequisite isn't met.
             Fixed a bug where "Randomize Barong floors" could be unchecked when using a seed URL. Fixed a bug in the generated URL shown in the angel's text.</li>

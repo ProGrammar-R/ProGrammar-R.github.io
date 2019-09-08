@@ -189,7 +189,7 @@
       elems.singleRoom.disabled = false
       elems.endurance.disabled = false
       elems.boss.disabled = false
-      elems.timeDifficulty.disabled = elems.endurance.value > 0
+      elems.timeDifficulty.disabled = false
     }
   }
 
@@ -301,23 +301,10 @@
 
   function enduranceChange() {
     localStorage.setItem('endurance', elems.endurance.value)
-    setTimeDifficultyBasedOnEndurance()
   }
 
   function bossChange() {
     localStorage.setItem('boss', elems.boss.checked)
-  }
-
-  function setTimeDifficultyBasedOnEndurance() {
-    if (elems.endurance.value > 0) {
-      elems.timeDifficulty.disabled = elems.preset.checked || elems.seed.disabled
-      elems.timeDifficultyContainer.removeAttribute("hidden")
-    } else {
-      elems.timeDifficulty.value = 0
-      elems.timeDifficulty.disabled = true
-      elems.timeDifficultyContainer.setAttribute("hidden", "")
-      timeDifficultyChange()
-    }
   }
 
   function timeDifficultyChange() {
@@ -484,7 +471,7 @@
     elems.singleRoom.disabled = false
     elems.endurance.disabled = false
     elems.boss.disabled = false
-    setTimeDifficultyBasedOnEndurance()
+    elems.timeDifficulty.disabled = false
     elems.clear.classList.add('hidden')
     presetChange()
   }
@@ -868,7 +855,6 @@
       endurance: document.getElementById('endurance'),
       boss: document.getElementById('boss'),
       timeDifficulty: document.getElementById('time-difficulty'),
-      timeDifficultyContainer: document.getElementById('time-difficulty-container'),
       download: document.getElementById('download'),
       downloadCue: document.getElementById('downloadCue'),
       loader: document.getElementById('loader'),
