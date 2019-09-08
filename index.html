@@ -22,7 +22,7 @@
           <span id="status"></span>
           <input id="file" type="file" accept=".bin,.iso">
         </p>
-        <div class="pure-u-14-24">
+        <div class="pure-u-16-24">
           <fieldset>
             <legend>Gameplay options</legend>
             <div class="pure-g">
@@ -77,8 +77,10 @@
                 <label for="starting-items">Randomize starting items</label>
               </div>
               <div class="pure-u-12-24">
-                <input id="barongs" type="checkbox">
-                <label for="barongs">Randomize Barong floors</label>
+                <div id="barongs-container">
+                  <input id="barongs" type="checkbox">
+                  <label for="barongs">Randomize Barong floors</label>
+                </div>
               </div>
               <div class="pure-u-12-24">
                 <input id="ball-elements" type="checkbox">
@@ -128,12 +130,31 @@
                 <label for="endurance">Endurance mode (99 floors)</label>
                 <select id="endurance">
                   <option value=0>Off</option>
-                  <option value=30>Easy (+30)</option>
-                  <option value=40>Normal (+40)</option>
-                  <option value=50>Hard (+50)</option>
+                  <option value=30>Easy (+30 levels / 40 floors)</option>
+                  <option value=40>Normal (+40 / 40 floors)</option>
+                  <option value=50>Hard (+50 / 40 floors)</option>
                 </select>
               </div>
-              <div class="pure-u-1" hidden="hidden">
+              <div class="pure-u-12-24">
+                <div>
+                  <input id="boss" type="checkbox">
+                  <label for="boss">True boss fight</label>
+                </div>
+              </div>
+              <div class="pure-u-12-24">
+                <div id="time-difficulty-container">
+                  <label for="time-difficulty">Enemy levels</label>
+                  <select id="time-difficulty">
+                    <option value=0>are unchanged</option>
+                    <option value=5>+1 per 17 minutes</option>
+                    <option value=4>+1 per 8 minutes</option>
+                    <option value=3>+1 per 4 minutes</option>
+                    <option value=2>+1 per 2 minutes</option>
+                    <option value=1>+1 every minute</option>
+                  </select>
+                </div>
+              </div>
+              <div class="pure-u-1" hidden>
                 <input id="experimental-changes" type="checkbox">
                 <label for="experimental-changes">Experimental Changes</label>
               </div>
@@ -155,7 +176,7 @@
             </div>
           </fieldset>
         </div>
-        <div class="pure-u-10-24 spoilers">
+        <div class="pure-u-10-24 spoilers" hidden>
           <textarea id="spoilers" rows="8" cols="32" disabled="disabled">
           </textarea>
         </div>
@@ -242,6 +263,11 @@
       </p>
       <hr>
       <h2><a name="changelog">Changelog</a></h2>
+      <h3><time>September 6, 2019</time></h3>
+      <ul>
+        <li>v1.8.0 Added time difficulty mode, where monster difficulties increase over time (tracked since game first loads). Options that require another option will now be hidden if the prerequisite isn't met.
+            Fixed a bug where "Randomize Barong floors" could be unchecked when using a seed URL. Fixed a bug in the generated URL shown in the angel's text.</li>
+      </ul>
       <h3><time>August 27, 2019</time></h3>
       <ul>
         <li>v1.7.4 Added custom domain "adrando.com". Added Sustainna's lovely favicon, which is used with permission (also licensed under MPL 2.0). Embedded full URL seed into angel's text.</li>

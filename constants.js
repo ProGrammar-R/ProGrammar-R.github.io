@@ -28,8 +28,10 @@
     angelFirstWord: 0xee5f97,
     isExhaustedBattleText: 0x1cbcc3c,
     pauseAfterDeathText: 0x55b71,
+    checkKohDeathTopFloor: 0x1c5e360, //RAM 0x8008e058
     pauseAfterDeathCode: 0x1c5e470,
     beldoLocation: 0x263cbb2, //RAM 0x800e604a
+    beldoInvulnerability: 0x31d0aa0, //RAM 0x8016c688
   }
 
   const lcgConstants = {modulus: 0x1fffFFFFffff, multiplier: 0x5DEECE66D, increment: 11,}

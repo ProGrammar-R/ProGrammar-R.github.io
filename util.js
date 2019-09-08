@@ -277,6 +277,30 @@
           i++
         }
         break
+      case 'o':
+        options.boss = true
+        break
+      case 'T':
+        // Check for an argument.
+        if (randomize[i] !== ':') {
+          throw new Error('Expected argument')
+        }
+
+        // Parse the arg name.
+        start = ++i
+        while (i < randomize.length
+               && [',', ':'].indexOf(randomize[i]) === -1) {
+          i++
+        }
+        arg = randomize.slice(start, i)
+        if (!arg.length) {
+          throw new Error('Expected argument')
+        }
+        options.timeDifficulty = arg
+        if (randomize[i] === ',') {
+          i++
+        }
+        break
       default:
         throw new Error('Invalid randomization: ' + c)
       }
@@ -384,6 +408,14 @@
       } else if ('endurance' in options) {
         randomize += 'N:' + options.endurance + ','
         delete options.endurance
+      } else if ('boss' in options) {
+        if (options.boss) {
+          randomize += 'o'
+        }
+        delete options.boss
+      } else if ('timeDifficulty' in options) {
+        randomize += 'T:' + options.timeDifficulty + ','
+        delete options.timeDifficulty
       } else {
         const unknown = Object.getOwnPropertyNames(options).pop()
         throw new Error('Unknown options: ' + unknown)
@@ -562,6 +594,17 @@
       data.writeShort(0x1ea8188, 0x7fff)
       data.writeShort(0x2181ed8, 0x7fff)
     }
+    applyTutorialSkip(options, data)
+    applyIntroSkip(options, data)
+    applyEnduranceAndTimeDifficulty(options, data)
+    applyBoss(options, data)
+    //if (options.experimentalChanges) {
+      //always make cursor start at New Game
+      //data.writeInstruction(0x43a920, 0x01000224)
+    //}
+  }
+
+  function applyTutorialSkip(options, data) {
     if (options.tutorialSkip) {
       data.writeInstruction(0x312b31c, 0x544e0508)
       data.writeInstruction(0x313215c, 0x544e0508)
@@ -571,6 +614,9 @@
       data.writeInstruction(0x314da5c, 0x544e0508)
       data.writeInstruction(0x315489c, 0x544e0508)
     }
+  }
+
+  function applyIntroSkip(options, data) {
     if (options.introSkip) {
       //skip from angel to intro video before waking up
       data.writeByte(0xee5f84, 0x05)
@@ -591,101 +637,133 @@
       data.writeByte(wakeAddress++, 0x00)
       data.writeWord(wakeAddress, 0x8002221e) //skip to address -1
     }
-    if (options.endurance > 0) {
-      const top = 0x63
-      //8001788c
-      data.writeByte(0x1ea5974, top)
-      data.writeByte(0x217f6c4, top)
-      //80018f58
-      data.writeByte(0x1ea72a0, top)
-      data.writeByte(0x1ea72c8, top)
-      data.writeByte(0x2180ff0, top)
-      data.writeByte(0x2181018, top)
-      //8001f48c
-      data.writeByte(0x1eae744, top)
-      data.writeByte(0x2188494, top)
-      //8003e16c
-      data.writeByte(0x21f94, top + 1)
-      data.writeByte(0x21f9c, top)
-      //800b0618
-      data.writeByte(0x1c859e0, top)
-      //800bcffc
-      data.writeByte(0x1c942a4, top)
-      data.writeByte(0x1c94354, top)
-      //800c0330
-      data.writeByte(0x1c97cf8, top)
-      //800c26ac
-      data.writeByte(0x1c9a534, top)
+  }
+
+  function applyEnduranceAndTimeDifficulty(options, data) {
+    if (options.endurance > 0 || options.timeDifficulty > 0) {
+      if (options.endurance > 0) {
+        const top = 0x63
+        //8001788c
+        data.writeByte(0x1ea5974, top)
+        data.writeByte(0x217f6c4, top)
+        //80018f58
+        data.writeByte(0x1ea72a0, top)
+        data.writeByte(0x1ea72c8, top)
+        data.writeByte(0x2180ff0, top)
+        data.writeByte(0x2181018, top)
+        //8001f48c
+        data.writeByte(0x1eae744, top)
+        data.writeByte(0x2188494, top)
+        //8003e16c
+        data.writeByte(0x21f94, top + 1)
+        data.writeByte(0x21f9c, top)
+        //800b0618
+        data.writeByte(0x1c859e0, top)
+        //800bcffc
+        data.writeByte(0x1c942a4, top)
+        data.writeByte(0x1c94354, top)
+        //800c0330
+        data.writeByte(0x1c97cf8, top)
+        //800c26ac
+        data.writeByte(0x1c9a534, top)
+      }
 
       //custom routine
       const spawnCodeAddresses = [0x1ea795c,0x21816ac,]
       spawnCodeAddresses.forEach(function(spawnCodeAddr) {
         //move new instructions in place
         const newSpawnCode = [
-          {instruction: 0x28000624, setsDifficulty: false,}, //li    a2,40
-          {instruction: 0x033c0700, setsDifficulty: false,}, //sra   a3,a3,0x10
-          {instruction: 0x1b00e600, setsDifficulty: false,}, //divu  a3,a2
-          {instruction: 0x1000a627, setsDifficulty: false,}, //addiu a2,sp,16
-          {instruction: 0x00000000, setsDifficulty: false,}, //nop
-          {instruction: 0x10380000, setsDifficulty: false,}, //mfhi  a3
-          {instruction: 0x12800000, setsDifficulty: false,}, //mflo  s0
-          {instruction: 0x2000bfaf, setsDifficulty: false,}, //sw    ra,32(sp)
-          {instruction: 0xb5fd000c, setsDifficulty: false,}, //                      jal	0x8003f6d4
-          {instruction: 0x5e3fe724, setsDifficulty: false,}, //                      addiu	a3,a3,16222                 ; a3 = floor number + 0x3f5e
-          {instruction: 0x06000424, setsDifficulty: false,}, //                      li	a0,6                            ; a0 = 6
-          {instruction: 0x1000a527, setsDifficulty: false,}, //                      addiu	a1,sp,16
-          {instruction: 0x3ff9000c, setsDifficulty: false,}, //                      jal	0x8003e4fc
-          {instruction: 0x21300000, setsDifficulty: false,}, //                      move	a2,zero                         ; a2 = 0
-          {instruction: 0xc8fc000c, setsDifficulty: false,}, //                      jal	0x8003f320
-          {instruction: 0x00000000, setsDifficulty: false,}, //                      nop
-          {instruction: 0x0880023c, setsDifficulty: false,}, //                      lui	v0,0x8008                       ; v0 = 0x80080000
-          {instruction: 0x7834428c, setsDifficulty: false,}, //                      lw	v0,13432(v0)                    ; v0 = $80083478
-          {instruction: 0x00a02626, setsDifficulty: false,}, //                      addiu	a2,s1,-24576                ; a2 = 0x8014a000
-          {instruction: 0x28000324, setsDifficulty: true,},  //li    v1,40
-          {instruction: 0x19007000, setsDifficulty: false,}, //multu v1,s0
-          {instruction: 0x10000324, setsDifficulty: false,}, //li    v1,16
-          {instruction: 0x00000000, setsDifficulty: false,}, //nop
-          {instruction: 0x12800000, setsDifficulty: false,}, //mflo  s0
+          {instruction: 0x28000624, enduranceDifficulty: false, timeDifficulty: false,}, //li    a2,40
+          {instruction: 0x033c0700, enduranceDifficulty: false, timeDifficulty: false,}, //sra   a3,a3,0x10
+          {instruction: 0x1b00e600, enduranceDifficulty: false, timeDifficulty: false,}, //divu  a3,a2
+          {instruction: 0x1000a627, enduranceDifficulty: false, timeDifficulty: false,}, //addiu a2,sp,16
+          {instruction: 0x00000000, enduranceDifficulty: false, timeDifficulty: false,}, //nop
+          {instruction: 0x10380000, enduranceDifficulty: false, timeDifficulty: false,}, //mfhi  a3
+          {instruction: 0x12800000, enduranceDifficulty: false, timeDifficulty: false,}, //mflo  s0
+          {instruction: 0x2000bfaf, enduranceDifficulty: false, timeDifficulty: false,}, //sw    ra,32(sp)
+          {instruction: 0xb5fd000c, enduranceDifficulty: false, timeDifficulty: false,}, //                      jal	0x8003f6d4
+          {instruction: 0x5e3fe724, enduranceDifficulty: false, timeDifficulty: false,}, //                      addiu	a3,a3,16222                 ; a3 = floor number + 0x3f5e
+          {instruction: 0x06000424, enduranceDifficulty: false, timeDifficulty: false,}, //                      li	a0,6                            ; a0 = 6
+          {instruction: 0x1000a527, enduranceDifficulty: false, timeDifficulty: false,}, //                      addiu	a1,sp,16
+          {instruction: 0x3ff9000c, enduranceDifficulty: false, timeDifficulty: false,}, //                      jal	0x8003e4fc
+          {instruction: 0x21300000, enduranceDifficulty: false, timeDifficulty: false,}, //                      move	a2,zero                         ; a2 = 0
+          {instruction: 0xc8fc000c, enduranceDifficulty: false, timeDifficulty: false,}, //                      jal	0x8003f320
+          {instruction: 0x00000000, enduranceDifficulty: false, timeDifficulty: false,}, //                      nop
+          {instruction: 0x0880023c, enduranceDifficulty: false, timeDifficulty: false,}, //                      lui	v0,0x8008                       ; v0 = 0x80080000
+          {instruction: 0x7834428c, enduranceDifficulty: false, timeDifficulty: false,}, //                      lw	v0,13432(v0)                    ; v0 = $80083478
+          {instruction: 0x00a02626, enduranceDifficulty: false, timeDifficulty: false,}, //                      addiu	a2,s1,-24576                ; a2 = 0x8014a000
+          {instruction: 0x28000324, enduranceDifficulty: true,  timeDifficulty: false,}, //li    v1,40
+          {instruction: 0x19007000, enduranceDifficulty: false, timeDifficulty: false,}, //multu v1,s0
+          {instruction: 0x10000324, enduranceDifficulty: false, timeDifficulty: false,}, //li    v1,16
+          {instruction: 0x0180043c, enduranceDifficulty: false, timeDifficulty: false,}, //lui   a0,0x8001  ; for time difficulty
+          {instruction: 0x12800000, enduranceDifficulty: false, timeDifficulty: false,}, //mflo  s0
+          {instruction: 0x1c02848c, enduranceDifficulty: false, timeDifficulty: false,}, //lw    a0,540(a0) ; for time difficulty
+          {instruction: 0x20000524, enduranceDifficulty: false, timeDifficulty: true,},  //li    a1,32
+          {instruction: 0x0620a400, enduranceDifficulty: false, timeDifficulty: false,}, //srlv  a0,a0,a1   ; for time difficulty
+          {instruction: 0x21800402, enduranceDifficulty: false, timeDifficulty: false,}, //addu  s0,s0,a0   ; for time difficulty
                       //loop:
-          {instruction: 0x0000c490, setsDifficulty: false,}, //lbu   a0,0(a2)
-          {instruction: 0x0100c590, setsDifficulty: false,}, //lbu   a1,1(a2)
-          {instruction: 0x02008014, setsDifficulty: false,}, //bnez  a0,2
-          {instruction: 0x00000000, setsDifficulty: false,}, //nop
-          {instruction: 0x20000424, setsDifficulty: false,}, //li    a0,20
+          {instruction: 0x0000c490, enduranceDifficulty: false, timeDifficulty: false,}, //lbu   a0,0(a2)
+          {instruction: 0x0100c590, enduranceDifficulty: false, timeDifficulty: false,}, //lbu   a1,1(a2)
+          {instruction: 0x02008014, enduranceDifficulty: false, timeDifficulty: false,}, //bnez  a0,2
+          {instruction: 0x00000000, enduranceDifficulty: false, timeDifficulty: false,}, //nop
+          {instruction: 0x20000424, enduranceDifficulty: false, timeDifficulty: false,}, //li    a0,20
 
-          {instruction: 0x000044a0, setsDifficulty: false,}, //sb    a0,0(v0)
-          {instruction: 0x2128b000, setsDifficulty: false,}, //addu  a1,a1,s0
-          {instruction: 0x0001a42c, setsDifficulty: false,}, //sltiu a0,a1,256
-          {instruction: 0x0200801c, setsDifficulty: false,}, //bgtz  a0,8
-          {instruction: 0x00000000, setsDifficulty: false,}, //nop
-          {instruction: 0xff000524, setsDifficulty: false,}, //li    a1,255
-          {instruction: 0x010045a0, setsDifficulty: false,}, //sb    a1,1(v0)
-          {instruction: 0x0200c624, setsDifficulty: false,}, //addiu a2,a2,2
-          {instruction: 0x02004224, setsDifficulty: false,}, //addiu v0,v0,2
-          {instruction: 0xf1ff6014, setsDifficulty: false,}, //bnez  v1,loop
-          {instruction: 0xffff6324, setsDifficulty: false,}, //addiu v1,v1,-1
-          {instruction: 0x00a03026, setsDifficulty: false,}, //addiu s0,s1,-24576
+          {instruction: 0x000044a0, enduranceDifficulty: false, timeDifficulty: false,}, //sb    a0,0(v0)
+          {instruction: 0x2128b000, enduranceDifficulty: false, timeDifficulty: false,}, //addu  a1,a1,s0
+          {instruction: 0x0001a42c, enduranceDifficulty: false, timeDifficulty: false,}, //sltiu a0,a1,256
+          {instruction: 0x0200801c, enduranceDifficulty: false, timeDifficulty: false,}, //bgtz  a0,8
+          {instruction: 0x00000000, enduranceDifficulty: false, timeDifficulty: false,}, //nop
+          {instruction: 0xff000524, enduranceDifficulty: false, timeDifficulty: false,}, //li    a1,255
+          {instruction: 0x010045a0, enduranceDifficulty: false, timeDifficulty: false,}, //sb    a1,1(v0)
+          {instruction: 0x0200c624, enduranceDifficulty: false, timeDifficulty: false,}, //addiu a2,a2,2
+          {instruction: 0x02004224, enduranceDifficulty: false, timeDifficulty: false,}, //addiu v0,v0,2
+          {instruction: 0xf1ff6014, enduranceDifficulty: false, timeDifficulty: false,}, //bnez  v1,loop
+          {instruction: 0xffff6324, enduranceDifficulty: false, timeDifficulty: false,}, //addiu v1,v1,-1
+          {instruction: 0x00a03026, enduranceDifficulty: false, timeDifficulty: false,}, //addiu s0,s1,-24576
 
-          {instruction: 0x00000000, setsDifficulty: false,}, //nop
-          {instruction: 0x00000000, setsDifficulty: false,}, //nop
-          {instruction: 0x00000000, setsDifficulty: false,}, //nop
-          {instruction: 0x00000000, setsDifficulty: false,}, //nop
-          {instruction: 0x00000000, setsDifficulty: false,}, //nop
+          {instruction: 0x00000000, enduranceDifficulty: false, timeDifficulty: false,}, //nop
         ]
+        const timeDifficultyShiftOffset = 11; //actually about 0xe01 per minute, but use 0x1000 as an approximation
+        const maxTimeDifficultyValue = 31 - timeDifficultyShiftOffset - 1; //31 is max non-zero shift, then remove shift offset plus 1 for min difficulty of 1
         newSpawnCode.forEach(function(instruction) {
             data.writeInstruction(spawnCodeAddr, instruction.instruction)
-            if (instruction.setsDifficulty) {
+            if (instruction.enduranceDifficulty) {
             	data.writeByte(spawnCodeAddr, options.endurance & 0xff)
+            }
+            if (instruction.timeDifficulty && !!options.timeDifficulty && options.timeDifficulty > 0 && options.timeDifficulty <= maxTimeDifficultyValue) {
+              data.writeByte(spawnCodeAddr, timeDifficultyShiftOffset + (options.timeDifficulty & 0xff))
             }
             spawnCodeAddr += 4
           }
         )
       })
     }
-    //if (options.experimentalChanges) {
-      //always make cursor start at New Game
-      //data.writeInstruction(0x43a920, 0x01000224)
-    //}
+  }
+
+  function applyBoss(options, data) {
+    if (options.boss) {
+      //make Beldo killable
+      let beldoAddress = constants.romAddresses.beldoInvulnerability
+      const beldoVulnerableCode = [
+          {instruction: 0x0000628c,}, //lw	v0,0(v1)
+          {instruction: 0x9b000392,}, //lbu	v1,155(s0)
+          {instruction: 0x08004000,}, //jr	v0
+          {instruction: 0x01006324,}, //addiu	v1,v1,1
+          {instruction: 0x9b0003a2,}, //sb	v1,155(s0)
+          {instruction: 0x34b5020c,}, //jal	0x800ad4d0  ; call change_monster_or_player_health
+          {instruction: 0x00000000,}, //nop
+          {instruction: 0x00000000,}, //nop
+          {instruction: 0x00000000,}, //nop
+        ]
+      beldoVulnerableCode.forEach(function(instruction) {
+        data.writeInstruction(beldoAddress, instruction.instruction)
+          beldoAddress += 4
+        }
+      )
+
+      //remove lose to win condition
+      data.writeInstruction(constants.romAddresses.checkKohDeathTopFloor, 0x0000033c)
+    }
   }
 
   function pauseAfterDeath(data) {
@@ -769,6 +847,8 @@
     eggomizer,
     singleRoom,
     endurance,
+    boss,
+    timeDifficulty,
   ) {
     this.id = id
     this.name = name
@@ -791,7 +871,9 @@
     this.monsterElements = monsterElements,
     this.eggomizer = eggomizer,
     this.singleRoom = singleRoom,
-    this.endurance = endurance
+    this.endurance = endurance,
+    this.boss = boss,
+    this.timeDifficulty = timeDifficulty
   }
 
   function clone(obj) {
@@ -892,6 +974,8 @@
     this.eggomizer = false
     this.singleRoom = false
     this.endurance = 0
+    this.boss = false
+    this.timeDifficulty = 0
   }
 
   // Convert lock sets into strings.
@@ -927,6 +1011,8 @@
     const eggomizer = self.eggomizer
     const singleRoom = self.singleRoom
     const endurance = self.endurance
+    const boss = self.boss
+    const timeDifficulty = self.timeDifficulty
     return new Preset(
       self.metadata.id,
       self.metadata.name,
@@ -950,6 +1036,8 @@
       eggomizer,
       singleRoom,
       endurance,
+      boss,
+      timeDifficulty,
     )
   }
 

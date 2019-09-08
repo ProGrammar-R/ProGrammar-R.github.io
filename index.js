@@ -166,6 +166,8 @@
       elems.eggomizer.disabled = true
       elems.singleRoom.disabled = true
       elems.endurance.disabled = true
+      elems.boss.disabled = true
+      elems.timeDifficulty.disabled = true
       presetIdChange()
     } else {
       elems.presetId.classList.add('hide')
@@ -186,6 +188,8 @@
       elems.eggomizer.disabled = false
       elems.singleRoom.disabled = false
       elems.endurance.disabled = false
+      elems.boss.disabled = false
+      elems.timeDifficulty.disabled = elems.endurance.value > 0
     }
   }
 
@@ -213,6 +217,8 @@
       elems.eggomizer.checked = !!options.eggomizer
       elems.singleRoom.checked = !!options.singleRoom
       elems.endurance.value = options.endurance
+      elems.boss.checked = !!options.boss
+      elems.timeDifficulty.value = options.timeDifficulty
     }
   }
 
@@ -241,9 +247,11 @@
     if (!elems.enemizer.checked) {
       elems.barongs.checked = false
       elems.barongs.disabled = true
+      elems.barongsContainer.setAttribute("hidden", "")
       barongsChange()
     } else {
       elems.barongs.disabled = elems.preset.checked || elems.seed.disabled
+      elems.barongsContainer.removeAttribute("hidden")
     }
   }
 
@@ -293,6 +301,27 @@
 
   function enduranceChange() {
     localStorage.setItem('endurance', elems.endurance.value)
+    setTimeDifficultyBasedOnEndurance()
+  }
+
+  function bossChange() {
+    localStorage.setItem('boss', elems.boss.checked)
+  }
+
+  function setTimeDifficultyBasedOnEndurance() {
+    if (elems.endurance.value > 0) {
+      elems.timeDifficulty.disabled = elems.preset.checked || elems.seed.disabled
+      elems.timeDifficultyContainer.removeAttribute("hidden")
+    } else {
+      elems.timeDifficulty.value = 0
+      elems.timeDifficulty.disabled = true
+      elems.timeDifficultyContainer.setAttribute("hidden", "")
+      timeDifficultyChange()
+    }
+  }
+
+  function timeDifficultyChange() {
+    localStorage.setItem('timeDifficulty', elems.timeDifficulty.value)
   }
 
   function appendSeedChange() {
@@ -366,6 +395,8 @@
       eggomizer: elems.eggomizer.checked,
       singleRoom: elems.singleRoom.checked,
       endurance: elems.endurance.value,
+      boss: elems.boss.checked,
+      timeDifficulty: elems.timeDifficulty.value,
     }
     return options
   }
@@ -440,7 +471,7 @@
     elems.introSkip.disabled = false
     elems.fastTutorial.disabled = false
     elems.enemizer.disabled = false
-    setBarongsBasedOnEnemizer(true)
+    setBarongsBasedOnEnemizer()
     elems.starter.disabled = false
     elems.nonnativeSpellsLevel.disabled = false
     elems.starterElement.disabled = false
@@ -452,6 +483,8 @@
     elems.eggomizer.disabled = false
     elems.singleRoom.disabled = false
     elems.endurance.disabled = false
+    elems.boss.disabled = false
+    setTimeDifficultyBasedOnEndurance()
     elems.clear.classList.add('hidden')
     presetChange()
   }
@@ -821,6 +854,7 @@
       fastTutorial: document.getElementById('fast-tutorial'),
       enemizer: document.getElementById('enemizer'),
       barongs: document.getElementById('barongs'),
+      barongsContainer: document.getElementById('barongs-container'),
       starter: document.getElementById('starter'),
       nonnativeSpellsLevel: document.getElementById('non-native-spells-level'),
       starterElement: document.getElementById('starter-element'),
@@ -832,6 +866,9 @@
       eggomizer: document.getElementById('eggomizer'),
       singleRoom: document.getElementById('single-room'),
       endurance: document.getElementById('endurance'),
+      boss: document.getElementById('boss'),
+      timeDifficulty: document.getElementById('time-difficulty'),
+      timeDifficultyContainer: document.getElementById('time-difficulty-container'),
       download: document.getElementById('download'),
       downloadCue: document.getElementById('downloadCue'),
       loader: document.getElementById('loader'),
@@ -866,6 +903,8 @@
     elems.eggomizer.addEventListener('change', eggomizerChange)
     elems.singleRoom.addEventListener('change', singleRoomChange)
     elems.endurance.addEventListener('change', enduranceChange)
+    elems.boss.addEventListener('change', bossChange)
+    elems.timeDifficulty.addEventListener('change', timeDifficultyChange)
     elems.copy.addEventListener('click', copyHandler)
     elems.makeCue.addEventListener('click', makeCueHandler)
     // Load presets
@@ -996,6 +1035,12 @@
       elems.endurance.value = applied.endurance
       enduranceChange()
       elems.endurance.disabled = true
+      elems.boss.checked = applied.boss
+      bossChange()
+      elems.boss.disabled = true
+      elems.timeDifficulty.value = applied.timeDifficulty
+      timeDifficultyChange()
+      elems.timeDifficulty.disabled = true
       elems.clear.classList.remove('hidden')
       const baseUrl = url.origin + url.pathname
       window.history.replaceState({}, document.title, baseUrl)
@@ -1038,6 +1083,8 @@
       loadOption('eggomizer', eggomizerChange, false)
       loadOption('singleRoom', singleRoomChange, false)
       loadOption('endurance', enduranceChange, 0)
+      loadOption('boss', bossChange, false)
+      loadOption('timeDifficulty', timeDifficultyChange, 0)
     }
     loadOption('appendSeed', appendSeedChange, true)
     loadOption('experimentalChanges', experimentalChangesChange, false)
