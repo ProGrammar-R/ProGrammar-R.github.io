@@ -5,7 +5,9 @@ deterministically (pseudo)-random, so the Nth floor of the Xth run up the tower 
 
 ## Browser
 
-https://ProGrammar-R.github.io
+https://adrando.com
+
+You can also reach it from https://ProGrammar-R.github.io
 
 ## CLI
 
