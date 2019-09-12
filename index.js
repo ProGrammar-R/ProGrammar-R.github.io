@@ -305,6 +305,15 @@
 
   function bossChange() {
     localStorage.setItem('boss', elems.boss.checked)
+    let hikewneOption = elems.starter.options.namedItem('starterHikewne')
+    if (!!hikewneOption) {
+      //hikewne is not allowed in boss mode
+      if (elems.boss.checked) {
+        hikewneOption.setAttribute("disabled", "")
+      } else {
+        hikewneOption.removeAttribute("disabled", "")
+      }
+    }
   }
 
   function timeDifficultyChange() {
@@ -908,6 +917,7 @@
     monsters.allMonsters.forEach(function(monster) {
       const option = document.createElement('option')
       option.value = monster.ID
+      option.id = 'starter' + monster.name
       option.innerText = monster.name
       elems.starter.appendChild(option)
     })

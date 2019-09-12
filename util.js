@@ -762,7 +762,124 @@
       )
 
       //remove lose to win condition
-      data.writeInstruction(constants.romAddresses.checkKohDeathTopFloor, 0x0000033c)
+      data.writeInstruction(constants.romAddresses.checkKohDeathTopFloor, 0x0000033c) //lui	v1,0x00
+
+      //prevent crash under certain conditions
+      data.writeInstruction(constants.romAddresses.beldoCrashFixPart1, 0x21184000) // move v1,v0
+      beldoAddress = constants.romAddresses.beldoCrashFixPart2
+      const beldoCrashFixPart2Code = [
+          {instruction: 0x05004010,}, //beqz	v0,0x8009b2c8                 ; if result of routine_8009a350 is 0, essentially jump to routine_8009b25c_end, returning v0 = 0
+          {instruction: 0x00336330,}, //andi	v1,v1,0x3300                  ; if secondary result of routine_8009a350 didn't have bits 0x3300 set
+          {instruction: 0x5c00028e,}, //lw	v0,92(s0)                       ; v0 = monster s0's nearby pointer (can freeze when load v0 = 0)
+          {instruction: 0x05006014,}, //bnez	v1,0x8009b2d4                 ;   jump to routine_8009b25c_end, returning v0 = 0
+          {instruction: 0x00000000,}, //nop
+        ]
+      beldoCrashFixPart2Code.forEach(function(instruction) {
+        data.writeInstruction(beldoAddress, instruction.instruction)
+          beldoAddress += 4
+        }
+      )
+
+      //custom Beldo code
+      const customBeldoCode = [
+          {instruction: 0x21200000,}, //move a0,0
+          {instruction: 0x21280000,}, //move a1,0
+          //loop
+          {instruction: 0x0000c38c,}, //lw  v1,0(a2)
+          {instruction: 0x0100a524,}, //addiu  a1,a1,1
+          {instruction: 0x1800a3af,}, //sw  v1,24(sp)
+          {instruction: 0x0400c624,}, //addiu  a2,a2,4
+          {instruction: 0x0800a22c,}, //sltiu  v0,a1,8
+          {instruction: 0xfaff4014,}, //bnez  v0,0x80171db4
+          {instruction: 0x0400bd27,}, //addiu  sp,sp,4
+          {instruction: 0x21280000,}, //move  a1,zero
+          {instruction: 0x01008424,}, //addiu  a0,a0,1
+          {instruction: 0x0200822c,}, //sltiu  v0,a0,2
+          {instruction: 0xf5ff4014,}, //bnez  v0,0x80171db4
+          {instruction: 0x7402c624,}, //addiu  a2,a2,628
+          {instruction: 0xadc70508,}, //j  0x80171eb4
+          {instruction: 0xc0ffbd27,}, //addiu  sp,sp,-64
+          //new routine
+          {instruction: 0xd0ffbd27,}, //addiu  sp,sp,-48
+          {instruction: 0x2800bfaf,}, //sw  ra,40(sp)
+          {instruction: 0x2400a4af,}, //sw  a0,36(sp)
+          {instruction: 0x2000a5af,}, //sw  a1,32(sp)
+          {instruction: 0x1c00a6af,}, //sw  a2,28(sp)
+          {instruction: 0x1800a7af,}, //sw  a3,24(sp)
+          {instruction: 0x10000524,}, //li  a1,16
+          {instruction: 0x3c92020c,}, //jal  0x800a48f0
+          {instruction: 0x0f000624,}, //li  a2,15
+          {instruction: 0x0f80033c,}, //lui  v1,0x800f
+          {instruction: 0x88000224,}, //li  v0,0x88
+          {instruction: 0xc5d062a0,}, //sb  v0,-12091(v1)
+          {instruction: 0x00010224,}, //li  v0,0x0100
+          {instruction: 0x00000000,}, //nop
+          {instruction: 0x44d262a4,}, //sh  v0,-11708(v1)
+          {instruction: 0x4ad262a4,}, //sh  v0,-11702(v1)
+          {instruction: 0x3ed262a4,}, //sh  v0,-11714(v1)
+          {instruction: 0xcad062a4,}, //sh  v0,-12086(v1)
+          {instruction: 0xbed062a4,}, //sh  v0,-12098(v1)
+          {instruction: 0x0e80033c,}, //lui  v1,0x800e
+          {instruction: 0x4a3560a0,}, //sb  zero,0x354a(v1)
+          //set fast
+          {instruction: 0x07000524,}, //li   a1,7
+          {instruction: 0x3c92020c,}, //jal	0x800a48f0
+          {instruction: 0x01000624,}, //li   a2,1
+          {instruction: 0x00000000,}, //nop
+          {instruction: 0x00000000,}, //nop
+          {instruction: 0x00000000,}, //nop
+          {instruction: 0x00000000,}, //nop
+          {instruction: 0x00000000,}, //nop
+          {instruction: 0x00000000,}, //nop
+          {instruction: 0x00000000,}, //nop
+          {instruction: 0x00000000,}, //nop
+          {instruction: 0x00000000,}, //nop
+          {instruction: 0x00000000,}, //nop
+          {instruction: 0x00000000,}, //nop
+          {instruction: 0x00000000,}, //nop
+          {instruction: 0x00000000,}, //nop
+          {instruction: 0x00000000,}, //nop
+          {instruction: 0x00000000,}, //nop
+          {instruction: 0x00000000,}, //nop
+          {instruction: 0x00000000,}, //nop
+          {instruction: 0x00000000,}, //nop
+          {instruction: 0x00000000,}, //nop
+          {instruction: 0x2800bf8f,}, //lw  ra,40(sp)
+          {instruction: 0x1800a78f,}, //lw  a3,24(sp)
+          {instruction: 0x1c00a68f,}, //lw  a2,28(sp)
+          {instruction: 0x2000a58f,}, //lw  a1,32(sp)
+          {instruction: 0x2400a48f,}, //lw  a0,36(sp)
+          {instruction: 0x0800e003,}, //jr  ra
+          {instruction: 0x3000bd27,}, //addiu  sp,sp,48
+        ]
+      beldoAddress = constants.romAddresses.customBeldoCode
+      customBeldoCode.forEach(function(instruction) {
+        data.writeInstruction(beldoAddress, instruction.instruction)
+          beldoAddress += 4
+        }
+      )
+
+      //make this routine get called instead of setting beldo as fast directly
+      data.writeInstruction(constants.romAddresses.beldoSetFast, 0x7bc7050c)
+
+      //give Beldo spells
+      const beldoUnitId = 0x38
+      const beldoInitialStatsAddress = constants.romAddresses.initialStatsTable + constants.initialStatsRowLength * beldoUnitId
+      data.writeByte(beldoInitialStatsAddress + constants.monsterStats.spell1Id, constants.spells.poison)
+      data.writeByte(beldoInitialStatsAddress + constants.monsterStats.spell1Level, 1)
+      data.writeByte(beldoInitialStatsAddress + constants.monsterStats.spell1LevelAlt, 1)
+      data.writeByte(beldoInitialStatsAddress + constants.monsterStats.spell2Id, constants.spells.lagrave)
+      data.writeByte(beldoInitialStatsAddress + constants.monsterStats.spell2Level, 1)
+      data.writeByte(beldoInitialStatsAddress + constants.monsterStats.spell2LevelAlt, 1)
+
+      //increase Beldo's stat growth to be more like Koh's
+      const beldoStatGrowthAddress = constants.romAddresses.statGrowthTable + constants.statGrowthRowLength * beldoUnitId
+      data.writeByte(beldoStatGrowthAddress + constants.monsterStats.attack, 0x08)
+      data.writeByte(beldoStatGrowthAddress + constants.monsterStats.defense, 0x0b)
+      data.writeByte(beldoStatGrowthAddress + constants.monsterStats.hp, 0x10)
+
+      //set Beldo's level based on endurance mode
+      data.writeByte(constants.romAddresses.beldoLevel, (options.endurance > 0) ? 60 : 40)
     }
   }
 

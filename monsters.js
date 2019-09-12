@@ -16,11 +16,6 @@
   const randomStarterHexKey = 6
   const randomStarterElementHexKey = 7
 
-  const initialStatsAddress = 0x57f30;
-  const initialStatsRowLength = 24;
-  const initialStatsElementOffset = 20;
-  const initialStatsSpell1Offset = 8;
-
   const allElements = [
     {ID: -3, name: "Default",   primary: false, isDefault: true},
     {ID: -2, name: "Randomize", primary: false, isDefault: false},
@@ -235,6 +230,10 @@
         starter = monsterFromName("Kewne").ID
       }
     }
+    //override Hikewne as starter if boss mode is enabled
+    if (options.boss && starter == monsterFromName("Hikewne").ID) {
+      starter = monsterFromName("Kewne").ID
+    }
     addresses.forEach(function(starterAddress) {
       data.writeByte(starterAddress.location, starter)
     })
@@ -244,7 +243,7 @@
   }
 
   function setMonsterToElement(desiredElement, data, randomValue, starterId) {
-    let initialElementAddress = getElementStatAddressForMonster(starterId)
+    let initialElementAddress = getInitialStatAddressForMonster(starterId) + constants.monsterStats.element
     let starterElement = data.readByte(initialElementAddress)
     let starterDefaultElement = starterElement
     let tri = elementFromName("Tri").ID
@@ -269,7 +268,7 @@
       data.writeByte(initialElementAddress, starterElement)
 
       //need to change starter spell to match element
-      let initialSpellAddress = initialStatsAddress + starterId * initialStatsRowLength + initialStatsSpell1Offset
+      let initialSpellAddress = constants.romAddresses.initialStatsTable + starterId * constants.initialStatsRowLength + constants.monsterStats.spell1Id
       let starterSpell = data.readByte(initialSpellAddress)
 
       //but only change it for monsters that have spells, aren't Tri, and weren't originally Tri (Hikewne)
@@ -308,7 +307,7 @@
       allMonsters.forEach(function(monster) {
         if (changeForAllMonsters || monster.ID == starter) {
           let hiddenSpell = data.readByte(hiddenSpellTableAddress + monster.ID)
-          let initialSpellAddress = initialStatsAddress + monster.ID * initialStatsRowLength + initialStatsSpell1Offset
+          let initialSpellAddress = constants.romAddresses.initialStatsTable + monster.ID * constants.initialStatsRowLength + constants.monsterStats.spell1Id
           if (!!hiddenSpell) {
             data.writeByte(initialSpellAddress, hiddenSpell)
             data.writeByte(initialSpellAddress + 1, 0x01) // set initial level
@@ -419,8 +418,8 @@
     }
   }
 
-  function getElementStatAddressForMonster(monsterID) {
-    return initialStatsAddress + monsterID * initialStatsRowLength + initialStatsElementOffset
+  function getInitialStatAddressForMonster(monsterID) {
+    return constants.romAddresses.initialStatsTable + monsterID * constants.initialStatsRowLength
   }
 
   const exports = {
@@ -430,6 +429,7 @@
     randomStarterOptionValue: randomStarterOptionValue,
     allElements: allElements,
     hiddenSpellOptions: hiddenSpellOptions,
+    getInitialStatAddressForMonster: getInitialStatAddressForMonster,
   }
   if (self) {
     self.adRando = Object.assign(self.adRando || {}, {
