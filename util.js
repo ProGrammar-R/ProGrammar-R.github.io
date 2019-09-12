@@ -241,6 +241,7 @@
         break
 	  	case 'w':
         options.newBalls = true
+        break
 	  	case 'I':
         options.startingItems = true
         break
