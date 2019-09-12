@@ -807,6 +807,8 @@
           {instruction: 0x2000a5af,}, //sw  a1,32(sp)
           {instruction: 0x1c00a6af,}, //sw  a2,28(sp)
           {instruction: 0x1800a7af,}, //sw  a3,24(sp)
+          {instruction: 0x1400b0af,}, //sw  s0,20(sp)
+          {instruction: 0x21808000,}, //move s0,a0
           {instruction: 0x10000524,}, //li  a1,16
           {instruction: 0x3c92020c,}, //jal  0x800a48f0
           {instruction: 0x0f000624,}, //li  a2,15
@@ -823,6 +825,7 @@
           {instruction: 0x0e80033c,}, //lui  v1,0x800e
           {instruction: 0x4a3560a0,}, //sb  zero,0x354a(v1)
           //set fast
+          {instruction: 0x21200002,}, //move a0,s0
           {instruction: 0x07000524,}, //li   a1,7
           {instruction: 0x3c92020c,}, //jal	0x800a48f0
           {instruction: 0x01000624,}, //li   a2,1
@@ -841,10 +844,7 @@
           {instruction: 0x00000000,}, //nop
           {instruction: 0x00000000,}, //nop
           {instruction: 0x00000000,}, //nop
-          {instruction: 0x00000000,}, //nop
-          {instruction: 0x00000000,}, //nop
-          {instruction: 0x00000000,}, //nop
-          {instruction: 0x00000000,}, //nop
+          {instruction: 0x1400b08f,}, //lw  s0,20(sp)
           {instruction: 0x2800bf8f,}, //lw  ra,40(sp)
           {instruction: 0x1800a78f,}, //lw  a3,24(sp)
           {instruction: 0x1c00a68f,}, //lw  a2,28(sp)
