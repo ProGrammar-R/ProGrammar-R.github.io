@@ -693,14 +693,14 @@
           {instruction: 0x0880023c, enduranceDifficulty: false, timeDifficulty: false,}, //                      lui	v0,0x8008                       ; v0 = 0x80080000
           {instruction: 0x7834428c, enduranceDifficulty: false, timeDifficulty: false,}, //                      lw	v0,13432(v0)                    ; v0 = $80083478
           {instruction: 0x00a02626, enduranceDifficulty: false, timeDifficulty: false,}, //                      addiu	a2,s1,-24576                ; a2 = 0x8014a000
-          {instruction: 0x28000324, enduranceDifficulty: true,  timeDifficulty: false,}, //li    v1,40
-          {instruction: 0x19007000, enduranceDifficulty: false, timeDifficulty: false,}, //multu v1,s0
-          {instruction: 0x10000324, enduranceDifficulty: false, timeDifficulty: false,}, //li    v1,16
-          {instruction: 0x0180043c, enduranceDifficulty: false, timeDifficulty: false,}, //lui   a0,0x8001  ; for time difficulty
-          {instruction: 0x12800000, enduranceDifficulty: false, timeDifficulty: false,}, //mflo  s0
-          {instruction: 0x1c02848c, enduranceDifficulty: false, timeDifficulty: false,}, //lw    a0,540(a0) ; for time difficulty
-          {instruction: 0x20000524, enduranceDifficulty: false, timeDifficulty: true,},  //li    a1,32
-          {instruction: 0x0620a400, enduranceDifficulty: false, timeDifficulty: false,}, //srlv  a0,a0,a1   ; for time difficulty
+          {instruction: 0x28000324, enduranceDifficulty: true,  timeDifficulty: false,}, //li    v1,40      ; set endurance difficulty multiplier
+          {instruction: 0x19007000, enduranceDifficulty: false, timeDifficulty: false,}, //multu v1,s0      ; multiply endurance difficulty multiplier by number of times past 40
+          {instruction: 0x10000324, enduranceDifficulty: false, timeDifficulty: false,}, //li    v1,16      ; set loop counter
+          {instruction: 0x0180043c, enduranceDifficulty: false, timeDifficulty: false,}, //lui   a0,0x8001  ;
+          {instruction: 0x12800000, enduranceDifficulty: false, timeDifficulty: false,}, //mflo  s0         ; s0 = monster level increase for endurance
+          {instruction: 0x1c02848c, enduranceDifficulty: false, timeDifficulty: false,}, //lw    a0,540(a0) ; get time elapsed for time difficulty
+          {instruction: 0x1f000524, enduranceDifficulty: false, timeDifficulty: true,},  //li    a1,31      ; get scaling factor for time difficulty (use 31 if no time difficulty, 32 acts like 0)
+          {instruction: 0x0620a400, enduranceDifficulty: false, timeDifficulty: false,}, //srlv  a0,a0,a1   ; a0 = monster level increase for time difficulty
           {instruction: 0x21800402, enduranceDifficulty: false, timeDifficulty: false,}, //addu  s0,s0,a0   ; for time difficulty
                       //loop:
           {instruction: 0x0000c490, enduranceDifficulty: false, timeDifficulty: false,}, //lbu   a0,0(a2)
@@ -731,7 +731,7 @@
             if (instruction.enduranceDifficulty) {
             	data.writeByte(spawnCodeAddr, options.endurance & 0xff)
             }
-            if (instruction.timeDifficulty && !!options.timeDifficulty && options.timeDifficulty > 0 && options.timeDifficulty <= maxTimeDifficultyValue) {
+            if (instruction.timeDifficulty && options.timeDifficulty > 0 && options.timeDifficulty <= maxTimeDifficultyValue) {
               data.writeByte(spawnCodeAddr, timeDifficultyShiftOffset + (options.timeDifficulty & 0xff))
             }
             spawnCodeAddr += 4
