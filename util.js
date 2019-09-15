@@ -809,7 +809,7 @@
           {instruction: 0x1800a7af,}, //sw  a3,24(sp)
           {instruction: 0x1400b0af,}, //sw  s0,20(sp)
           {instruction: 0x21808000,}, //move s0,a0
-          {instruction: 0x10000524,}, //li  a1,16
+          {instruction: 0x16000524,}, //li  a1,16
           {instruction: 0x3c92020c,}, //jal  0x800a48f0
           {instruction: 0x0f000624,}, //li  a2,15
           {instruction: 0x0f80033c,}, //lui  v1,0x800f
@@ -876,8 +876,8 @@
       //increase Beldo's stat growth to be more like Koh's
       const beldoStatGrowthAddress = constants.romAddresses.statGrowthTable + constants.statGrowthRowLength * beldoUnitId
       data.writeByte(beldoStatGrowthAddress + constants.monsterStats.attack, 0x08)
-      data.writeByte(beldoStatGrowthAddress + constants.monsterStats.defense, 0x0b)
-      data.writeByte(beldoStatGrowthAddress + constants.monsterStats.hp, 0x10)
+      data.writeByte(beldoStatGrowthAddress + constants.monsterStats.defense, 0x4b)
+      data.writeByte(beldoStatGrowthAddress + constants.monsterStats.hp, 0x00)
 
       //set Beldo's level based on endurance mode
       data.writeByte(constants.romAddresses.beldoLevel, (options.endurance > 0) ? 60 : 40)
