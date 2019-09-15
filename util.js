@@ -873,9 +873,9 @@
       data.writeByte(beldoInitialStatsAddress + constants.monsterStats.spell2Level, 1)
       data.writeByte(beldoInitialStatsAddress + constants.monsterStats.spell2LevelAlt, 1)
 
-      //increase Beldo's stat growth to be more like Koh's
+      //change Beldo's stat growth
       const beldoStatGrowthAddress = constants.romAddresses.statGrowthTable + constants.statGrowthRowLength * beldoUnitId
-      data.writeByte(beldoStatGrowthAddress + constants.monsterStats.attack, 0x08)
+      data.writeByte(beldoStatGrowthAddress + constants.monsterStats.attack, 0x05)
       data.writeByte(beldoStatGrowthAddress + constants.monsterStats.defense, 0x4b)
       data.writeByte(beldoStatGrowthAddress + constants.monsterStats.hp, 0x00)
 
