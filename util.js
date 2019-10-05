@@ -1,13 +1,16 @@
 (function(self) {
 
   let constants
+  let fields
   let sjcl
 
   if (self) {
     constants = self.adRando.constants
+    fields = self.adRando.fields
     sjcl = self.sjcl
   } else {
     constants = require('./constants')
+    fields = require('./fields')
     sjcl = require('sjcl')
   }
 
@@ -127,189 +130,44 @@
   }
 
   function optionsFromString(randomize) {
-    const options = {}
     let i = 0
+    let currentIndex
+    let found
+    const fieldNames = Object.getOwnPropertyNames(fields.allOptions)
     while (i < randomize.length) {
-      let c = randomize[i++]
-      let arg
-      let start
-      switch (c) {
-      case 'P':
-        // Check for an argument.
-        if (randomize[i] !== ':') {
-          throw new Error('Expected argument')
-        }
+      currentIndex = i
+      found = fieldNames.find(function(fieldName) {
+        i = fields.allOptions[fieldName].setIfNext(randomize, i)
+        return currentIndex !== i
+      })
+      if (!found) {
+        let c = randomize[i++]
+        if (c === 'P') {
+          // Check for an argument.
+          if (randomize[i] !== ':') {
+            throw new Error('Expected argument')
+          }
 
-        // Parse the arg name.
-        start = ++i
-        while (i < randomize.length
-               && [',', ':'].indexOf(randomize[i]) === -1) {
-          i++
+          // Parse the arg name.
+          start = ++i
+          while (i < randomize.length
+                 && [',', ':'].indexOf(randomize[i]) === -1) {
+            i++
+          }
+          arg = randomize.slice(start, i)
+          if (!arg.length) {
+            throw new Error('Expected argument')
+          }
+          options.preset = arg
+          if (randomize[i] === ',') {
+            i++
+          }
+        } else {
+          throw new Error('Invalid randomization: ' + c)
         }
-        arg = randomize.slice(start, i)
-        if (!arg.length) {
-          throw new Error('Expected argument')
-        }
-        options.preset = arg
-        if (randomize[i] === ',') {
-          i++
-        }
-        break
-      case 'd':
-        options.derandomize = true
-        break
-      case 't':
-        options.tutorialSkip = true
-        break
-      case 'i':
-        options.introSkip = true
-        break
-      case 'f':
-        options.fastTutorial = true
-        break
-      case 'e':
-        options.enemizer = true
-        break
-      case 'b':
-        options.barongs = true
-        break
-      case 'S':
-        // Check for an argument.
-        if (randomize[i] !== ':') {
-          throw new Error('Expected argument')
-        }
-
-        // Parse the arg name.
-        start = ++i
-        while (i < randomize.length
-               && [',', ':'].indexOf(randomize[i]) === -1) {
-          i++
-        }
-        arg = randomize.slice(start, i)
-        if (!arg.length) {
-          throw new Error('Expected argument')
-        }
-        options.starter = arg
-        if (randomize[i] === ',') {
-          i++
-        }
-        break
-      case 'n':
-        options.nonnativeSpellsLevel = true
-        break
-      case 'E':
-        // Check for an argument.
-        if (randomize[i] !== ':') {
-          throw new Error('Expected argument')
-        }
-
-        // Parse the arg name.
-        start = ++i
-        while (i < randomize.length
-               && [',', ':'].indexOf(randomize[i]) === -1) {
-          i++
-        }
-        arg = randomize.slice(start, i)
-        if (!arg.length) {
-          throw new Error('Expected argument')
-        }
-        options.starterElement = arg
-        if (randomize[i] === ',') {
-          i++
-        }
-        break
-      case 'h':
-        // Check for an argument.
-        if (randomize[i] !== ':') {
-          throw new Error('Expected argument')
-        }
-
-        // Parse the arg name.
-        start = ++i
-        while (i < randomize.length
-               && [',', ':'].indexOf(randomize[i]) === -1) {
-          i++
-        }
-        arg = randomize.slice(start, i)
-        if (!arg.length) {
-          throw new Error('Expected argument')
-        }
-        options.hiddenSpells = arg
-        if (randomize[i] === ',') {
-          i++
-        }
-        break
-	  	case 'w':
-        options.newBalls = true
-        break
-	  	case 'I':
-        options.startingItems = true
-        break
-      case 'B':
-        options.ballElements = true
-        break
-      case 'm':
-        options.monsterElements = true
-        break
-      case 'g':
-        options.eggomizer = true
-        break
-      case 's':
-        options.singleRoom = true
-        break
-      case 'N':
-        // Check for an argument.
-        if (randomize[i] !== ':') {
-          throw new Error('Expected argument')
-        }
-
-        // Parse the arg name.
-        start = ++i
-        while (i < randomize.length
-               && [',', ':'].indexOf(randomize[i]) === -1) {
-          i++
-        }
-        arg = randomize.slice(start, i)
-        if (!arg.length) {
-          throw new Error('Expected argument')
-        }
-        options.endurance = arg
-        if (randomize[i] === ',') {
-          i++
-        }
-        break
-      case 'o':
-        options.boss = true
-        break
-      case 'T':
-        // Check for an argument.
-        if (randomize[i] !== ':') {
-          throw new Error('Expected argument')
-        }
-
-        // Parse the arg name.
-        start = ++i
-        while (i < randomize.length
-               && [',', ':'].indexOf(randomize[i]) === -1) {
-          i++
-        }
-        arg = randomize.slice(start, i)
-        if (!arg.length) {
-          throw new Error('Expected argument')
-        }
-        options.timeDifficulty = arg
-        if (randomize[i] === ',') {
-          i++
-        }
-        break
-      default:
-        throw new Error('Invalid randomization: ' + c)
       }
     }
-    if (!Object.getOwnPropertyNames(options).length) {
-      throw new Error('No randomizations')
-    }
-    return options
+    return fields.allOptions
   }
 
   function optionsToString(options) {
@@ -322,106 +180,23 @@
       }
     })
     let randomize = ''
-    while (Object.getOwnPropertyNames(options).length) {
-      if ('preset' in options) {
-        randomize += 'P:' + options.preset
-        if (Object.getOwnPropertyNames(options).length > 1) {
-          randomize += ','
-        }
-        delete options.preset
-      } else if ('derandomize' in options) {
-        if (options.derandomize) {
-          randomize += 'd'
-        }
-        delete options.derandomize
-      } else if ('tutorialSkip' in options) {
-        if (options.tutorialSkip) {
-          randomize += 't'
-        }
-        delete options.tutorialSkip
-      } else if ('introSkip' in options) {
-        if (options.introSkip) {
-          randomize += 'i'
-        }
-        delete options.introSkip
-      } else if ('fastTutorial' in options) {
-        if (options.fastTutorial) {
-          randomize += 'f'
-        }
-        delete options.fastTutorial
-      } else if ('enemizer' in options) {
-        if (options.enemizer) {
-          randomize += 'e'
-        }
-        delete options.enemizer
-
-        //only do this if enemizer is set
-        if ('barongs' in options) {
-          if (options.barongs) {
-            randomize += 'b'
-          }
-          delete options.barongs
-        }
-      } else if ('starter' in options) {
-        randomize += 'S:' + options.starter + ','
-        delete options.starter
-      } else if ('nonnativeSpellsLevel' in options) {
-        if (options.nonnativeSpellsLevel) {
-          randomize += 'n'
-        }
-        delete options.nonnativeSpellsLevel
-      } else if ('starterElement' in options) {
-        randomize += 'E:' + options.starterElement + ','
-        delete options.starterElement
-      } else if ('hiddenSpells' in options) {
-        randomize += 'h:' + options.hiddenSpells + ','
-        delete options.hiddenSpells
-      } else if ('newBalls' in options) {
-        if (options.newBalls) {
-          randomize += 'w'
-        }
-        delete options.newBalls
-      } else if ('startingItems' in options) {
-        if (options.startingItems) {
-          randomize += 'I'
-        }
-        delete options.startingItems
-      } else if ('ballElements' in options) {
-        if (options.ballElements) {
-          randomize += 'B'
-        }
-        delete options.ballElements
-      } else if ('monsterElements' in options) {
-        if (options.monsterElements) {
-          randomize += 'm'
-        }
-        delete options.monsterElements
-      } else if ('eggomizer' in options) {
-        if (options.eggomizer) {
-          randomize += 'g'
-        }
-        delete options.eggomizer
-      } else if ('singleRoom' in options) {
-        if (options.singleRoom) {
-          randomize += 's'
-        }
-        delete options.singleRoom
-      } else if ('endurance' in options) {
-        randomize += 'N:' + options.endurance + ','
-        delete options.endurance
-      } else if ('boss' in options) {
-        if (options.boss) {
-          randomize += 'o'
-        }
-        delete options.boss
-      } else if ('timeDifficulty' in options) {
-        randomize += 'T:' + options.timeDifficulty + ','
-        delete options.timeDifficulty
-      } else {
-        const unknown = Object.getOwnPropertyNames(options).pop()
-        throw new Error('Unknown options: ' + unknown)
+    if ('preset' in options) {
+      randomize += 'P:' + options.preset
+      if (Object.getOwnPropertyNames(options).length > 1) {
+        randomize += ','
       }
+      delete options.preset
     }
+    Object.getOwnPropertyNames(options).forEach(function(someOption) {
+      const field = fields.get(someOption)
+      if (field) {
+        //TODO this next line probably isn't necessary, but if this function gets reused, it will be. Refactor to avoid the need to do this.
+        field.set(options[someOption])
+        randomize += field.toOptionValue()
+      } else {
+        throw new Error('Unknown option: ' + someOption)
+      }
+    })
     return randomize
   }
 
@@ -1075,25 +850,10 @@
   // Helper class to create relic location locks.
   function PresetBuilder(metadata) {
     this.metadata = metadata
-    this.derandomize = true
-    this.tutorialSkip = true
-    this.introSkip = true
-    this.fastTutorial = false
-    this.enemizer = false
-    this.barongs = false
-    this.starter = 0x02
-    this.nonnativeSpellsLevel = false
-    this.starterElement = -3
-    this.hiddenSpells = 0
-    this.newBalls = false
-    this.startingItems = false
-    this.ballElements = false
-    this.monsterElements = false
-    this.eggomizer = false
-    this.singleRoom = false
-    this.endurance = 0
-    this.boss = false
-    this.timeDifficulty = 0
+    const self = this
+    fields.forEachField(function(field, _fieldName) {
+      self[field.properName] = field.defaultValue
+    })
   }
 
   // Convert lock sets into strings.
@@ -1112,51 +872,20 @@
         }
       })
     }
-    const derandomize = self.derandomize
-    const tutorialSkip = self.tutorialSkip
-    const introSkip = self.introSkip
-    const fastTutorial = self.fastTutorial
-    const enemizer = self.enemizer
-    const barongs = self.barongs
-    const starter = self.starter
-    const nonnativeSpellsLevel = self.nonnativeSpellsLevel
-    const starterElement = self.starterElement
-    const hiddenSpells = self.hiddenSpells
-    const newBalls = self.newBalls
-    const startingItems = self.startingItems
-    const ballElements = self.ballElements
-    const monsterElements = self.monsterElements
-    const eggomizer = self.eggomizer
-    const singleRoom = self.singleRoom
-    const endurance = self.endurance
-    const boss = self.boss
-    const timeDifficulty = self.timeDifficulty
-    return new Preset(
+
+    const result = new Preset(
       self.metadata.id,
       self.metadata.name,
       self.metadata.description,
       self.metadata.author,
       self.metadata.weight || 0,
-      derandomize,
-      tutorialSkip,
-      introSkip,
-      fastTutorial,
-      enemizer,
-      barongs,
-      starter,
-      nonnativeSpellsLevel,
-      starterElement,
-      hiddenSpells,
-      newBalls,
-      startingItems,
-      ballElements,
-      monsterElements,
-      eggomizer,
-      singleRoom,
-      endurance,
-      boss,
-      timeDifficulty,
     )
+
+    const propNames = Object.getOwnPropertyNames(fields.allOptions)
+    propNames.forEach(function(propName) {
+      result[propName] = self[propName]
+    })
+    return result
   }
 
   function getDefaultFromList(someList) {

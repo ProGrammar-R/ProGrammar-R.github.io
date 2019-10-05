@@ -1,0 +1,215 @@
+(function(self) {
+
+  const TYPE = {
+    check: 'checkbox',
+    dropdown: 'select',
+  }
+
+  class Option {
+    constructor(
+      properName,
+      elementName,
+      shortName,
+      values,
+      defaultValue,
+      type,
+    ) {
+      this.properName = properName;
+      this.elementName = elementName;
+      this.shortName = shortName;
+      this.values = values;
+      this.defaultValue = defaultValue;
+      this.currentValue = this.defaultValue;
+      this.type = type;
+      this.elem = null;
+    }
+
+    setValue(newValue) {
+      this.currentValue = newValue;
+    }
+
+    set(newValue) {
+      this.currentValue = newValue;
+      this.changeHandler();
+    }
+
+    get() {
+      return this.currentValue;
+    }
+
+    initialize(document) {
+      this.elem = document.getElementById(this.elementName);
+      allOptions[this.properName] = this;
+    }
+
+    setIfNext(_optionString, index) {
+      return index;
+    }
+
+    toOptionValue() {
+      return '';
+    }
+
+    changeHandler() {}
+  }
+
+
+  class CheckOption extends Option {
+    constructor(
+      properName,
+      elementName,
+      shortName,
+      values,
+      defaultValue,
+    ) {
+      super(properName, elementName, shortName, values, defaultValue, TYPE.check);
+    }
+
+    set(newValue) {
+      if (this.elem) {
+        this.elem.checked = newValue;
+      }
+      super.set(newValue);
+    }
+
+    get() {
+      if (this.elem) {
+        return this.elem.checked;
+      }
+      return super.get();
+    }
+
+    initialize(document) {
+      super.initialize(document);
+      this.elem.checked = this.currentValue;
+    }
+
+    setIfNext(optionString, index) {
+      if (optionString[index] === this.shortName) {
+        this.set(true);
+        index++;
+      }
+      return index;
+    }
+
+    toOptionValue() {
+      return this.get() ? this.shortName : '';
+    }
+  }
+
+
+  class DropdownOption extends Option {
+    constructor(
+      properName,
+      elementName,
+      shortName,
+      values,
+      defaultValue,
+    ) {
+      super(properName, elementName, shortName, values, defaultValue, TYPE.dropdown);
+    }
+
+    set(newValue) {
+      if (this.elem) {
+        this.elem.value = newValue;
+      }
+      super.set(newValue);
+    }
+
+    get() {
+      if (this.elem) {
+        return this.elem.value;
+      }
+      return super.get();
+    }
+
+    initialize(document) {
+      super.initialize(document);
+      this.elem.value = this.currentValue;
+    }
+
+    setIfNext(optionString, index) {
+      if (optionString[index] === this.shortName) {
+        // Check for an argument.
+        if (optionString[++index] !== ':') {
+          throw new Error('Expected argument');
+        }
+
+        // Parse the arg name.
+        let start = ++index;
+        while (index < optionString.length
+               && [',', ':'].indexOf(optionString[index]) === -1) {
+          index++;
+        }
+        let arg = optionString.slice(start, index);
+        if (!arg.length) {
+          throw new Error('Expected argument');
+        }
+        this.set(arg);
+        if (optionString[index] === ',') {
+          index++;
+        }
+      }
+      return index;
+    }
+
+    toOptionValue() {
+      return this.shortName + ':' + this.get() + ',';
+    }
+  }
+
+
+  const allOptions = {
+    barongs:              new CheckOption('barongs',              'barongs',                  'b', null, false),
+    ballElements:         new CheckOption('ballElements',         'ball-elements',            'B', null, false),
+    derandomize:          new CheckOption('derandomize',          'derandomize',              'd', null, true),
+    enemizer:             new CheckOption('enemizer',             'enemizer',                 'e', null, false),
+    starterElement:       new DropdownOption('starterElement',    'starter-element',          'E', null, -3),
+    fastTutorial:         new CheckOption('fastTutorial',         'fast-tutorial',            'f', null, false),
+    eggomizer:            new CheckOption('eggomizer',            'eggomizer',                'g', null, false),
+    hiddenSpells:         new DropdownOption('hiddenSpells',      'hidden-spells',            'h', null, 0),
+    introSkip:            new CheckOption('introSkip',            'intro-skip',               'i', null, true),
+    startingItems:        new CheckOption('startingItems',        'starting-items',           'I', null, false),
+    nonnativeSpellsLevel: new CheckOption('nonnativeSpellsLevel', 'non-native-spells-level',  'n', null, false),
+    monsterElements:      new CheckOption('monsterElements',      'monster-elements',         'm', null, false),
+    endurance:            new DropdownOption('endurance',         'endurance',                'N', null, 0),
+    boss:                 new CheckOption('boss',                 'boss',                     'o', null, false),
+    //preset:             new DropdownOption('preset',            'preset',                   'P', null, ),
+    singleRoom:           new CheckOption('singleRoom',           'single-room',              's', null, false),
+    starter:              new DropdownOption('starter',           'starter',                  'S', null, 2),
+    tutorialSkip:         new CheckOption('tutorialSkip',         'tutorial-skip',            't', null, true),
+    timeDifficulty:       new DropdownOption('timeDifficulty',    'time-difficulty',          'T', null, 0),
+    newBalls:             new CheckOption('newBalls',             'new-balls',                'w', null, false),
+  }
+
+  function get(properName) {
+    return allOptions[properName];
+  }
+
+  /**
+   * mapFunction should take 2 args: field and fieldName
+   */
+  function forEachField(mapFunction) {
+    Object.getOwnPropertyNames(allOptions).forEach(function(fieldName) {
+      mapFunction(allOptions[fieldName], fieldName)
+    })
+  }
+
+  const exports = {
+    TYPE: TYPE,
+    Option: Option,
+    CheckOption: CheckOption,
+    DropdownOption: DropdownOption,
+    allOptions: allOptions,
+    get: get,
+    forEachField: forEachField,
+  }
+  if (self) {
+    self.adRando = Object.assign(self.adRando || {}, {
+      fields: exports,
+    })
+  } else {
+    module.exports = exports
+  }
+})(typeof(self) !== 'undefined' ? self : null)
+

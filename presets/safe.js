@@ -11,12 +11,15 @@
 
   // Boilerplate.
   let constants
+  let fields
   let util
   if (self) {
     constants = self.adRando.constants
+    fields = self.adRando.fields
     util = self.adRando.util
   } else {
     constants = require('../constants')
+    fields = require('../fields')
     util = require('../util')
   }
   const PresetBuilder = util.PresetBuilder

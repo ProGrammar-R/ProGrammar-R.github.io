@@ -1,6 +1,7 @@
 (function(self) {
 
   let util
+  let constants
 
   if (self) {
     util = self.adRando.util

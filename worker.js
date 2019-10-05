@@ -1,6 +1,7 @@
 importScripts('https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.1/seedrandom.min.js')
 importScripts('https://cdnjs.cloudflare.com/ajax/libs/sjcl/1.0.8/sjcl.min.js')
 importScripts("constants.js")
+importScripts("fields.js")
 importScripts("util.js")
 importScripts("text.js")
 importScripts("items.js")

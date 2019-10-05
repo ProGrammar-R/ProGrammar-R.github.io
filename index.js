@@ -26,6 +26,7 @@
     worker = new Worker('worker.js')
     worker.addEventListener('message', workerMessage);
     constants = adRando.constants
+    fields = adRando.fields
     util = adRando.util
     text = adRando.text
     presets = adRando.presets
@@ -34,6 +35,7 @@
   } else {
     version = require('./package').version
     constants = require('./constants')
+    fields = require('./fields')
     util = require('./util')
     text = require('./text')
     presets = require('./presets')
@@ -61,6 +63,20 @@
       }
     } else {
       elems[name].checked = defaultValue
+    }
+    changeHandler()
+  }
+
+  function loadFieldOption(name, changeHandler, defaultValue) {
+    const value = localStorage.getItem(name)
+    if (typeof(value) === 'string') {
+      if (value === 'true' || value === 'false') {
+        fields.allOptions[name].set(value === 'true')
+      } else {
+        fields.allOptions[name].set(value)
+      }
+    } else {
+      fields.allOptions[name].set(defaultValue)
     }
     changeHandler()
   }
@@ -149,47 +165,15 @@
     localStorage.setItem('preset', elems.preset.checked)
     if (elems.preset.checked) {
       elems.presetId.classList.remove('hide')
-      elems.derandomize.disabled = true
-      elems.tutorialSkip.disabled = true
-      elems.introSkip.disabled = true
-      elems.fastTutorial.disabled = true
-      elems.enemizer.disabled = true
-      elems.barongs.disabled = true
-      elems.starter.disabled = true
-      elems.nonnativeSpellsLevel.disabled = true
-      elems.starterElement.disabled = true
-      elems.hiddenSpells.disabled = true
-      elems.newBalls.disabled = true
-      elems.startingItems.disabled = true
-      elems.ballElements.disabled = true
-      elems.monsterElements.disabled = true
-      elems.eggomizer.disabled = true
-      elems.singleRoom.disabled = true
-      elems.endurance.disabled = true
-      elems.boss.disabled = true
-      elems.timeDifficulty.disabled = true
+      Object.getOwnPropertyNames(fields.allOptions).forEach(function(optionName) {
+        fields.allOptions[optionName].elem.disabled = true
+      })
       presetIdChange()
     } else {
       elems.presetId.classList.add('hide')
-      elems.derandomize.disabled = false
-      elems.tutorialSkip.disabled = false
-      elems.introSkip.disabled = false
-      elems.fastTutorial.disabled = false
-      elems.enemizer.disabled = false
-      elems.barongs.disabled = !elems.enemizer.checked
-      elems.starter.disabled = false
-      elems.nonnativeSpellsLevel.disabled = false
-      elems.starterElement.disabled = false
-      elems.hiddenSpells.disabled = false
-      elems.newBalls.disabled = false
-      elems.startingItems.disabled = false
-      elems.ballElements.disabled = false
-      elems.monsterElements.disabled = false
-      elems.eggomizer.disabled = false
-      elems.singleRoom.disabled = false
-      elems.endurance.disabled = false
-      elems.boss.disabled = false
-      elems.timeDifficulty.disabled = false
+      fields.forEachField(function(field, fieldName) {
+        field.elem.disabled = (fieldName === 'barongs' ? !fields.allOptions.enemizer.elem.checked : false)
+      })
     }
   }
 
@@ -200,124 +184,47 @@
     localStorage.setItem('presetId', preset.id)
     if (elems.preset.checked) {
       const options = preset.options()
-      elems.derandomize.checked = !!options.derandomize
-      elems.tutorialSkip.checked = !!options.tutorialSkip
-      elems.introSkip.checked = !!options.introSkip
-      elems.fastTutorial.checked = !!options.fastTutorial
-      elems.enemizer.checked = !!options.enemizer
-      elems.barongs.checked = !!options.barongs
-      elems.starter.value = options.starter
-      elems.nonnativeSpellsLevel.checked = !!options.nonnativeSpellsLevel
-      elems.starterElement.value = options.starterElement
-      elems.hiddenSpells.value = options.hiddenSpells
-      elems.newBalls.checked = !!options.newBalls
-      elems.startingItems.checked = !!options.startingItems
-      elems.ballElements.checked = !!options.ballElements
-      elems.monsterElements.checked = !!options.monsterElements
-      elems.eggomizer.checked = !!options.eggomizer
-      elems.singleRoom.checked = !!options.singleRoom
-      elems.endurance.value = options.endurance
-      elems.boss.checked = !!options.boss
-      elems.timeDifficulty.value = options.timeDifficulty
+      fields.forEachField(function(field, fieldName) {
+        field.set(field.type === fields.TYPE.check ? !!options[fieldName] : options[fieldName])
+      })
     }
   }
 
-  function derandomizeChange() {
-    localStorage.setItem('derandomize', elems.derandomize.checked)
-  }
-
-  function tutorialSkipChange() {
-    localStorage.setItem('tutorialSkip', elems.tutorialSkip.checked)
-  }
-
-  function introSkipChange() {
-    localStorage.setItem('introSkip', elems.introSkip.checked)
-  }
-
-  function fastTutorialChange() {
-    localStorage.setItem('fastTutorial', elems.fastTutorial.checked)
+  function genericChangeHandler(field) {
+    //set value from elem
+    field.setValue(field.get())
+    localStorage.setItem(field.properName, field.get())
   }
 
   function enemizerChange() {
-    localStorage.setItem('enemizer', elems.enemizer.checked)
+    genericChangeHandler(fields.get('enemizer'))
     setBarongsBasedOnEnemizer()
   }
 
   function setBarongsBasedOnEnemizer() {
-    if (!elems.enemizer.checked) {
-      elems.barongs.checked = false
-      elems.barongs.disabled = true
+    const barongs = fields.get('barongs')
+    if (!fields.get('enemizer').get()) {
+      barongs.set(false)
+      barongs.elem.disabled = true
       elems.barongsContainer.setAttribute("hidden", "")
-      barongsChange()
+      barongs.changeHandler()
     } else {
-      elems.barongs.disabled = elems.preset.checked || elems.seed.disabled
+      barongs.elem.disabled = elems.preset.checked || elems.seed.disabled
       elems.barongsContainer.removeAttribute("hidden")
     }
   }
 
-  function barongsChange() {
-    localStorage.setItem('barongs', elems.barongs.checked)
-  }
-
-  function starterChange() {
-    localStorage.setItem('starter', elems.starter.value)
-  }
-
-  function nonnativeSpellsLevelChange() {
-    localStorage.setItem('nonnativeSpellsLevel', elems.nonnativeSpellsLevel.checked)
-  }
-
-  function starterElementChange() {
-    localStorage.setItem('starterElement', elems.starterElement.value)
-  }
-
-  function hiddenSpellsChange() {
-    localStorage.setItem('hiddenSpells', elems.hiddenSpells.value)
-  }
-
-  function newBallsChange() {
-    localStorage.setItem('newBalls', elems.newBalls.checked)
-  }
-
-  function startingItemsChange() {
-    localStorage.setItem('startingItems', elems.startingItems.checked)
-  }
-
-  function ballElementsChange() {
-    localStorage.setItem('ballElements', elems.ballElements.checked)
-  }
-
-  function monsterElementsChange() {
-    localStorage.setItem('monsterElements', elems.monsterElements.checked)
-  }
-
-  function eggomizerChange() {
-    localStorage.setItem('eggomizer', elems.eggomizer.checked)
-  }
-
-  function singleRoomChange() {
-    localStorage.setItem('singleRoom', elems.singleRoom.checked)
-  }
-
-  function enduranceChange() {
-    localStorage.setItem('endurance', elems.endurance.value)
-  }
-
   function bossChange() {
-    localStorage.setItem('boss', elems.boss.checked)
-    let hikewneOption = elems.starter.options.namedItem('starterHikewne')
+    genericChangeHandler(fields.get('boss'))
+    let hikewneOption = fields.get('starter').elem.options.namedItem('starterHikewne')
     if (!!hikewneOption) {
       //hikewne is not allowed in boss mode
-      if (elems.boss.checked) {
+      if (fields.get('boss').get()) {
         hikewneOption.setAttribute("disabled", "")
       } else {
         hikewneOption.removeAttribute("disabled", "")
       }
     }
-  }
-
-  function timeDifficultyChange() {
-    localStorage.setItem('timeDifficulty', elems.timeDifficulty.value)
   }
 
   function appendSeedChange() {
@@ -372,28 +279,11 @@
   function getFormOptions() {
     if (elems.preset.checked) {
       return {preset: presets[elems.presetId.selectedIndex].id}
-    }
-    const options = {
-      derandomize: elems.derandomize.checked,
-      tutorialSkip: elems.tutorialSkip.checked,
-      introSkip: elems.introSkip.checked,
-      fastTutorial: elems.fastTutorial.checked,
-      enemizer: elems.enemizer.checked,
-      barongs: elems.barongs.checked,
-      starter: elems.starter.value,
-      nonnativeSpellsLevel: elems.nonnativeSpellsLevel.checked,
-      starterElement: elems.starterElement.value,
-      hiddenSpells: elems.hiddenSpells.value,
-      newBalls: elems.newBalls.checked,
-      startingItems: elems.startingItems.checked,
-      ballElements: elems.ballElements.checked,
-      monsterElements: elems.monsterElements.checked,
-      eggomizer: elems.eggomizer.checked,
-      singleRoom: elems.singleRoom.checked,
-      endurance: elems.endurance.value,
-      boss: elems.boss.checked,
-      timeDifficulty: elems.timeDifficulty.value,
-    }
+    }    
+    let options = {}
+    Object.getOwnPropertyNames(fields.allOptions).forEach(function(fieldName) {
+      options[fieldName] = fields.allOptions[fieldName].get()
+    })
     return options
   }
 
@@ -462,25 +352,12 @@
     elems.seed.disabled = false
     elems.preset.disabled = false
     elems.presetId.disabled = false
-    elems.derandomize.disabled = false
-    elems.tutorialSkip.disabled = false
-    elems.introSkip.disabled = false
-    elems.fastTutorial.disabled = false
-    elems.enemizer.disabled = false
+    fields.forEachField(function(field, fieldName) {
+      if (fieldName !== "barongs") {
+        field.elem.disabled = false
+      }
+    })
     setBarongsBasedOnEnemizer()
-    elems.starter.disabled = false
-    elems.nonnativeSpellsLevel.disabled = false
-    elems.starterElement.disabled = false
-    elems.hiddenSpells.disabled = false
-    elems.newBalls.disabled = false
-    elems.startingItems.disabled = false
-    elems.ballElements.disabled = false
-    elems.monsterElements.disabled = false
-    elems.eggomizer.disabled = false
-    elems.singleRoom.disabled = false
-    elems.endurance.disabled = false
-    elems.boss.disabled = false
-    elems.timeDifficulty.disabled = false
     elems.clear.classList.add('hidden')
     presetChange()
   }
@@ -844,26 +721,7 @@
       clear: document.getElementById('clear'),
       appendSeed: document.getElementById('append-seed'),
       experimentalChanges: document.getElementById('experimental-changes'),
-      derandomize: document.getElementById('derandomize'),
-      tutorialSkip: document.getElementById('tutorial-skip'),
-      introSkip: document.getElementById('intro-skip'),
-      fastTutorial: document.getElementById('fast-tutorial'),
-      enemizer: document.getElementById('enemizer'),
-      barongs: document.getElementById('barongs'),
       barongsContainer: document.getElementById('barongs-container'),
-      starter: document.getElementById('starter'),
-      nonnativeSpellsLevel: document.getElementById('non-native-spells-level'),
-      starterElement: document.getElementById('starter-element'),
-      hiddenSpells: document.getElementById('hidden-spells'),
-      newBalls: document.getElementById('new-balls'),
-      startingItems: document.getElementById('starting-items'),
-      ballElements: document.getElementById('ball-elements'),
-      monsterElements: document.getElementById('monster-elements'),
-      eggomizer: document.getElementById('eggomizer'),
-      singleRoom: document.getElementById('single-room'),
-      endurance: document.getElementById('endurance'),
-      boss: document.getElementById('boss'),
-      timeDifficulty: document.getElementById('time-difficulty'),
       download: document.getElementById('download'),
       downloadCue: document.getElementById('downloadCue'),
       loader: document.getElementById('loader'),
@@ -872,6 +730,9 @@
       notification: document.getElementById('notification'),
       seedUrl: document.getElementById('seed-url'),
     }
+    fields.forEachField(function(field, _fieldName) {
+      field.initialize(document)
+    })
     resetState()
     elems.file.addEventListener('change', fileChange)
     elems.form.addEventListener('submit', submitListener)
@@ -881,25 +742,19 @@
     elems.clear.addEventListener('click', clearHandler)
     elems.appendSeed.addEventListener('change', appendSeedChange)
     elems.experimentalChanges.addEventListener('change', experimentalChangesChange)
-    elems.derandomize.addEventListener('change', derandomizeChange)
-    elems.tutorialSkip.addEventListener('change', tutorialSkipChange)
-    elems.introSkip.addEventListener('change', introSkipChange)
-    elems.fastTutorial.addEventListener('change', fastTutorialChange)
-    elems.enemizer.addEventListener('change', enemizerChange)
-    elems.barongs.addEventListener('change', barongsChange)
-    elems.starter.addEventListener('change', starterChange)
-    elems.nonnativeSpellsLevel.addEventListener('change', nonnativeSpellsLevelChange)
-    elems.starterElement.addEventListener('change', starterElementChange)
-    elems.hiddenSpells.addEventListener('change', hiddenSpellsChange)
-    elems.newBalls.addEventListener('change', newBallsChange)
-    elems.startingItems.addEventListener('change', startingItemsChange)
-    elems.ballElements.addEventListener('change', ballElementsChange)
-    elems.monsterElements.addEventListener('change', monsterElementsChange)
-    elems.eggomizer.addEventListener('change', eggomizerChange)
-    elems.singleRoom.addEventListener('change', singleRoomChange)
-    elems.endurance.addEventListener('change', enduranceChange)
-    elems.boss.addEventListener('change', bossChange)
-    elems.timeDifficulty.addEventListener('change', timeDifficultyChange)
+    fields.forEachField(function(field, fieldName) {
+      switch (fieldName) {
+        case 'enemizer':
+          field.changeHandler = enemizerChange
+          break
+        case 'boss':
+          field.changeHandler = bossChange
+          break
+        default:
+          field.changeHandler = function(){ genericChangeHandler(field) }
+      }
+      field.elem.addEventListener('change', field.changeHandler)
+    })
     elems.copy.addEventListener('click', copyHandler)
     elems.makeCue.addEventListener('click', makeCueHandler)
     // Load presets
@@ -913,13 +768,13 @@
     const randomStarterOption = document.createElement('option')
     randomStarterOption.value = monsters.randomStarterOptionValue
     randomStarterOption.innerText = 'Randomize'
-    elems.starter.appendChild(randomStarterOption)
+    fields.get('starter').elem.appendChild(randomStarterOption)
     monsters.allMonsters.forEach(function(monster) {
       const option = document.createElement('option')
       option.value = monster.ID
       option.id = 'starter' + monster.name
       option.innerText = monster.name
-      elems.starter.appendChild(option)
+      fields.get('starter').elem.appendChild(option)
     })
     // Load elements
     monsters.allElements.forEach(function(element) {
@@ -929,14 +784,14 @@
       if (element.name === "Tri") {
         option.innerText += " (no spells)"
       }
-      elems.starterElement.appendChild(option)
+      fields.get('starterElement').elem.appendChild(option)
     })
     // Load hidden spell options
     monsters.hiddenSpellOptions.forEach(function(spell) {
       const option = document.createElement('option')
       option.value = spell.ID
       option.innerText = spell.name
-      elems.hiddenSpells.appendChild(option)
+      fields.get('hiddenSpells').elem.appendChild(option)
     })
 
     const url = new URL(window.location.href)
@@ -955,7 +810,6 @@
     if (url.search.length) {
       const rs = util.optionsFromUrl(window.location.href)
       options = rs.options
-      const applied = util.Preset.options(options)
       seed = rs.seed
       expectChecksum = rs.checksum
       if (typeof(seed) === 'string') {
@@ -980,63 +834,11 @@
       presetChange()
       elems.preset.disabled = true
       elems.presetId.disabled = true
-      elems.derandomize.checked = applied.derandomize
-      derandomizeChange()
-      elems.derandomize.disabled = true
-      elems.tutorialSkip.checked = applied.tutorialSkip
-      tutorialSkipChange()
-      elems.tutorialSkip.disabled = true
-      elems.introSkip.checked = applied.introSkip
-      introSkipChange()
-      elems.introSkip.disabled = true
-      elems.fastTutorial.checked = applied.fastTutorial
-      fastTutorialChange()
-      elems.fastTutorial.disabled = true
-      elems.enemizer.checked = applied.enemizer
-      enemizerChange()
-      elems.enemizer.disabled = true
-      elems.barongs.checked = applied.barongs
-      barongsChange()
-      elems.barongs.disabled = true
-      elems.starter.value = applied.starter
-      starterChange()
-      elems.starter.disabled = true
-      elems.nonnativeSpellsLevel.checked = applied.nonnativeSpellsLevel
-      nonnativeSpellsLevelChange()
-      elems.nonnativeSpellsLevel.disabled = true
-      elems.starterElement.value = applied.starterElement
-      starterElementChange()
-      elems.starterElement.disabled = true
-      elems.hiddenSpells.value = applied.hiddenSpells
-      hiddenSpellsChange()
-      elems.hiddenSpells.disabled = true
-      elems.newBalls.checked = applied.newBalls
-      newBallsChange()
-      elems.newBalls.disabled = true
-      elems.startingItems.checked = applied.startingItems
-      startingItemsChange()
-      elems.startingItems.disabled = true
-      elems.ballElements.checked = applied.ballElements
-      ballElementsChange()
-      elems.ballElements.disabled = true
-      elems.monsterElements.checked = applied.monsterElements
-      monsterElementsChange()
-      elems.monsterElements.disabled = true
-      elems.eggomizer.checked = applied.eggomizer
-      eggomizerChange()
-      elems.eggomizer.disabled = true
-      elems.singleRoom.checked = applied.singleRoom
-      singleRoomChange()
-      elems.singleRoom.disabled = true
-      elems.endurance.value = applied.endurance
-      enduranceChange()
-      elems.endurance.disabled = true
-      elems.boss.checked = applied.boss
-      bossChange()
-      elems.boss.disabled = true
-      elems.timeDifficulty.value = applied.timeDifficulty
-      timeDifficultyChange()
-      elems.timeDifficulty.disabled = true
+      Object.getOwnPropertyNames(fields.allOptions).forEach(function(fieldName) {
+        const field = fields.allOptions[fieldName]
+        field.set(options[fieldName].get())
+        field.elem.disabled = true
+      })
       elems.clear.classList.remove('hidden')
       const baseUrl = url.origin + url.pathname
       window.history.replaceState({}, document.title, baseUrl)
@@ -1062,25 +864,10 @@
       document.getElementById('dev-border').classList.add('dev')
     }
     if (!elems.preset.checked) {
-      loadOption('derandomize', derandomizeChange, true)
-      loadOption('tutorialSkip', tutorialSkipChange, true)
-      loadOption('introSkip', introSkipChange, true)
-      loadOption('fastTutorial', fastTutorialChange, false)
-      loadOption('enemizer', enemizerChange, false)
-      loadOption('barongs', barongsChange, false)
-      loadOption('starter', starterChange, 0x02)
-      loadOption('nonnativeSpellsLevel', nonnativeSpellsLevelChange, false)
-      loadOption('starterElement', starterElementChange, util.getDefaultFromList(monsters.allElements).ID)
-      loadOption('hiddenSpells', hiddenSpellsChange, util.getDefaultFromList(monsters.hiddenSpellOptions).ID)
-      loadOption('newBalls', newBallsChange, false)
-      loadOption('startingItems', startingItemsChange, false)
-      loadOption('ballElements', ballElementsChange, false)
-      loadOption('monsterElements', monsterElementsChange, false)
-      loadOption('eggomizer', eggomizerChange, false)
-      loadOption('singleRoom', singleRoomChange, false)
-      loadOption('endurance', enduranceChange, 0)
-      loadOption('boss', bossChange, false)
-      loadOption('timeDifficulty', timeDifficultyChange, 0)
+      Object.getOwnPropertyNames(fields.allOptions).forEach(function(fieldName) {
+        const field = fields.allOptions[fieldName]
+        loadFieldOption(fieldName, field.changeHandler, field.defaultValue)
+      })
     }
     loadOption('appendSeed', appendSeedChange, true)
     loadOption('experimentalChanges', experimentalChangesChange, false)
