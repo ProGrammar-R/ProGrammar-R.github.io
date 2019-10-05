@@ -165,14 +165,14 @@
     localStorage.setItem('preset', elems.preset.checked)
     if (elems.preset.checked) {
       elems.presetId.classList.remove('hide')
-      Object.getOwnPropertyNames(fields.allOptions).forEach(function(optionName) {
-        fields.allOptions[optionName].elem.disabled = true
+      fields.forEachField(function(field, _fieldName) {
+        field.setDisabled(true)
       })
       presetIdChange()
     } else {
       elems.presetId.classList.add('hide')
       fields.forEachField(function(field, fieldName) {
-        field.elem.disabled = (fieldName === 'barongs' ? !fields.allOptions.enemizer.elem.checked : false)
+        field.setDisabled(fieldName === 'barongs' ? !fields.get('enemizer').get() : false)
       })
     }
   }
@@ -205,11 +205,11 @@
     const barongs = fields.get('barongs')
     if (!fields.get('enemizer').get()) {
       barongs.set(false)
-      barongs.elem.disabled = true
+      barongs.setDisabled(true)
       elems.barongsContainer.setAttribute("hidden", "")
       barongs.changeHandler()
     } else {
-      barongs.elem.disabled = elems.preset.checked || elems.seed.disabled
+      barongs.setDisabled(elems.preset.checked || elems.seed.disabled)
       elems.barongsContainer.removeAttribute("hidden")
     }
   }
@@ -354,7 +354,7 @@
     elems.presetId.disabled = false
     fields.forEachField(function(field, fieldName) {
       if (fieldName !== "barongs") {
-        field.elem.disabled = false
+        field.setDisabled(false)
       }
     })
     setBarongsBasedOnEnemizer()
@@ -837,7 +837,7 @@
       Object.getOwnPropertyNames(fields.allOptions).forEach(function(fieldName) {
         const field = fields.allOptions[fieldName]
         field.set(options[fieldName].get())
-        field.elem.disabled = true
+        field.setDisabled(true)
       })
       elems.clear.classList.remove('hidden')
       const baseUrl = url.origin + url.pathname

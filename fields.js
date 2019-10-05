@@ -51,6 +51,12 @@
     }
 
     changeHandler() {}
+
+    setDisabled(isDisabled) {
+      if (this.elem) {
+        this.elem.disabled = isDisabled;
+      }
+    }
   }
 
 
