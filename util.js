@@ -231,39 +231,6 @@
     return baseUrl + '?' + args.join(',')
   }
 
-  const map = {
-    ',': 0x8143,
-    '.': 0x8144,
-    ':': 0x8146,
-    ';': 0x8147,
-    '?': 0x8148,
-    '!': 0x8149,
-    '`': 0x814d,
-    '"': 0x814e,
-    '^': 0x814f,
-    '_': 0x8151,
-    '~': 0x8160,
-    '\'': 0x8166,
-    '(': 0x8169,
-    ')': 0x816a,
-    '[': 0x816d,
-    ']': 0x816e,
-    '{': 0x816f,
-    '}': 0x8170,
-    '+': 0x817b,
-    '-': 0x817c,
-    '0': 0x824f,
-    '1': 0x8250,
-    '2': 0x8251,
-    '3': 0x8252,
-    '4': 0x8253,
-    '5': 0x8254,
-    '6': 0x8255,
-    '7': 0x8256,
-    '8': 0x8257,
-    '9': 0x8258,
-  }
-
   function setSeedAzureDreams(data, options, seed) {
     //very important
     data.writeInstruction(0x1c5879c,0x82778271)
@@ -742,6 +709,7 @@
     endurance,
     boss,
     timeDifficulty,
+    traps,
   ) {
     this.id = id
     this.name = name
@@ -767,6 +735,7 @@
     this.endurance = endurance,
     this.boss = boss,
     this.timeDifficulty = timeDifficulty
+    this.traps = traps
   }
 
   function clone(obj) {

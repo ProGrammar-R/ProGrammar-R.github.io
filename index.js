@@ -5,6 +5,7 @@
   let version
   let constants
   let util
+  let traps
   let text
   let presets
   let items
@@ -28,6 +29,7 @@
     constants = adRando.constants
     fields = adRando.fields
     util = adRando.util
+    traps = adRando.traps
     text = adRando.text
     presets = adRando.presets
     items = adRando.items
@@ -37,6 +39,7 @@
     constants = require('./constants')
     fields = require('./fields')
     util = require('./util')
+    traps = require('./traps')
     text = require('./text')
     presets = require('./presets')
     items = require('./items')
@@ -300,14 +303,18 @@
     }
     lastSeed = seed
     info[1]['Seed'] = seed
-    worker.postMessage({
-      version: version,
-      file: selectedFile,
-      checksum: expectChecksum,
-      options: options,
-      seed: seed,
-      info: info,
-    })
+    const reader = new FileReader()
+    reader.onload = function() {
+      worker.postMessage({
+        version: version,
+        fileData: this.result,
+        checksum: expectChecksum,
+        options: options,
+        seed: seed,
+        info: info,
+      }, [this.result])
+    }
+    reader.readAsArrayBuffer(selectedFile)
   }
 
   function workerMessage(message) {
@@ -666,6 +673,7 @@
     }
     let hex = util.setSeedAzureDreams(check, applied, seed)
     text.embedSeedAndFlagsInAngelText(check, applied, seed)
+    traps.setTraps(check, applied)
     //text.writeBattleTextToFile(check, constants.romAddresses.isExhaustedBattleText, "collapsed.\\p\\0")
     //util.pauseAfterDeath(check)
     //also applies several other options due to difficulties when calling from here
@@ -750,10 +758,24 @@
         case 'boss':
           field.changeHandler = bossChange
           break
+        case 'traps':
+          field.values.forEach(function(value) {
+            value.changeHandler = function(){
+              genericChangeHandler(value)
+              value.parent.setToLocalStorage()
+            }
+            if (value.elem) {
+              value.elem.addEventListener('change', value.changeHandler)
+            }
+          })
+          field.setToLocalStorage = function(){ genericChangeHandler(field) }
+          break
         default:
           field.changeHandler = function(){ genericChangeHandler(field) }
       }
-      field.elem.addEventListener('change', field.changeHandler)
+      if (field.elem) {
+        field.elem.addEventListener('change', field.changeHandler)
+      }
     })
     elems.copy.addEventListener('click', copyHandler)
     elems.makeCue.addEventListener('click', makeCueHandler)

@@ -39,7 +39,8 @@
 
     initialize(document) {
       this.elem = document.getElementById(this.elementName);
-      allOptions[this.properName] = this;
+      // bring element state in line with current value
+      this.set(this.currentValue)
     }
 
     setIfNext(_optionString, index) {
@@ -85,11 +86,6 @@
       return super.get();
     }
 
-    initialize(document) {
-      super.initialize(document);
-      this.elem.checked = this.currentValue;
-    }
-
     setIfNext(optionString, index) {
       if (optionString[index] === this.shortName) {
         this.set(true);
@@ -127,11 +123,6 @@
         return this.elem.value;
       }
       return super.get();
-    }
-
-    initialize(document) {
-      super.initialize(document);
-      this.elem.value = this.currentValue;
     }
 
     setIfNext(optionString, index) {

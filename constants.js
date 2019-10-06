@@ -27,6 +27,7 @@
   const romAddresses = {
     pauseAfterDeathText:     0x55b71,
     initialStatsTable:       0x57f30, //RAM 0x8006d168
+    trapTable:               0x5e7a8, //RAM 0x80072cd0
     angelFirstWord:         0xee5f97,
     checkKohDeathTopFloor: 0x1c5e360, //RAM 0x8008e058
     pauseAfterDeathCode:   0x1c5e470,
@@ -34,6 +35,12 @@
     beldoCrashFixPart2:    0x1c6d498, //RAM 0x8009b2b0
     statGrowthTable:       0x1cb9c94, //RAM 0x800ddcbc
     isExhaustedBattleText: 0x1cbcc3c,
+    trapRollMaxSingleRm1:  0x1eae330, //RAM 0x8001f078
+    trapRollMaxPerFloor1:  0x1eae398, //RAM 0x8001f0e0
+    trapRollLowestId1:     0x1eae420, //RAM 0x8001f168
+    trapRollMaxSingleRm2:  0x2188080, //RAM 0x8001f078
+    trapRollMaxPerFloor2:  0x21880e8, //RAM 0x8001f0e0
+    trapRollLowestId2:     0x2188170, //RAM 0x8001f168
     beldoLocation:         0x263cbb2, //RAM 0x800e604a
     beldoLevel:            0x263cbb7,
     beldoSetFast:          0x31cddcc, //RAM 0x80169fa4

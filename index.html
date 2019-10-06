@@ -150,6 +150,86 @@
                   <option value=1>+1 every minute</option>
                 </select>
               </div>
+              <div class="pure-u-1">
+                <br>
+                <em>Traps</em>
+              </div>
+              <div id="trap-spawns-select" class="pure-u-12-24">
+                <label for="trap-spawns">Trap spawn rate</label>
+                <select id="trap-spawns"></select>
+              </div>
+              <div class="pure-u-6-24">
+                <label for="trap-reversal">Reversal</label>
+                <select id="trap-reversal"></select>
+              </div>
+              <div class="pure-u-6-24">
+                <label for="trap-slow">Slow</label>
+                <select id="trap-slow"></select>
+              </div>
+              <div class="pure-u-6-24">
+                <label for="trap-warp">Warp</label>
+                <select id="trap-warp"></select>
+              </div>
+              <div class="pure-u-6-24">
+                <label for="trap-goup">Go Up</label>
+                <select id="trap-goup"></select>
+              </div>
+              <div class="pure-u-6-24">
+                <label for="trap-chaos">Chaos</label>
+                <select id="trap-chaos"></select>
+              </div>
+              <div class="pure-u-6-24">
+                <label for="trap-bomb">Bomb</label>
+                <select id="trap-bomb"></select>
+              </div>
+              <div class="pure-u-6-24">
+                <label for="trap-slam">Slam</label>
+                <select id="trap-slam"></select>
+              </div>
+              <div class="pure-u-6-24">
+                <label for="trap-sleep">Sleep</label>
+                <select id="trap-sleep"></select>
+              </div>
+              <div class="pure-u-6-24">
+                <label for="trap-blinder">Blinder</label>
+                <select id="trap-blinder"></select>
+              </div>
+              <div class="pure-u-6-24">
+                <label for="trap-poison">Poison</label>
+                <select id="trap-poison"></select>
+              </div>
+              <div class="pure-u-6-24">
+                <label for="trap-prison">Prison</label>
+                <select id="trap-prison"></select>
+              </div>
+              <div class="pure-u-6-24">
+                <label for="trap-frog">Frog</label>
+                <select id="trap-frog"></select>
+              </div>
+              <div class="pure-u-6-24">
+                <label for="trap-bump">Bump</label>
+                <select id="trap-bump"></select>
+              </div>
+              <div class="pure-u-6-24">
+                <label for="trap-crack">Crack</label>
+                <select id="trap-crack"></select>
+              </div>
+              <div class="pure-u-6-24">
+                <label for="trap-upheaval">Upheaval</label>
+                <select id="trap-upheaval"></select>
+              </div>
+              <div class="pure-u-6-24">
+                <label for="trap-seal">Seal</label>
+                <select id="trap-seal"></select>
+              </div>
+              <div class="pure-u-6-24">
+                <label for="trap-rust">Rust</label>
+                <select id="trap-rust"></select>
+              </div>
+              <div class="pure-u-6-24">
+                <label for="trap-monster-den">Monster den</label>
+                <select id="trap-monster-den"></select>
+              </div>
               <div class="pure-u-1" hidden>
                 <input id="experimental-changes" type="checkbox">
                 <label for="experimental-changes">Experimental Changes</label>
@@ -259,6 +339,11 @@
       </p>
       <hr>
       <h2><a name="changelog">Changelog</a></h2>
+      <h3><time>October 6, 2019</time></h3>
+      <ul>
+        <li>v1.10.0 Refactored how fields are managed. Added support for changing trap spawn rates.
+            Be aware individial trap spawn rates are relative and matter less when the overall spawn rate is increased.</li>
+      </ul>
       <h3><time>September 15, 2019</time></h3>
       <ul>
         <li>v1.9.0 Added an option for a true boss fight where several things have been changed compared to the original game. Further changes may be made after testers give their opinions.</li>
@@ -390,6 +475,7 @@
     <script src="constants.js"></script>
     <script src="fields.js"></script>
     <script src="util.js"></script>
+    <script src="traps.js"></script>
     <script src="items.js"></script>
     <script src="text.js"></script>
     <script src="monsters.js"></script>
