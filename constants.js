@@ -22,6 +22,7 @@
     SHIELD:   0x11,
     EGG:      0x12,
     FAMILIAR: 0x13,
+    TRAP:     0x15,
   }
 
   const romAddresses = {
@@ -33,14 +34,24 @@
     pauseAfterDeathCode:   0x1c5e470,
     beldoCrashFixPart1:    0x1c6c354, //RAM 0x8009a3cc
     beldoCrashFixPart2:    0x1c6d498, //RAM 0x8009b2b0
+    turnMonsterSpawnRate:  0x1c73d14, //RAM 0x800a0e1c
+    initMonsterSpawnRate:  0x1c7a720, //RAM 0x800a69e8
     statGrowthTable:       0x1cb9c94, //RAM 0x800ddcbc
     isExhaustedBattleText: 0x1cbcc3c,
+    multiElevatorSpawns1:  0x1ea5b1c, //RAM 0x80017a34
     trapRollMaxSingleRm1:  0x1eae330, //RAM 0x8001f078
     trapRollMaxPerFloor1:  0x1eae398, //RAM 0x8001f0e0
     trapRollLowestId1:     0x1eae420, //RAM 0x8001f168
+    multiElevatorSpawns2:  0x217f86c, //RAM 0x80017a34
     trapRollMaxSingleRm2:  0x2188080, //RAM 0x8001f078
     trapRollMaxPerFloor2:  0x21880e8, //RAM 0x8001f0e0
     trapRollLowestId2:     0x2188170, //RAM 0x8001f168
+    floorMonsterTable:     0x24638e8, //RAM 0x800ddc7c
+    tutorialFloorLayout:   0x248ce50,
+    tutorialElevatorYpos:  0x248cf73,
+    tutorialStartingItems: 0x248cf78, // X Y ID category status quality
+    tutorialTrap:          0x248cf9e, // X Y ID category
+    tutorialPulunpa:       0x248cfac, // X Y ID category ??? level
     beldoLocation:         0x263cbb2, //RAM 0x800e604a
     beldoLevel:            0x263cbb7,
     beldoSetFast:          0x31cddcc, //RAM 0x80169fa4
@@ -85,8 +96,6 @@
 
   const lcgConstants = {modulus: 0x1fffFFFFffff, multiplier: 0x5DEECE66D, increment: 11,}
 
-  const tileIdOffset = 0x80
-
   const exports = {
     defaultOptions: defaultOptions,
     TYPE: TYPE,
@@ -96,7 +105,7 @@
     initialStatsRowLength: initialStatsRowLength,
     statGrowthRowLength: statGrowthRowLength,
     lcgConstants: lcgConstants,
-    tileIdOffset: 0x80,
+    sectorSize: 0x930,
   }
   if (self) {
     self.adRando = Object.assign(self.adRando || {}, {

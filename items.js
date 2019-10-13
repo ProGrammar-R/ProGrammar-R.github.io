@@ -24,8 +24,22 @@
   }
 
   const items = [
-    //Sword
-    { name: 'Medicinal',  type: TYPE.HERB, id: 0x0F, modifiers: 0x00, inPool: true,},
+    //Herb
+    { name: 'Medicinal',    type: TYPE.HERB, id: 0x01, modifiers: 0x00, inPool: false, address: 0x5e8ac, barong: false}, //hospital version
+    { name: 'Antidote',     type: TYPE.HERB, id: 0x02, modifiers: 0x00, inPool: false, address: 0x5e8c0, barong: false},
+    { name: 'Antichaos',    type: TYPE.HERB, id: 0x03, modifiers: 0x00, inPool: false, address: 0x5e8d4, barong: false},
+    { name: 'Wake-Up',      type: TYPE.HERB, id: 0x04, modifiers: 0x00, inPool: false, address: 0x5e8e8, barong: false},
+    { name: 'Cure-All',     type: TYPE.HERB, id: 0x05, modifiers: 0x00, inPool: false, address: 0x5e8fc, barong: false},
+    { name: 'Harak',        type: TYPE.HERB, id: 0x06, modifiers: 0x00, inPool: false, address: 0x5e910, barong: false},
+    { name: 'Shomuro',      type: TYPE.HERB, id: 0x07, modifiers: 0x00, inPool: false, address: 0x5e924, barong: true},
+    { name: 'Healing Herb', type: TYPE.HERB, id: 0x07, modifiers: 0x00, inPool: false, address: 0x5e938, barong: false},
+    { name: 'Poison',       type: TYPE.HERB, id: 0x09, modifiers: 0x00, inPool: false, address: 0x5e94c, barong: true},
+    { name: 'Paralyze',     type: TYPE.HERB, id: 0x0a, modifiers: 0x00, inPool: false, address: 0x5e960, barong: true},
+    { name: 'Harash',       type: TYPE.HERB, id: 0x0b, modifiers: 0x00, inPool: false, address: 0x5e974, barong: true},
+    { name: 'Horrey',       type: TYPE.HERB, id: 0x0c, modifiers: 0x00, inPool: false, address: 0x5e988, barong: true},
+    { name: 'Sleep',        type: TYPE.HERB, id: 0x0d, modifiers: 0x00, inPool: false, address: 0x5e99c, barong: true},
+    { name: 'Roehm',        type: TYPE.HERB, id: 0x0e, modifiers: 0x00, inPool: false, address: 0x5e9b0, barong: false},
+    { name: 'Medicinal',    type: TYPE.HERB, id: 0x0f, modifiers: 0x00, inPool: true,  address: 0x5e9c4, barong: false},
     //Ball
     { name: 'Fire',       type: TYPE.BALL, id: 0x01, modifiers: 0x05, inPool: true,  address: 0x5ecd4, spellId: 0x01, names: [0, 0x8002E3E8, 0, 0x8002E39C],          descriptions: [0, 0x8002E3B0, 0, 0x8002E364],},
     { name: 'Blaze',      type: TYPE.BALL, id: 0x02, modifiers: 0x05, inPool: true,  address: 0x5ece8, spellId: 0x04, names: [0, 0x8002E314, 0, 0x8002E2D0],          descriptions: [0, 0x8002E2E0, 0, 0x8002E2A0],},
@@ -178,7 +192,7 @@
 
       //if fast tutorial, move elevator Y coordinate
       if (options.fastTutorial) {
-        data.writeByte(0x248cf73, 0x31)
+        data.writeByte(constants.romAddresses.tutorialElevatorYpos, 0x31)
       }
 
       if (options.ballElements) {
@@ -195,28 +209,34 @@
       }
     }
     if (options.eggomizer != 0) {
-      const floorMonsterAddress = 0x24638e8
       const floorEggOffset = 32
-      const addressIncrement = 0x930
+      const addressIncrement = constants.sectorSize
       let eggs = itemsByType(TYPE.EGG, false)
 
       for (i = 0; i < 39; i++) {
-        let floorEggAddress = floorMonsterAddress + i * addressIncrement + floorEggOffset
+        let floorEggAddress = constants.romAddresses.floorMonsterTable + i * addressIncrement + floorEggOffset
         for (j = 0; j < 32; j++) {
           let eggIndex = lcg.rollBetween(0, eggs.length-1)
           data.writeByte(floorEggAddress++, eggs[eggIndex].id)
         }
       }
     }
+    if (options.barongItems) {
+      const herbs = itemsByType(TYPE.HERB, true)
+      herbs.forEach(function(herb) {
+        if (herb.barong) {
+          data.writeByte(herb.address, 0x08)
+        }
+      })
+    }
   }
 
   function setItem(startingItemIndex, item, data, itemIndex, options) {
-    const startingItemsAddress = 0x248CF78
     const itemIdOffset = 2
     const defaultState = 0
     const newX = 0x1f
     const startingNewY = 0x36
-    let itemAddress = startingItemsAddress + startingItemIndex * startingItemWidth
+    let itemAddress = constants.romAddresses.tutorialStartingItems + startingItemIndex * startingItemWidth
     if (options.fastTutorial) {
       data.writeByte(itemAddress++, newX)
       data.writeByte(itemAddress++, startingNewY - itemIndex)
@@ -284,7 +304,7 @@
   }
 
   function allowAnyBalls(data) {
-    let balls = itemsByType(TYPE.BALL, true)
+    const balls = itemsByType(TYPE.BALL, true)
     balls.forEach(function(ball) {
       data.writeByte(ball.address + itemOffsets.buyPrice, ball.spellId)
     })

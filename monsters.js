@@ -214,6 +214,8 @@
     }
     //For some reason, calling setStarter from index.js doesn't work
     setStarter(options, data, hex)
+    replaceTutorialPulunpaWithBarong(options, data)
+    setMonsterSpawns(options, data)
   }
 
   function setStarter(options, data, hex) {
@@ -319,10 +321,8 @@
   }
 
   function randomizeMonsterElements(options, data, hex, starterId) {
-    const loadMonsterNopReferenceAddress = 0x2aa6a64
     const getPaletteForMonsterAddress = 0x272bc
     const loadMonsterNopAddress = 0x1c7e068
-    const loadMonsterOntoStackAddress = loadMonsterNopAddress + 8
 
     const loadMonsterNopReferenceAddresses = //10 9c 0a 80
       [0x1cbb588,0x1cbc954,0x1cbec80,0x1cbece8,0x1cbed44,0x1cbeda0,0x1cbf10c,0x1cbf118,0x1cbf11c,0x26a1e08,0x26a8c48,0x26afa88,0x26b68c8,0x26bd708,0x26c4548,0x26cb388,0x26d42c8,0x26db108,0x26e1f48,0x26e8d88,0x26efbc8,0x26f6a08,
@@ -420,6 +420,46 @@
 
   function getInitialStatAddressForMonster(monsterID) {
     return constants.romAddresses.initialStatsTable + monsterID * constants.initialStatsRowLength
+  }
+
+  function replaceTutorialPulunpaWithBarong(options, data) {
+    if (options.tutorialBarong) {
+      if (options.fastTutorial) {
+        data.writeLEShort(constants.romAddresses.tutorialPulunpa, 0x1f2d)
+      }
+      data.writeByte(constants.romAddresses.tutorialPulunpa + 2, monsterFromName("Barong").ID)
+    }
+  }
+
+  function setMonsterSpawns(options, data) {
+    if (options.monsterSpawns !== undefined) {
+      const spawnRate = options.monsterSpawns & 0xf
+      const monsterSpawnsOff = 0
+      const monsterSpawnsMax = 6
+      const upperBound = (spawnRate === monsterSpawnsOff ? 0 : (1 << spawnRate))
+      const lowerBound = upperBound >>> 1
+      data.writeByte(constants.romAddresses.initMonsterSpawnRate, Math.min(lowerBound, 16))
+      data.writeByte(constants.romAddresses.initMonsterSpawnRate, Math.min(upperBound, 16))
+
+      const turnSpawnRoll = (1 << (8 - spawnRate)) - 1
+      const initialTurnSpawnRoll = turnSpawnRoll >> 1
+      let minTurnsBetweenSpawns
+      if (spawnRate === monsterSpawnsMax) {
+        minTurnsBetweenSpawns = 0
+      } else if (spawnRate === monsterSpawnsOff) {
+        minTurnsBetweenSpawns = 0xffff
+      } else {
+        minTurnsBetweenSpawns = 0x100 >>> spawnRate
+      }
+      data.writeShort(constants.romAddresses.turnMonsterSpawnRate, turnSpawnRoll)
+      data.writeShort(constants.romAddresses.turnMonsterSpawnRate + 4, minTurnsBetweenSpawns)
+
+      if (spawnRate === monsterSpawnsOff) {
+        data.writeInstruction(constants.romAddresses.turnMonsterSpawnRate + 0x3c, 0xffff4234) // ori v0,v0,0xffff
+      } else {
+        data.writeShort(constants.romAddresses.turnMonsterSpawnRate + 0x3c, initialTurnSpawnRoll)
+      }
+    }
   }
 
   const exports = {

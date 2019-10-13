@@ -211,17 +211,6 @@
       this.parent = null;
     }
 
-    initialize(document) {
-      super.initialize(document);
-      const self = this;
-      Object.getOwnPropertyNames(this.values).forEach(function(valueName) {
-        const option = document.createElement('option')
-        option.value = self.values[valueName]
-        option.innerText = valueName
-        self.elem.appendChild(option)
-      })
-    }
-
     set(newValue) {
       super.set(newValue);
       if (this.parent) {

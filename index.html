@@ -118,6 +118,36 @@
                 <input id="new-balls" type="checkbox">
                 <label for="new-balls">Add new spell balls</label>
               </div>
+              <div class="pure-u-12-24">
+                <input id="barongItems" type="checkbox">
+                <label for="barongItems">Spawn Barong-only items</label>
+              </div>
+              <div class="pure-u-12-24">
+                <input id="tutorialBarong" type="checkbox">
+                <label for="tutorialBarong">Barong on tutorial floor</label>
+              </div>
+              <div id="monster-spawns-select" class="pure-u-12-24">
+                <label for="monster-spawns">Monster spawn rate</label>
+                <select id="monster-spawns">
+                  <option value=0>Off</option>
+                  <option value=1>Very low</option>
+                  <option value=2>Low</option>
+                  <option value=3>Normal</option>
+                  <option value=4>High</option>
+                  <option value=5>Very high</option>
+                  <option value=6>Max</option>
+                </select>
+              </div>
+              <div id="elevator-spawns-select" class="pure-u-12-24">
+                <label for="elevator-spawns">Elevator spawn rate</label>
+                <select id="elevator-spawns">
+                  <option value=63>Normal</option>
+                  <option value=7>Increased</option>
+                  <option value=3>High</option>
+                  <option value=1>Very high</option>
+                  <option value=0>Max</option>
+                </select>
+              </div>
               <div class="pure-u-1">
                 <br>
                 <em>Challenges</em>
@@ -339,6 +369,11 @@
       </p>
       <hr>
       <h2><a name="changelog">Changelog</a></h2>
+      <h3><time>October 13, 2019</time></h3>
+      <ul>
+        <li>v1.11.0 Added options for changing elevator and monster spawn rates. Added options to replace tutorial Pulunpa with a Barong
+          and to allow Barong-only items to spawn normally. Note that this does not change very rare spawns like Geropita Fruit.</li>
+      </ul>
       <h3><time>October 6, 2019</time></h3>
       <ul>
         <li>v1.10.0 Refactored how fields are managed. Added support for changing trap spawn rates.

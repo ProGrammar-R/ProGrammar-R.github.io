@@ -125,6 +125,19 @@
       return super.get();
     }
 
+    initialize(document) {
+      super.initialize(document);
+      if (this.values) {
+        const self = this;
+        Object.getOwnPropertyNames(this.values).forEach(function(valueName) {
+          const option = document.createElement('option')
+          option.value = self.values[valueName]
+          option.innerText = valueName
+          self.elem.appendChild(option)
+        })
+      }
+    }
+
     setIfNext(optionString, index) {
       if (optionString[index] === this.shortName) {
         // Check for an argument.
@@ -167,8 +180,10 @@
     hiddenSpells:         new DropdownOption('hiddenSpells',      'hidden-spells',            'h', null, 0),
     introSkip:            new CheckOption('introSkip',            'intro-skip',               'i', null, true),
     startingItems:        new CheckOption('startingItems',        'starting-items',           'I', null, false),
+    elevatorSpawns:       new DropdownOption('elevatorSpawns',    'elevatorSpawns',           'L', null, 1),
     nonnativeSpellsLevel: new CheckOption('nonnativeSpellsLevel', 'non-native-spells-level',  'n', null, false),
     monsterElements:      new CheckOption('monsterElements',      'monster-elements',         'm', null, false),
+    monsterSpawns:        new DropdownOption('monsterSpawns',     'monster-spawns',           'M', null, 3),
     endurance:            new DropdownOption('endurance',         'endurance',                'N', null, 0),
     boss:                 new CheckOption('boss',                 'boss',                     'o', null, false),
     //preset:             new DropdownOption('preset',            'preset',                   'P', null, ),
@@ -176,6 +191,8 @@
     starter:              new DropdownOption('starter',           'starter',                  'S', null, 2),
     tutorialSkip:         new CheckOption('tutorialSkip',         'tutorial-skip',            't', null, true),
     timeDifficulty:       new DropdownOption('timeDifficulty',    'time-difficulty',          'T', null, 0),
+    tutorialBarong:       new CheckOption('tutorialBarong',       'tutorialBarong',           'u', null, false),
+    barongItems:          new CheckOption('barongItems',          'barongItems',              'U', null, false),
     newBalls:             new CheckOption('newBalls',             'new-balls',                'w', null, false),
   }
 
