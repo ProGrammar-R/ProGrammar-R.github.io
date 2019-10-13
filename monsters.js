@@ -439,7 +439,7 @@
       const upperBound = (spawnRate === monsterSpawnsOff ? 0 : (1 << spawnRate))
       const lowerBound = upperBound >>> 1
       data.writeByte(constants.romAddresses.initMonsterSpawnRate, Math.min(lowerBound, 16))
-      data.writeByte(constants.romAddresses.initMonsterSpawnRate, Math.min(upperBound, 16))
+      data.writeByte(constants.romAddresses.initMonsterSpawnRate + 4, Math.min(upperBound, 16))
 
       const turnSpawnRoll = (1 << (8 - spawnRate)) - 1
       const initialTurnSpawnRoll = turnSpawnRoll >> 1
