@@ -173,6 +173,7 @@
     barongs:              new CheckOption('barongs',              'barongs',                  'b', null, false),
     ballElements:         new CheckOption('ballElements',         'ball-elements',            'B', null, false),
     derandomize:          new CheckOption('derandomize',          'derandomize',              'd', null, true),
+    goDownTraps:          new CheckOption('goDownTraps',          'go-down-traps',            'D', null, false),
     enemizer:             new CheckOption('enemizer',             'enemizer',                 'e', null, false),
     starterElement:       new DropdownOption('starterElement',    'starter-element',          'E', null, -3),
     fastTutorial:         new CheckOption('fastTutorial',         'fast-tutorial',            'f', null, false),
@@ -180,7 +181,7 @@
     hiddenSpells:         new DropdownOption('hiddenSpells',      'hidden-spells',            'h', null, 0),
     introSkip:            new CheckOption('introSkip',            'intro-skip',               'i', null, true),
     startingItems:        new CheckOption('startingItems',        'starting-items',           'I', null, false),
-    elevatorSpawns:       new DropdownOption('elevatorSpawns',    'elevator-spawns',           'L', null, 1),
+    elevatorSpawns:       new DropdownOption('elevatorSpawns',    'elevator-spawns',          'L', null, 1),
     nonnativeSpellsLevel: new CheckOption('nonnativeSpellsLevel', 'non-native-spells-level',  'n', null, false),
     monsterElements:      new CheckOption('monsterElements',      'monster-elements',         'm', null, false),
     monsterSpawns:        new DropdownOption('monsterSpawns',     'monster-spawns',           'M', null, 3),
@@ -191,8 +192,8 @@
     starter:              new DropdownOption('starter',           'starter',                  'S', null, 2),
     tutorialSkip:         new CheckOption('tutorialSkip',         'tutorial-skip',            't', null, true),
     timeDifficulty:       new DropdownOption('timeDifficulty',    'time-difficulty',          'T', null, 0),
-    tutorialBarong:       new CheckOption('tutorialBarong',       'tutorialBarong',           'u', null, false),
-    barongItems:          new CheckOption('barongItems',          'barongItems',              'U', null, false),
+    tutorialBarong:       new CheckOption('tutorialBarong',       'tutorial-barong',          'u', null, false),
+    barongItems:          new CheckOption('barongItems',          'barong-items',             'U', null, false),
     newBalls:             new CheckOption('newBalls',             'new-balls',                'w', null, false),
   }
 

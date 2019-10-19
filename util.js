@@ -342,6 +342,7 @@
     applyEnduranceAndTimeDifficulty(options, data)
     applyBoss(options, data)
     applyElevatorSpawns(options, data)
+    applyGoDownTraps(options, data)
     //if (options.experimentalChanges) {
       //always make cursor start at New Game
       //data.writeInstruction(0x43a920, 0x01000224)
@@ -632,6 +633,13 @@
     data.writeByte(constants.romAddresses.multiElevatorSpawns2, options.elevatorSpawns & 0xff)
   }
 
+  function applyGoDownTraps(options, data) {
+    if (options.goDownTraps) {
+      data.writeShort(constants.romAddresses.goUpTrapIncrement, 0xffff)
+      data.writeShort(constants.romAddresses.goUpTrapIncrement + 4, 0xffff)
+    }
+  }
+
   function pauseAfterDeath(data) {
     // write text that is directed to after death to introduce a pause
     data.writeLEShort(constants.romAddresses.pauseAfterDeathText, 0x1101)
@@ -720,6 +728,7 @@
     tutorialBarong,
     elevatorSpawns,
     monsterSpawns,
+    goDownTraps,
   ) {
     this.id = id
     this.name = name
@@ -750,6 +759,7 @@
     this.tutorialBarong = tutorialBarong
     this.elevatorSpawns = elevatorSpawns
     this.monsterSpawns = monsterSpawns
+    this.goDownTraps = goDownTraps
   }
 
   function clone(obj) {

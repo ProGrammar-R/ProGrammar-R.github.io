@@ -36,6 +36,7 @@
     beldoCrashFixPart2:    0x1c6d498, //RAM 0x8009b2b0
     turnMonsterSpawnRate:  0x1c73d14, //RAM 0x800a0e1c
     initMonsterSpawnRate:  0x1c7a720, //RAM 0x800a69e8
+    goUpTrapIncrement:     0x1ca4fe8, //RAM 0x800cbad0
     statGrowthTable:       0x1cb9c94, //RAM 0x800ddcbc
     isExhaustedBattleText: 0x1cbcc3c,
     multiElevatorSpawns1:  0x1ea5b1c, //RAM 0x80017a34

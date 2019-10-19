@@ -119,12 +119,12 @@
                 <label for="new-balls">Add new spell balls</label>
               </div>
               <div class="pure-u-12-24">
-                <input id="barongItems" type="checkbox">
-                <label for="barongItems">Spawn Barong-only items</label>
+                <input id="barong-items" type="checkbox">
+                <label for="barong-items">Spawn Barong-only items</label>
               </div>
               <div class="pure-u-12-24">
-                <input id="tutorialBarong" type="checkbox">
-                <label for="tutorialBarong">Barong on tutorial floor</label>
+                <input id="tutorial-barong" type="checkbox">
+                <label for="tutorial-barong">Barong on tutorial floor</label>
               </div>
               <div id="monster-spawns-select" class="pure-u-12-24">
                 <label for="monster-spawns">Monster spawn rate</label>
@@ -260,6 +260,10 @@
                 <label for="trap-monster-den">Monster den</label>
                 <select id="trap-monster-den"></select>
               </div>
+              <div class="pure-u-12-24">
+                <input id="go-down-traps" type="checkbox">
+                <label for="go-down-traps">Go up traps send you down</label>
+              </div>
               <div class="pure-u-1" hidden>
                 <input id="experimental-changes" type="checkbox">
                 <label for="experimental-changes">Experimental Changes</label>
@@ -369,6 +373,10 @@
       </p>
       <hr>
       <h2><a name="changelog">Changelog</a></h2>
+      <h3><time>October 19, 2019</time></h3>
+      <ul>
+        <li>v1.12.0 Added an option to make Go Up traps send Koh down a floor instead.</li>
+      </ul>
       <h3><time>October 13, 2019</time></h3>
       <ul>
         <li>v1.11.2 Fixed a bug where upper bound of enemy spawn rate was never set.</li>
