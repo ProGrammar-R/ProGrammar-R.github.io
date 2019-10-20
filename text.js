@@ -59,11 +59,12 @@
   }
 
   const symbols = [
-    {symbol: "\\0", code: 0x00, width: 0, battle: 0x00,},
+    {symbol: "\\0", code: 0x00, width: -1, battle: 0x00,},
     {symbol: "\\3", code: 0x03, width: 0,},
     {symbol: "\\c", code: 0x08, width: -1,},
     {symbol: "\\n", code: 0x0a, width: -1, battle: 0x0a00,}, //battle written in big endian to distinguish control codes
     {symbol: "\\p", code: 0x11, width: 0, battle: 0x1100,},
+    {symbol: "\\B", code: 0x51, width: 0, battle: 0x51,}, //switch to battle text
     {symbol: "\\K", code: 0xfe00, width: 6,}, //Koh
     {symbol: "\\k", code: 0xfe01, width: 6,}, //Kewne
     {symbol: " ", code: 0x8140, width: 1, battle: 0x01,},

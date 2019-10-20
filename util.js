@@ -342,7 +342,6 @@
     applyEnduranceAndTimeDifficulty(options, data)
     applyBoss(options, data)
     applyElevatorSpawns(options, data)
-    applyGoDownTraps(options, data)
     //if (options.experimentalChanges) {
       //always make cursor start at New Game
       //data.writeInstruction(0x43a920, 0x01000224)
@@ -609,7 +608,7 @@
 
       //give Beldo spells
       const beldoUnitId = 0x38
-      const beldoInitialStatsAddress = constants.romAddresses.initialStatsTable + constants.initialStatsRowLength * beldoUnitId
+      const beldoInitialStatsAddress = constants.romAddresses.initialStatsTable + constants.rowLength.initialStats * beldoUnitId
       data.writeByte(beldoInitialStatsAddress + constants.monsterStats.spell1Id, constants.spells.poison)
       data.writeByte(beldoInitialStatsAddress + constants.monsterStats.spell1Level, 1)
       data.writeByte(beldoInitialStatsAddress + constants.monsterStats.spell1LevelAlt, 1)
@@ -618,7 +617,7 @@
       data.writeByte(beldoInitialStatsAddress + constants.monsterStats.spell2LevelAlt, 1)
 
       //change Beldo's stat growth
-      const beldoStatGrowthAddress = constants.romAddresses.statGrowthTable + constants.statGrowthRowLength * beldoUnitId
+      const beldoStatGrowthAddress = constants.romAddresses.statGrowthTable + constants.rowLength.statGrowth * beldoUnitId
       data.writeByte(beldoStatGrowthAddress + constants.monsterStats.attack, 0x05)
       data.writeByte(beldoStatGrowthAddress + constants.monsterStats.defense, 0x4b)
       data.writeByte(beldoStatGrowthAddress + constants.monsterStats.hp, 0x00)
@@ -631,13 +630,6 @@
   function applyElevatorSpawns(options, data) {
     data.writeByte(constants.romAddresses.multiElevatorSpawns1, options.elevatorSpawns & 0xff)
     data.writeByte(constants.romAddresses.multiElevatorSpawns2, options.elevatorSpawns & 0xff)
-  }
-
-  function applyGoDownTraps(options, data) {
-    if (options.goDownTraps) {
-      data.writeShort(constants.romAddresses.goUpTrapIncrement, 0xffff)
-      data.writeShort(constants.romAddresses.goUpTrapIncrement + 4, 0xffff)
-    }
   }
 
   function pauseAfterDeath(data) {
