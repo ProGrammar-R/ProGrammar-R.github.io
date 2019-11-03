@@ -415,6 +415,37 @@
           setMonsterToElement(randomizeElement, data, lcg.roll(), monster.ID)
         }
       })
+
+      if (options.monsterElements == 2) {
+        const randomizeWithinFloorRoutine = [
+          0xe0ffbd27, //addiu	sp,sp,-32
+          0x1800a4af, //sw	a0,24(sp)
+          0x1400a5af, //sw	a1,20(sp)
+          0x1000bfaf, //sw	ra,16(sp)
+          0x00000424, //li	a0,0                            ; a0 = 0
+          0x699b020c, //jal	0x800a6da4                      ; call get_rand_based_on_a0_and_a1
+          0x02000524, //li	a1,2                            ; a1 = 2
+          0x02004014, //bnez	v0,skip 2                     ; if $8001f586 != 0, skip next statement
+          0x00000000, //nop
+          0x04000224, //li	v0,4                            ; v0 = 4
+          0x140002a2, //sb	v0,20(s0)                       ; set actual element
+          0x1c0002a2, //sb	v0,28(s0)                       ; set current element
+          0x610a010c, //jal	0x80042984                      ; call set_monster_palette
+          0x21200002, //move	a0,s0                         ; a0 = s0
+          0x4c9b020c, //jal	0x800a6d30                      ; roll for v0
+          0x00000000, //nop
+          0x1000bf8f, //lw	ra,16(sp)
+          0x1400a58f, //lw	a1,20(sp)
+          0x1800a48f, //lw	a0,24(s4)
+          0x0800e003, //jr	ra
+          0x2000bd27,] //addiu	sp,sp,32
+        let routineAddress = constants.romAddresses.itemCategoryNamesKanji;
+        randomizeWithinFloorRoutine.forEach(function(newInstruction) {
+          data.writeInstruction(routineAddress, newInstruction)
+          routineAddress += 4
+        })
+        data.writeInstruction(constants.romAddresses.placeMonsterRollGamma, 0x05cd010c) //jal 0x80073414
+      }
     }
   }
 

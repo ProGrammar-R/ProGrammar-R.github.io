@@ -29,11 +29,14 @@
     pauseAfterDeathText:     0x55b71,
     initialStatsTable:       0x57f30, //RAM 0x8006d168
     trapTable:               0x5e7a8, //RAM 0x80072cd0
+    itemCategoryTable:       0x5f01c, //RAM 0x80073414
+    itemCategoryNamesKanji:  0x6f128, //RAM 0x800813e0
     angelFirstWord:         0xee5f97,
     checkKohDeathTopFloor: 0x1c5e360, //RAM 0x8008e058
     pauseAfterDeathCode:   0x1c5e470,
     beldoCrashFixPart1:    0x1c6c354, //RAM 0x8009a3cc
     beldoCrashFixPart2:    0x1c6d498, //RAM 0x8009b2b0
+    placeMonsterRollGamma: 0x1c73950, //RAM 0x800a0a58
     turnMonsterSpawnRate:  0x1c73d14, //RAM 0x800a0e1c
     initMonsterSpawnRate:  0x1c7a720, //RAM 0x800a69e8
     statGrowthTable:       0x1cb9c94, //RAM 0x800ddcbc
