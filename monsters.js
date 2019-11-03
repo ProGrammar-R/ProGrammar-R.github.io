@@ -240,11 +240,11 @@
       data.writeByte(starterAddress.location, starter)
     })
     setHiddenSpellsAvailable(options, data, starter)
-    setMonsterToElement(options.starterElement, data, hex[randomStarterElementHexKey], starter)
+    setMonsterToElement(options.starterElement, data, hex[randomStarterElementHexKey], starter, true)
     randomizeMonsterElements(options, data, hex, starter)
   }
 
-  function setMonsterToElement(desiredElement, data, randomValue, starterId) {
+  function setMonsterToElement(desiredElement, data, randomValue, starterId, matchSpellToElement) {
     let initialElementAddress = getInitialStatAddressForMonster(starterId) + constants.monsterStats.element
     let starterElement = data.readByte(initialElementAddress)
     let starterDefaultElement = starterElement
@@ -274,7 +274,7 @@
       let starterSpell = data.readByte(initialSpellAddress)
 
       //but only change it for monsters that have spells, aren't Tri, and weren't originally Tri (Hikewne)
-      if (!!starterSpell && starterDefaultElement != tri) {
+      if (matchSpellToElement && !!starterSpell && starterDefaultElement != tri) {
         if (starterElement != tri) {
           let spellElement = primaryElements[(starterSpell - 1) % primaryElements.length].ID
           //console.log('Spell ID '+starterSpell)
@@ -412,11 +412,11 @@
 
       allMonsters.forEach(function(monster) {
         if (monster.ID != starterId && monster.ID != kewne && monster.ID != hikewne) {
-          setMonsterToElement(randomizeElement, data, lcg.roll(), monster.ID)
+          setMonsterToElement(randomizeElement, data, lcg.roll(), monster.ID, (options.monsterElements & 0xf) != 2)
         }
       })
 
-      if (options.monsterElements == 2) {
+      if ((options.monsterElements & 0xf) > 1) {
         const randomizeWithinFloorRoutine = [
           0xe0ffbd27, //addiu	sp,sp,-32
           0x1800a4af, //sw	a0,24(sp)
@@ -429,7 +429,7 @@
           0x00000000, //nop
           0x04000224, //li	v0,4                            ; v0 = 4
           0x140002a2, //sb	v0,20(s0)                       ; set actual element
-          0x1c0002a2, //sb	v0,28(s0)                       ; set current element
+          //0x1c0002a2, //sb	v0,28(s0)                       ; set current element
           0x610a010c, //jal	0x80042984                      ; call set_monster_palette
           0x21200002, //move	a0,s0                         ; a0 = s0
           0x4c9b020c, //jal	0x800a6d30                      ; roll for v0
@@ -444,7 +444,7 @@
           data.writeInstruction(routineAddress, newInstruction)
           routineAddress += 4
         })
-        data.writeInstruction(constants.romAddresses.placeMonsterRollGamma, 0x05cd010c) //jal 0x80073414
+        data.writeInstruction(constants.romAddresses.placeMonsterRollGamma, 0xf804020c) //jal 0x800813e0
       }
     }
   }

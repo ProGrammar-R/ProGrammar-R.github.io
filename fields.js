@@ -181,7 +181,7 @@
     hiddenSpells:         new DropdownOption('hiddenSpells',      'hidden-spells',            'h', null, 0),
     introSkip:            new CheckOption('introSkip',            'intro-skip',               'i', null, true),
     startingItems:        new CheckOption('startingItems',        'starting-items',           'I', null, false),
-    elevatorSpawns:       new DropdownOption('elevatorSpawns',    'elevator-spawns',          'L', null, 1),
+    elevatorSpawns:       new DropdownOption('elevatorSpawns',    'elevator-spawns',          'L', null, 63),
     nonnativeSpellsLevel: new CheckOption('nonnativeSpellsLevel', 'non-native-spells-level',  'n', null, false),
     monsterElements:      new DropdownOption('monsterElements',   'monster-elements',         'm', null, 0),
     monsterSpawns:        new DropdownOption('monsterSpawns',     'monster-spawns',           'M', null, 3),
