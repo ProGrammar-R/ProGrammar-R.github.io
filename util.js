@@ -608,7 +608,7 @@
 
       //give Beldo spells
       const beldoUnitId = 0x38
-      const beldoInitialStatsAddress = constants.romAddresses.initialStatsTable + constants.initialStatsRowLength * beldoUnitId
+      const beldoInitialStatsAddress = constants.romAddresses.initialStatsTable + constants.rowLength.initialStats * beldoUnitId
       data.writeByte(beldoInitialStatsAddress + constants.monsterStats.spell1Id, constants.spells.poison)
       data.writeByte(beldoInitialStatsAddress + constants.monsterStats.spell1Level, 1)
       data.writeByte(beldoInitialStatsAddress + constants.monsterStats.spell1LevelAlt, 1)
@@ -617,7 +617,7 @@
       data.writeByte(beldoInitialStatsAddress + constants.monsterStats.spell2LevelAlt, 1)
 
       //change Beldo's stat growth
-      const beldoStatGrowthAddress = constants.romAddresses.statGrowthTable + constants.statGrowthRowLength * beldoUnitId
+      const beldoStatGrowthAddress = constants.romAddresses.statGrowthTable + constants.rowLength.statGrowth * beldoUnitId
       data.writeByte(beldoStatGrowthAddress + constants.monsterStats.attack, 0x05)
       data.writeByte(beldoStatGrowthAddress + constants.monsterStats.defense, 0x4b)
       data.writeByte(beldoStatGrowthAddress + constants.monsterStats.hp, 0x00)
@@ -720,6 +720,7 @@
     tutorialBarong,
     elevatorSpawns,
     monsterSpawns,
+    goDownTraps,
   ) {
     this.id = id
     this.name = name
@@ -750,6 +751,7 @@
     this.tutorialBarong = tutorialBarong
     this.elevatorSpawns = elevatorSpawns
     this.monsterSpawns = monsterSpawns
+    this.goDownTraps = goDownTraps
   }
 
   function clone(obj) {

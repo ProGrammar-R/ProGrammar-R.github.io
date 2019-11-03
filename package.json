@@ -1,6 +1,6 @@
 {
   "name": "AD-DeRandomizer",
-  "version": "1.11.2-0",
+  "version": "1.12.0-0",
   "description": "This is a romhacking tool to de-randomize some things about `Azure Dreams (PS1)`.",
   "main": "index.js",
   "dependencies": {
@@ -18,6 +18,6 @@
   "bugs": {
     "url": "https://github.com/ProGrammar-R/ProGrammar-R.github.io/issues"
   },
-  "homepage": "https://programmar-r.github.io/",
+  "homepage": "https://adrando.com/",
   "devDependencies": {}
 }

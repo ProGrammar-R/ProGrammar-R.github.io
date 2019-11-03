@@ -270,7 +270,7 @@
       data.writeByte(initialElementAddress, starterElement)
 
       //need to change starter spell to match element
-      let initialSpellAddress = constants.romAddresses.initialStatsTable + starterId * constants.initialStatsRowLength + constants.monsterStats.spell1Id
+      let initialSpellAddress = constants.romAddresses.initialStatsTable + starterId * constants.rowLength.initialStats + constants.monsterStats.spell1Id
       let starterSpell = data.readByte(initialSpellAddress)
 
       //but only change it for monsters that have spells, aren't Tri, and weren't originally Tri (Hikewne)
@@ -309,7 +309,7 @@
       allMonsters.forEach(function(monster) {
         if (changeForAllMonsters || monster.ID == starter) {
           let hiddenSpell = data.readByte(hiddenSpellTableAddress + monster.ID)
-          let initialSpellAddress = constants.romAddresses.initialStatsTable + monster.ID * constants.initialStatsRowLength + constants.monsterStats.spell1Id
+          let initialSpellAddress = constants.romAddresses.initialStatsTable + monster.ID * constants.rowLength.initialStats + constants.monsterStats.spell1Id
           if (!!hiddenSpell) {
             data.writeByte(initialSpellAddress, hiddenSpell)
             data.writeByte(initialSpellAddress + 1, 0x01) // set initial level
@@ -450,7 +450,7 @@
   }
 
   function getInitialStatAddressForMonster(monsterID) {
-    return constants.romAddresses.initialStatsTable + monsterID * constants.initialStatsRowLength
+    return constants.romAddresses.initialStatsTable + monsterID * constants.rowLength.initialStats
   }
 
   function replaceTutorialPulunpaWithBarong(options, data) {

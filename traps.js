@@ -3,15 +3,18 @@
   let constants
   let fields
   let util
+  let text
 
   if (self) {
     constants = self.adRando.constants
     fields = self.adRando.fields
     util = self.adRando.util
+    text = self.adRando.text
   } else {
     constants = require('./constants')
     fields = require('./fields')
     util = require('./util')
+    text = require('./text')
   }
 
   const TRAP_FREQUENCIES = {
@@ -317,7 +320,6 @@
 
   function setTraps(data, options) {
     if (options.traps !== DEFAULT_TRAPS) {
-      const trapLength = 12;
       let firstActiveTrap = Object.getOwnPropertyNames(TRAP_TYPES).length;
       let lastActiveTrap = 1;
       let i = 0;
@@ -339,7 +341,7 @@
           if (trapId > lastActiveTrap && trapValue !== TRAP_FREQUENCIES.Off) {
             lastActiveTrap = trapId;
           }
-          data.writeByte(constants.romAddresses.trapTable + trapId * trapLength + 1, ((trapValue & 0x03) << 4) | 0x02);
+          data.writeByte(constants.romAddresses.trapTable + trapId * constants.rowLength.trap + 1, ((trapValue & 0x03) << 4) | 0x02);
         }
       })
       //apply some sane limits
@@ -349,6 +351,27 @@
       data.writeByte(constants.romAddresses.trapRollLowestId1 + 8, lastActiveTrap);
       data.writeByte(constants.romAddresses.trapRollLowestId2, firstActiveTrap);
       data.writeByte(constants.romAddresses.trapRollLowestId2 + 8, lastActiveTrap);
+    }
+    applyGoDownTraps(options, data)
+  }
+
+  function applyGoDownTraps(options, data) {
+    if (options.goDownTraps) {
+      if (self) {
+        text = self.adRando.text
+      } else {
+        text = require('./text')
+      }
+      data.writeShort(constants.romAddresses.goUpTrapIncrement, 0xffff)
+      data.writeShort(constants.romAddresses.goUpTrapIncrement + 4, 0xffff)
+
+      //in battle text
+      text.writeBattleTextToFile(data, constants.romAddresses.toUpstairsBattleText, "\\n\\Bdown")
+      //trap description
+      text.writeTextToFile(data, constants.romAddresses.goUpTrapDescription, "\\K will be sent down one\\nfloor.\\0Go Down\\0")
+      //text.writeTextToFile(data, constants.romAddresses.anUpperFloorText, "\\3a lower")
+      //update pointer to trap name
+      data.writeWord(constants.romAddresses.trapTable + 4 * constants.rowLength.trap + 4, 0x80031354)
     }
   }
 

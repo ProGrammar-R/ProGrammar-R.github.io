@@ -25,7 +25,15 @@
     TRAP:     0x15,
   }
 
+  const rowLength = {
+    trap: 12,
+    initialStats: 24,
+    statGrowth: 8,
+  }
+
   const romAddresses = {
+    goUpTrapDescription:     0x13260, //RAM 0x80031318
+    anUpperFloorText:        0x1329b, //RAM 0x80031353
     pauseAfterDeathText:     0x55b71,
     initialStatsTable:       0x57f30, //RAM 0x8006d168
     trapTable:               0x5e7a8, //RAM 0x80072cd0
@@ -39,8 +47,10 @@
     placeMonsterRollGamma: 0x1c73950, //RAM 0x800a0a58
     turnMonsterSpawnRate:  0x1c73d14, //RAM 0x800a0e1c
     initMonsterSpawnRate:  0x1c7a720, //RAM 0x800a69e8
+    goUpTrapIncrement:     0x1ca4fe8, //RAM 0x800cbad0
     statGrowthTable:       0x1cb9c94, //RAM 0x800ddcbc
     isExhaustedBattleText: 0x1cbcc3c,
+    toUpstairsBattleText:  0x1cbe450, //RAM 0x800e1af8
     multiElevatorSpawns1:  0x1ea5b1c, //RAM 0x80017a34
     trapRollMaxSingleRm1:  0x1eae330, //RAM 0x8001f078
     trapRollMaxPerFloor1:  0x1eae398, //RAM 0x8001f0e0
@@ -94,19 +104,15 @@
     lagrave: 0x2b,
   }
 
-  const initialStatsRowLength = 24;
-  const statGrowthRowLength = 8;
-
   const lcgConstants = {modulus: 0x1fffFFFFffff, multiplier: 0x5DEECE66D, increment: 11,}
 
   const exports = {
     defaultOptions: defaultOptions,
     TYPE: TYPE,
+    rowLength: rowLength,
     romAddresses: romAddresses,
     monsterStats: monsterStats,
     spells: spells,
-    initialStatsRowLength: initialStatsRowLength,
-    statGrowthRowLength: statGrowthRowLength,
     lcgConstants: lcgConstants,
     sectorSize: 0x930,
   }
