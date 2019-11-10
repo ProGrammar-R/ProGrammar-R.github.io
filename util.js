@@ -715,6 +715,7 @@
     endurance,
     boss,
     timeDifficulty,
+    survival,
     traps,
     barongItems,
     tutorialBarong,
@@ -746,6 +747,7 @@
     this.endurance = endurance,
     this.boss = boss,
     this.timeDifficulty = timeDifficulty
+    this.survival = survival
     this.traps = traps
     this.barongItems = barongItems
     this.tutorialBarong = tutorialBarong

@@ -7,7 +7,7 @@
     FRUIT:    0x2,
     SEED:     0x3,
     BALL:     0x4,
-    BEAM:     0x5,
+    SCROLL:   0x5,
     CRYSTAL:  0x6,
     BELL:     0x7,
     GLASSES:  0x8,
@@ -52,10 +52,12 @@
     isExhaustedBattleText: 0x1cbcc3c,
     toUpstairsBattleText:  0x1cbe450, //RAM 0x800e1af8
     multiElevatorSpawns1:  0x1ea5b1c, //RAM 0x80017a34
+    tutorialFloorId1:      0x1ea75b8, //RAM 0x80019140
     trapRollMaxSingleRm1:  0x1eae330, //RAM 0x8001f078
     trapRollMaxPerFloor1:  0x1eae398, //RAM 0x8001f0e0
     trapRollLowestId1:     0x1eae420, //RAM 0x8001f168
     multiElevatorSpawns2:  0x217f86c, //RAM 0x80017a34
+    tutorialFloorId2:      0x2181308, //RAM 0x80019140
     trapRollMaxSingleRm2:  0x2188080, //RAM 0x8001f078
     trapRollMaxPerFloor2:  0x21880e8, //RAM 0x8001f0e0
     trapRollLowestId2:     0x2188170, //RAM 0x8001f168
@@ -65,6 +67,10 @@
     tutorialStartingItems: 0x248cf78, // X Y ID category status quality
     tutorialTrap:          0x248cf9e, // X Y ID category
     tutorialPulunpa:       0x248cfac, // X Y ID category ??? level
+    debugFloorLayout:      0x2493360, 
+    debugFloorElevator:    0x249338e, // X Y 00 00 00 00
+    debugFloorFirstItem:   0x2493394, // X Y ID category status quality
+    debugFloorItemEnd:     0x2493514,
     beldoLocation:         0x263cbb2, //RAM 0x800e604a
     beldoLevel:            0x263cbb7,
     beldoSetFast:          0x31cddcc, //RAM 0x80169fa4

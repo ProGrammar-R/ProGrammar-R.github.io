@@ -194,6 +194,7 @@
     timeDifficulty:       new DropdownOption('timeDifficulty',    'time-difficulty',          'T', null, 0),
     tutorialBarong:       new CheckOption('tutorialBarong',       'tutorial-barong',          'u', null, false),
     barongItems:          new CheckOption('barongItems',          'barong-items',             'U', null, false),
+    survival:             new CheckOption('survival',             'survival',                 'v', null, false),
     newBalls:             new CheckOption('newBalls',             'new-balls',                'w', null, false),
   }
 
