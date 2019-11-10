@@ -26,9 +26,9 @@
   const items = [
     //Herb
     { name: 'Medicinal',    type: TYPE.HERB, id: 0x01, modifiers: 0x00, inPool: false, survival: 0, address: 0x5e8ac, barong: false}, //hospital version
-    { name: 'Antidote',     type: TYPE.HERB, id: 0x02, modifiers: 0x00, inPool: false, survival: 1, address: 0x5e8c0, barong: false},
-    { name: 'Antichaos',    type: TYPE.HERB, id: 0x03, modifiers: 0x00, inPool: false, survival: 1, address: 0x5e8d4, barong: false},
-    { name: 'Wake-Up',      type: TYPE.HERB, id: 0x04, modifiers: 0x00, inPool: false, survival: 1, address: 0x5e8e8, barong: false},
+    { name: 'Antidote',     type: TYPE.HERB, id: 0x02, modifiers: 0x00, inPool: false, survival: 0, address: 0x5e8c0, barong: false},
+    { name: 'Antichaos',    type: TYPE.HERB, id: 0x03, modifiers: 0x00, inPool: false, survival: 0, address: 0x5e8d4, barong: false},
+    { name: 'Wake-Up',      type: TYPE.HERB, id: 0x04, modifiers: 0x00, inPool: false, survival: 0, address: 0x5e8e8, barong: false},
     { name: 'Cure-All',     type: TYPE.HERB, id: 0x05, modifiers: 0x00, inPool: false, survival: 1, address: 0x5e8fc, barong: false},
     { name: 'Harak',        type: TYPE.HERB, id: 0x06, modifiers: 0x00, inPool: false, survival: 1, address: 0x5e910, barong: false},
     { name: 'Shomuro',      type: TYPE.HERB, id: 0x07, modifiers: 0x00, inPool: false, survival: 1, address: 0x5e924, barong: true},
@@ -106,9 +106,9 @@
     { name: 'Monster',    type: TYPE.LOUPE, id: 0x04, modifiers: 0x00, inPool: false, survival: 1, address: 0x5efa4},
     { name: 'Treasure',   type: TYPE.LOUPE, id: 0x05, modifiers: 0x00, inPool: false, survival: 0, address: 0x5efb8},
     //Sand
-    { name: 'Red',        type: TYPE.SAND, id: 0x01, modifiers: 0x00, inPool: false, survival: 0, address: 0x5efe0}, //0
-    { name: 'Blue',       type: TYPE.SAND, id: 0x02, modifiers: 0x00, inPool: false, survival: 0, address: 0x5eff4},
-    { name: 'White',      type: TYPE.SAND, id: 0x03, modifiers: 0x00, inPool: false, survival: 0, address: 0x5f008},
+    { name: 'Red',        type: TYPE.SAND, id: 0x01, modifiers: 0x00, inPool: false, survival: 1, address: 0x5efe0}, //0
+    { name: 'Blue',       type: TYPE.SAND, id: 0x02, modifiers: 0x00, inPool: false, survival: 1, address: 0x5eff4},
+    { name: 'White',      type: TYPE.SAND, id: 0x03, modifiers: 0x00, inPool: false, survival: 1, address: 0x5f008},
     //Special
     { name: 'Blue Collar',    type: TYPE.SPECIAL, id: 0x04, modifiers: 0x00, inPool: false, survival: 1, address: 0x5dc64}, //-3
     { name: '?',              type: TYPE.SPECIAL, id: 0x08, modifiers: 0x00, inPool: false, survival: 0, address: 0x5dcb4}, 
