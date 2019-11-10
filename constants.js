@@ -52,11 +52,13 @@
     isExhaustedBattleText: 0x1cbcc3c,
     toUpstairsBattleText:  0x1cbe450, //RAM 0x800e1af8
     multiElevatorSpawns1:  0x1ea5b1c, //RAM 0x80017a34
+    callReplaceKewneTut1:  0x1ea7210, //RAM 0x80018ec8
     tutorialFloorId1:      0x1ea75b8, //RAM 0x80019140
     trapRollMaxSingleRm1:  0x1eae330, //RAM 0x8001f078
     trapRollMaxPerFloor1:  0x1eae398, //RAM 0x8001f0e0
     trapRollLowestId1:     0x1eae420, //RAM 0x8001f168
     multiElevatorSpawns2:  0x217f86c, //RAM 0x80017a34
+    callReplaceKewneTut2:  0x2180f60, //RAM 0x80018ec8
     tutorialFloorId2:      0x2181308, //RAM 0x80019140
     trapRollMaxSingleRm2:  0x2188080, //RAM 0x8001f078
     trapRollMaxPerFloor2:  0x21880e8, //RAM 0x8001f0e0

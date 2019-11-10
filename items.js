@@ -426,6 +426,10 @@
       //replace tutorial with test room
       data.writeByte(constants.romAddresses.tutorialFloorId1, 0x08)
       data.writeByte(constants.romAddresses.tutorialFloorId2, 0x08)
+
+      //overwrite call to replace kewne with tutorial version or game crashes with Kewne in survival mode due to wild routine 0x800f6d28 being called from 0x80152980
+      data.writeInstruction(constants.romAddresses.callReplaceKewneTut1, 0x00000000)
+      data.writeInstruction(constants.romAddresses.callReplaceKewneTut2, 0x00000000)
     }
   }
 
