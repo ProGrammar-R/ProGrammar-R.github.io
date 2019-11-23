@@ -364,7 +364,7 @@
 
     const manoevaTransformPaletteMaskAddress = [0x2c1b124,0x2c21f64,0x2c28da4,0x2c2fbe4,0x2c36a24,0x2c3d864,0x2c446a4]
 
-    if (options.monsterElements) {
+    if (+options.monsterElements) {
       //override references to load_monster_nop with end of the previous function
       loadMonsterNopReferenceAddresses.forEach(function(address) {
         data.writeWord(address, 0x800a9c08)

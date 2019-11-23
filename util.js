@@ -329,7 +329,7 @@
     return hex
   }
 
-  function setAppliedOptions(options, data) {
+  function setAppliedOptions(options, data, hex) {
     if (options.nonnativeSpellsLevel) {
       data.writeInstruction(0x1c75450, 0x21106000)
     }
@@ -342,6 +342,9 @@
     applyEnduranceAndTimeDifficulty(options, data)
     applyBoss(options, data)
     applyElevatorSpawns(options, data)
+    makeFrog(options, data)
+    applyThemes(options, data, hex)
+    applyQuestReload(options, data)
     //if (options.experimentalChanges) {
       //always make cursor start at New Game
       //data.writeInstruction(0x43a920, 0x01000224)
@@ -632,6 +635,72 @@
     data.writeByte(constants.romAddresses.multiElevatorSpawns2, options.elevatorSpawns & 0xff)
   }
 
+  function makeFrog(options, data) {
+    if (options.frog) {
+      let sourceAddress = 0x2EE8100
+      const frogAddress = 0x2F184C0
+      let destinationAddress = frogAddress
+      let sectorIndex = 0
+      let addressRemainder = 0
+      while (sourceAddress < frogAddress) {
+        sectorIndex = sourceAddress % constants.sectorSize
+        if (sectorIndex >= 24 && sectorIndex < 2072) { // don't overwrite section or checksum data
+          data.writeWord(destinationAddress, data.readWord(sourceAddress))
+          addressRemainder = sourceAddress % 28224
+          if (addressRemainder == 0x4a60) { // set monster type to be frog
+            data.writeByte(destinationAddress, 0x2e)
+          } else if (addressRemainder == 0x16f4 || addressRemainder == 0x16f8) { //overwrite missing animations for jumping up
+            data.writeWord(destinationAddress, 0x1d1d1d1d)
+          } else if (addressRemainder == 0x16ec || addressRemainder == 0x16f0) { //overwrite missing animations for getting hit
+            data.writeWord(destinationAddress, 0x29292929)
+          } else if (addressRemainder == 0x170c || addressRemainder == 0x1710) { //overwrite missing animations for dying
+            data.writeWord(destinationAddress, 0x0d0d0d0d)
+          } else if (addressRemainder == 0x53a4) { //prevent frog from attacking to prevent crash / softlock
+            data.writeShort(destinationAddress, 0x0000)
+          }
+        }
+        sourceAddress+=4
+        destinationAddress+=4
+      }
+      data.writeByte(0x1c7e2b0, 0xd1) //change call to is_monster_a_frog_or_salamander to only return if is a salamander
+      data.writeInstruction(0x375dac0, 0x00000000) //remove override of monster ID with backup monster ID in case of frog in line-up menu
+    }
+  }
+
+  function applyThemes(options, data, hex) {
+    if (options.themes) {
+      const randomThemeHexSeed = 1;
+      const lcgSeed = hex.length > randomThemeHexSeed ? Math.abs(hex[randomThemeHexSeed]) : 15;
+
+      const floorThemeOffset = 64
+      const themeCount = 0x1b
+      const themes = new Array(themeCount)
+      //fill array
+      for (let i = 0; i < themeCount; i++) {
+        themes[i] = i
+      }
+      shuffle(themes, lcgSeed)
+      let themeAddress = constants.romAddresses.floorMonsterTable + floorThemeOffset
+      let theme = 0 //leave floor 1 as theme 0, though this probably doesn't get used
+
+      for (let i = 1; i < 40; i++) {
+        //as in vanilla game, only change themes on even numbered floors
+        if (i % 2 === 0) {
+          theme = themes.pop()
+        }
+        data.writeByte(themeAddress, theme)
+        themeAddress += constants.sectorSize
+      }
+    }
+  }
+
+  function applyQuestReload(options, data) {
+    if (options.questReload) {
+      data.writeInstruction(constants.romAddresses.markQuestAsLoaded1, 0x00000000)
+      data.writeInstruction(constants.romAddresses.markQuestAsLoaded2, 0x00000000)
+    }
+  }
+
   function pauseAfterDeath(data) {
     // write text that is directed to after death to introduce a pause
     data.writeLEShort(constants.romAddresses.pauseAfterDeathText, 0x1101)
@@ -653,6 +722,16 @@
         pauseCodeAddr += 4
       }
     )
+  }
+
+  function shuffle(array, lcgSeed) {
+    const lcg = new util.LCG(constants.lcgConstants.modulus, constants.lcgConstants.multiplier, constants.lcgConstants.increment, lcgSeed)
+    //Fisher-Yates shuffle
+    let j = 0
+    for (let i = array.length -1; i > 0; i--) {
+      j = lcg.rollBetween(0, i);
+      [array[i], array[j]] = [array[j], array[i]];
+    }
   }
 
   function saltSeed(version, options, seed) {
@@ -678,16 +757,6 @@
       data = data.slice(0x800 + 0x130)
     }
     return file
-  }
-
-  function shuffled(array) {
-    const copy = array.slice()
-    const shuffled = []
-    while (copy.length) {
-      const rand = Math.floor(Math.random() * copy.length)
-      shuffled.push(copy.splice(rand, 1)[0])
-    }
-    return shuffled
   }
 
   function Preset(
@@ -722,6 +791,8 @@
     elevatorSpawns,
     monsterSpawns,
     goDownTraps,
+    themes,
+    questReload,
   ) {
     this.id = id
     this.name = name
@@ -754,6 +825,8 @@
     this.elevatorSpawns = elevatorSpawns
     this.monsterSpawns = monsterSpawns
     this.goDownTraps = goDownTraps
+    this.themes = themes
+    this.questReload = questReload
   }
 
   function clone(obj) {
@@ -931,7 +1004,7 @@
     saltSeed: saltSeed,
     setAppliedOptions: setAppliedOptions,
     restoreFile: restoreFile,
-    shuffled: shuffled,
+    shuffle: shuffle,
     Preset: Preset,
     PresetBuilder: PresetBuilder,
     getDefaultFromList: getDefaultFromList,

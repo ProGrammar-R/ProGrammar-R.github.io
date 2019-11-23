@@ -39,6 +39,8 @@
     trapTable:               0x5e7a8, //RAM 0x80072cd0
     itemCategoryTable:       0x5f01c, //RAM 0x80073414
     itemCategoryNamesKanji:  0x6f128, //RAM 0x800813e0
+    markQuestAsLoaded1:     0x6cc7f8, //RAM 0x80022090
+    markQuestAsLoaded2:     0x6cc814, //RAM 0x800220ac
     angelFirstWord:         0xee5f97,
     checkKohDeathTopFloor: 0x1c5e360, //RAM 0x8008e058
     pauseAfterDeathCode:   0x1c5e470,
@@ -54,12 +56,14 @@
     multiElevatorSpawns1:  0x1ea5b1c, //RAM 0x80017a34
     callReplaceKewneTut1:  0x1ea7210, //RAM 0x80018ec8
     tutorialFloorId1:      0x1ea75b8, //RAM 0x80019140
+    windCrystalCheck1:     0x1ead384, //RAM 0x8001e32c
     trapRollMaxSingleRm1:  0x1eae330, //RAM 0x8001f078
     trapRollMaxPerFloor1:  0x1eae398, //RAM 0x8001f0e0
     trapRollLowestId1:     0x1eae420, //RAM 0x8001f168
     multiElevatorSpawns2:  0x217f86c, //RAM 0x80017a34
     callReplaceKewneTut2:  0x2180f60, //RAM 0x80018ec8
     tutorialFloorId2:      0x2181308, //RAM 0x80019140
+    windCrystalCheck2:     0x21870d4, //RAM 0x8001e32c
     trapRollMaxSingleRm2:  0x2188080, //RAM 0x8001f078
     trapRollMaxPerFloor2:  0x21880e8, //RAM 0x8001f0e0
     trapRollLowestId2:     0x2188170, //RAM 0x8001f168

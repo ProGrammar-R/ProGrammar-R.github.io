@@ -201,6 +201,7 @@
     { name: 'Tyrant Egg',   type: TYPE.EGG, id: 0x2B, modifiers: 0x14, inPool: true, survival: 0,},
     { name: 'Golem Egg',    type: TYPE.EGG, id: 0x2C, modifiers: 0x14, inPool: true, survival: 0,},
     { name: 'Maximum Egg',  type: TYPE.EGG, id: 0x2D, modifiers: 0x14, inPool: true, survival: 0,},
+    { name: 'Frog Egg',     type: TYPE.EGG, id: 0x2E, modifiers: 0x14, inPool: false, survival: 0,},
   ]
 
   function itemsByType(type, ignorePool) {
@@ -270,7 +271,7 @@
         }
       }
     }
-    if (options.eggomizer != 0) {
+    if (options.eggomizer) {
       const floorEggOffset = 32
       const addressIncrement = constants.sectorSize
       let eggs = itemsByType(TYPE.EGG, false)
@@ -430,6 +431,10 @@
       //overwrite call to replace kewne with tutorial version or game crashes with Kewne in survival mode due to wild routine 0x800f6d28 being called from 0x80152980
       data.writeInstruction(constants.romAddresses.callReplaceKewneTut1, 0x00000000)
       data.writeInstruction(constants.romAddresses.callReplaceKewneTut2, 0x00000000)
+
+      //turn off spawning extra wind crystals
+      data.writeByte(constants.romAddresses.windCrystalCheck1, 0x00)
+      data.writeByte(constants.romAddresses.windCrystalCheck2, 0x00)
     }
   }
 

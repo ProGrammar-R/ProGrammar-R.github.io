@@ -31,7 +31,7 @@ self.addEventListener('message', function(message) {
     //adRando.text.writeBattleTextToFile(check, adRando.constants.romAddresses.isExhaustedBattleText, "collapsed.\\p\\0")
     adRando.monsters.setEnemizer(options, check, hex)
     adRando.items.setStartingItems(options, check, hex)
-    adRando.util.setAppliedOptions(options, check)
+    adRando.util.setAppliedOptions(options, check, hex)
     const checksum = check.sum()
     if (data.checksum && data.checksum !== checksum) {
       throw new Error(VER_ERROR)

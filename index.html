@@ -69,8 +69,15 @@
                 <em>Randomizations</em>
               </div>
               <div class="pure-u-12-24">
+                <input id="themes" type="checkbox">
+                <label for="themes">Randomize floor themes (appearances)</label>
+              </div>
+              <div class="pure-u-12-24">
+                <!-- placeholder -->
+              </div>
+              <div class="pure-u-12-24">
                 <input id="enemizer" type="checkbox">
-                <label for="enemizer">Randomize monsters (enemizer)</label>
+                <label for="enemizer">Randomize monsters</label>
               </div>
               <div class="pure-u-12-24">
                 <input id="starting-items" type="checkbox">
@@ -110,6 +117,13 @@
               <div class="pure-u-1">
                 <br>
                 <em>Modifications</em>
+              </div>
+              <div class="pure-u-12-24">
+                <input id="quest-reload" type="checkbox">
+                <label for="quest-reload">Tower saves can be loaded more than once</label>
+              </div>
+              <div class="pure-u-12-24">
+                <!-- placeholder -->
               </div>
               <div id="hidden-spells-select" class="pure-u-1">
                 <label for="hidden-spells">Dormant spells awakened for</label>
@@ -381,12 +395,18 @@
       </p>
       <hr>
       <h2><a name="changelog">Changelog</a></h2>
+      <h3><time>November 23, 2019</time></h3>
+      <ul>
+        <li>v1.15.0 Added an option to randomize floor theme (appearance), including five previously unused themes.
+          Added an option to allow in-tower saves to be loaded more than once. Removed wind crystals from survival mode.
+          Also fixed a bug where enemy monsters elements were always randomized, even with element randomization off.</li>
+      </ul>
       <h3><time>November 10, 2019</time></h3>
       <ul>
         <li>v1.14.2 Fixed a crash that occurred in survival mode when entering the tower for the first time with Kewne as your familiar.</li>
         <li>v1.14.1 Tweaked resources in survival mode to replace some stat-restoring herbs with sands.</li>
         <li>v1.14.0 Added survival mode, where the tutorial floor has been replaced with a floor containing a set of many useful items.
-          However, items will not spawn in the tower as usual– only coins, wind crystals, and the occasional egg will appear. Naturally, settings like
+          However, items will not spawn in the tower as usual– only coins will appear. Naturally, settings like
           "spawn Barong-only items" and "randomize starting items" will have no effect. This new floor does have an elevator, but it is only visible
           on the minimap.
         </li>
