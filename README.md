@@ -1,11 +1,12 @@
-# AzD De-Randomizer
+# AzD (De-)Randomizer
 
 This is a romhacking tool to de-randomize the floor layouts of `Azure Dreams`. Specifically, they should be
-deterministically (pseudo)-random, so the Nth floor of the Xth run up the tower will always be the same.
+deterministically (pseudo)-random, so the Nth floor of the Xth run up the tower will always be the same. There
+are also a number of options to randomize or modify other aspects of the game.
 
 ## Browser
 
-https://ProGrammar-R.github.io
+https://adrando.com or https://ProGrammar-R.github.io
 
 ## CLI
 
