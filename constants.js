@@ -47,6 +47,7 @@
     itemCategoryNamesKanji:  0x6f128, //RAM 0x800813e0
     markQuestAsLoaded1:     0x6cc7f8, //RAM 0x80022090
     markQuestAsLoaded2:     0x6cc814, //RAM 0x800220ac
+    towerItemCap:           0x70f624, //RAM 0x800a0c5c
     angelFirstWord:         0xee5f97,
     checkKohDeathTopFloor: 0x1c5e360, //RAM 0x8008e058
     pauseAfterDeathCode:   0x1c5e470,

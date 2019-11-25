@@ -208,8 +208,8 @@
     let optionsAndPreset
     let checksum
     let seed
-    if (args.length > 2) {
-      optionsAndPreset = optionsFromString(args.slice(0, args.length - 2).join(','))
+    if (args.length >= 2) {
+      optionsAndPreset = optionsFromString(args.slice(0, Math.max(args.length - 2, 1)).join(','))
     } else {
       optionsAndPreset = optionsFromString(constants.defaultOptions)
     }
@@ -229,7 +229,9 @@
     if (options !== constants.defaultOptions) {
       args.push(options)
     }
-    args.push(checksum.toString(16))
+    if (checksum) {
+      args.push(checksum.toString(16))
+    }
     args.push(encodeURIComponent(seed))
     return baseUrl + '?' + args.join(',')
   }
@@ -388,6 +390,7 @@
     applyPortableElevators(options, data)
     applySecondTower(options, data)
     applyFloor2(options, data)
+    applyLiftItemCap(options, data)
     //if (options.experimentalChanges) {
       //always make cursor start at New Game
       //data.writeInstruction(0x43a920, 0x01000224)
@@ -680,34 +683,41 @@
 
   function makeFrog(options, data) {
     if (options.frog) {
-      let sourceAddress = 0x2EE8100
-      const frogAddress = 0x2F184C0
-      let destinationAddress = frogAddress
-      let sectorIndex = 0
-      let addressRemainder = 0
-      while (sourceAddress < frogAddress) {
-        sectorIndex = sourceAddress % constants.sectorSize
-        if (sectorIndex >= 24 && sectorIndex < 2072) { // don't overwrite section or checksum data
-          data.writeWord(destinationAddress, data.readWord(sourceAddress))
-          addressRemainder = sourceAddress % 28224
-          if (addressRemainder == 0x4a60) { // set monster type to be frog
-            data.writeByte(destinationAddress, 0x2e)
-          } else if (addressRemainder == 0x16f4 || addressRemainder == 0x16f8) { //overwrite missing animations for jumping up
-            data.writeWord(destinationAddress, 0x1d1d1d1d)
-          } else if (addressRemainder == 0x16ec || addressRemainder == 0x16f0) { //overwrite missing animations for getting hit
-            data.writeWord(destinationAddress, 0x29292929)
-          } else if (addressRemainder == 0x170c || addressRemainder == 0x1710) { //overwrite missing animations for dying
-            data.writeWord(destinationAddress, 0x0d0d0d0d)
-          } else if (addressRemainder == 0x53a4) { //prevent frog from attacking to prevent crash / softlock
-            data.writeShort(destinationAddress, 0x0000)
-          }
-        }
-        sourceAddress+=4
-        destinationAddress+=4
-      }
-      data.writeByte(0x1c7e2b0, 0xd1) //change call to is_monster_a_frog_or_salamander to only return if is a salamander
-      data.writeInstruction(0x375dac0, 0x00000000) //remove override of monster ID with backup monster ID in case of frog in line-up menu
+      addCharacter(data, 0x2e)
+      //add selfi
+      addCharacter(data, 0x32)
     }
+  }
+
+  function addCharacter(data, characterId) {
+    const sourceMonsterId = 0x2d
+    let sourceAddress = 0x2EE8100
+    const characterAddress = sourceAddress + (characterId - sourceMonsterId) * 0x303c0
+    let destinationAddress = characterAddress
+    let sectorIndex = 0
+    let addressRemainder = 0
+    while (sourceAddress < characterAddress) {
+      sectorIndex = sourceAddress % constants.sectorSize
+      if (sectorIndex >= 24 && sectorIndex < 2072) { // don't overwrite section or checksum data
+        data.writeWord(destinationAddress, data.readWord(sourceAddress))
+        addressRemainder = sourceAddress % 28224
+        if (addressRemainder == 0x4a60) { // set monster type to be chosen character type
+          data.writeByte(destinationAddress, characterId)
+        } else if (addressRemainder == 0x16f4 || addressRemainder == 0x16f8) { //overwrite missing animations for jumping up
+          data.writeWord(destinationAddress, 0x1d1d1d1d)
+        } else if (addressRemainder == 0x16ec || addressRemainder == 0x16f0) { //overwrite missing animations for getting hit
+          data.writeWord(destinationAddress, 0x29292929)
+        } else if (addressRemainder == 0x170c || addressRemainder == 0x1710) { //overwrite missing animations for dying
+          data.writeWord(destinationAddress, 0x0d0d0d0d)
+        } else if (addressRemainder == 0x53a4) { //prevent frog from attacking to prevent crash / softlock
+          data.writeShort(destinationAddress, 0x0000)
+        }
+      }
+      sourceAddress+=4
+      destinationAddress+=4
+    }
+    data.writeByte(0x1c7e2b0, 0xd1) //change call to is_monster_a_frog_or_salamander to only return if is a salamander
+    data.writeInstruction(0x375dac0, 0x00000000) //remove override of monster ID with backup monster ID in case of non-standard monster in line-up menu
   }
 
   function applyThemes(options, data, hex) {
@@ -885,6 +895,12 @@
     }
   }
 
+  function applyLiftItemCap(options, data) {
+    if (options.itemCap) {
+      data.writeByte(constants.romAddresses.towerItemCap, 21)
+    }
+  }
+
   function pauseAfterDeath(data) {
     // write text that is directed to after death to introduce a pause
     data.writeLEShort(constants.romAddresses.pauseAfterDeathText, 0x1101)
@@ -980,6 +996,7 @@
     portableElevators,
     secondTower,
     floor2,
+    itemCap,
   ) {
     this.id = id
     this.name = name
@@ -1017,6 +1034,7 @@
     this.portableElevators = portableElevators
     this.secondTower = secondTower
     this.floor2 = floor2
+    this.itemCap = itemCap
   }
 
   function clone(obj) {

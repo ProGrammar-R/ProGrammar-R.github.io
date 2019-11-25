@@ -149,17 +149,17 @@
 
   function resetCopy() {
     if (elems.seed.value.length || (lastSeed && lastSeed.length)) {
-      elems.copy.disabled = false
+      //elems.copy.disabled = false
       elems.makeCue.disabled = false
     } else {
-      elems.copy.disabled = true
+      //elems.copy.disabled = true
       elems.makeCue.disabled = false
     }
   }
 
   function seedChange() {
     disableDownload()
-    elems.copy.disabled = true
+    //elems.copy.disabled = true
     elems.makeCue.disabled = true
     haveChecksum = false
   }
@@ -377,7 +377,7 @@
   function copyHandler(event) {
     event.preventDefault()
     event.stopPropagation()
-    elems.seed.value = elems.seed.value || lastSeed || ''
+    elems.seed.value = elems.seed.value || lastSeed || (new Date()).getTime().toString()
     const url = util.optionsToUrl(
       getFormOptions(),
       checksum,
