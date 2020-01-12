@@ -345,6 +345,7 @@
     makeFrog(options, data)
     applyThemes(options, data, hex)
     applyQuestReload(options, data)
+    applyPortableElevators(options, data)
     //if (options.experimentalChanges) {
       //always make cursor start at New Game
       //data.writeInstruction(0x43a920, 0x01000224)
@@ -701,6 +702,70 @@
     }
   }
 
+  function applyPortableElevators(options, data) {
+    if (options.portableElevators) {
+      //make icon a chest
+      data.writeByte(constants.romAddresses.elevatorIcon, 0x14)
+      //make hold/usable
+      data.writeByte(constants.romAddresses.elevatorUseOptions, 0x00)
+      //prevent crash when use - 98a37 -> 14 to take alt path when 0
+      data.writeByte(constants.romAddresses.elevatorAltPath, 0x14)
+      //dd707 -> 0 to take alt path
+      data.writeByte(constants.romAddresses.itemCategDamageTable+3, 0x00)
+      //replace nop on alt path with custom routine - 98a3c -> ff bc 00 0c    jal 8002f3fc
+      data.writeInstruction(constants.romAddresses.elevatorAltPath+5, 0xffbc000c)
+
+      //replace extra wind crystals with portable elevators
+      data.writeByte(constants.romAddresses.windCrystalCheck1-20, 0x14)
+      data.writeByte(constants.romAddresses.windCrystalCheck1-12, 0x02)
+      data.writeLEShort(constants.romAddresses.windCrystalCheck1+0x78, 0x0214)
+      data.writeByte(constants.romAddresses.windCrystalCheck2-20, 0x14)
+      data.writeByte(constants.romAddresses.windCrystalCheck2-12, 0x02)
+      data.writeLEShort(constants.romAddresses.windCrystalCheck2+0x78, 0x0214)
+      //change max portable elevators to 2
+      data.writeByte(constants.romAddresses.windCrystalCheck1, 0x03)
+      data.writeByte(constants.romAddresses.windCrystalCheck2, 0x03)
+
+      const customElevatorCode = [
+        //custom routine to set custom item use routine triggered when take alt path
+        {instruction: 0x0300143c,}, //lui s4,0x3
+        {instruction: 0x0800e003,}, //jr ra
+        {instruction: 0x08f49426,}, //addiu s4,s4,0xf408
+        //custom item use routine
+        {instruction: 0xe8ffbd27,}, //addiu sp,sp,-0x18
+        {instruction: 0x1000a4af,}, //sw a0,0x10(sp)
+        {instruction: 0x1400bfaf,}, //sw ra,0x14(sp)
+                                    //set number of pending items back to 0
+        {instruction: 0x0880023c,}, //lui v0,0x8008
+        {instruction: 0x6a344394,}, //lhu v1,0x346a(v0)
+        {instruction: 0x00000000,}, //nop
+        {instruction: 0xffff6324,}, //addiu v1,v1,0xffff
+        {instruction: 0x6a3443a4,}, //sh v1,0x346a(v0)
+                                    //check if user is koh, and if so, skip to end
+        {instruction: 0x13008390,}, //lbu v1,0x13(a0)
+        {instruction: 0x00000000,}, //nop
+        {instruction: 0x04006010,}, //beq v1,r0,8002f444
+                                    //set koh's action to go up and wipe item (only triggered when giving)
+        {instruction: 0x25000324,}, //li  v1,25
+        {instruction: 0x523543a4,}, //sh v1,0x3552(v0)
+        {instruction: 0xce62020c,}, //jal 0x80098b38
+        {instruction: 0x2120a000,}, //move a0,a1
+                                    //end routine
+        {instruction: 0x1400bf8f,}, //lw ra,0x14(sp)
+        {instruction: 0x1000a48f,}, //lw a0,0x10(sp)
+        {instruction: 0x1800bd27,}, //addiu sp,sp,0x18
+        {instruction: 0x0800e003,}, //jr ra
+        {instruction: 0x01000224,}, //li  v0,1
+      ]
+      customElevatorAddress = constants.romAddresses.ropeDescription
+      customElevatorCode.forEach(function(instruction) {
+          data.writeInstruction(customElevatorAddress, instruction.instruction)
+          customElevatorAddress += 4
+        }
+      )
+    }
+  }
+
   function pauseAfterDeath(data) {
     // write text that is directed to after death to introduce a pause
     data.writeLEShort(constants.romAddresses.pauseAfterDeathText, 0x1101)
@@ -793,6 +858,7 @@
     goDownTraps,
     themes,
     questReload,
+    portableElevators,
   ) {
     this.id = id
     this.name = name
@@ -827,6 +893,7 @@
     this.goDownTraps = goDownTraps
     this.themes = themes
     this.questReload = questReload
+    this.portableElevators = portableElevators
   }
 
   function clone(obj) {

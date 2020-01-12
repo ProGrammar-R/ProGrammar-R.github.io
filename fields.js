@@ -188,6 +188,7 @@
     monsterSpawns:        new DropdownOption('monsterSpawns',     'monster-spawns',           'M', null, 3),
     endurance:            new DropdownOption('endurance',         'endurance',                'N', null, 0),
     boss:                 new CheckOption('boss',                 'boss',                     'o', null, false),
+    portableElevators:    new CheckOption('portableElevators',    'portable-elevators',       'p', null, false),
     //preset:             new DropdownOption('preset',            'preset',                   'P', null, ),
     questReload:          new CheckOption('questReload',          'quest-reload',             'q', null, false),
     singleRoom:           new CheckOption('singleRoom',           'single-room',              's', null, false),

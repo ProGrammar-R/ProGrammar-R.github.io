@@ -32,18 +32,22 @@
   }
 
   const romAddresses = {
+    ropeDescription:         0x10e84, //RAM 0x8002f3ec
     goUpTrapDescription:     0x13260, //RAM 0x80031318
     anUpperFloorText:        0x1329b, //RAM 0x80031353
     pauseAfterDeathText:     0x55b71,
     initialStatsTable:       0x57f30, //RAM 0x8006d168
+    elevatorIcon:            0x5e786, //RAM 0x80072cae
     trapTable:               0x5e7a8, //RAM 0x80072cd0
     itemCategoryTable:       0x5f01c, //RAM 0x80073414
+    elevatorUseOptions:      0x5f1bc, //RAM 0x800735b4
     itemCategoryNamesKanji:  0x6f128, //RAM 0x800813e0
     markQuestAsLoaded1:     0x6cc7f8, //RAM 0x80022090
     markQuestAsLoaded2:     0x6cc814, //RAM 0x800220ac
     angelFirstWord:         0xee5f97,
     checkKohDeathTopFloor: 0x1c5e360, //RAM 0x8008e058
     pauseAfterDeathCode:   0x1c5e470,
+    elevatorAltPath:       0x1c6a62f, //RAM 0x80098a37
     beldoCrashFixPart1:    0x1c6c354, //RAM 0x8009a3cc
     beldoCrashFixPart2:    0x1c6d498, //RAM 0x8009b2b0
     placeMonsterRollGamma: 0x1c73950, //RAM 0x800a0a58
@@ -51,6 +55,7 @@
     initMonsterSpawnRate:  0x1c7a720, //RAM 0x800a69e8
     goUpTrapIncrement:     0x1ca4fe8, //RAM 0x800cbad0
     statGrowthTable:       0x1cb9c94, //RAM 0x800ddcbc
+    itemCategDamageTable:  0x1cb95ac, //RAM 0x800dd704
     isExhaustedBattleText: 0x1cbcc3c,
     toUpstairsBattleText:  0x1cbe450, //RAM 0x800e1af8
     multiElevatorSpawns1:  0x1ea5b1c, //RAM 0x80017a34

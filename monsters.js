@@ -137,6 +137,7 @@
       const normalBarongFloorLSD = 6
       const whitePicketFloor = 25
       const firstFloorForHealers = 6
+      const firstFloorForMajorThreats = 4
 
       let address = 0x24638e8
       let f = 1
@@ -156,6 +157,12 @@
           floorMonsters.push({ID: monsterFromName("Picket").ID, level: 17, slots: 1})
           monsterChoices = removeValueNamed(monsterChoices, "Picket")
           slotsRemaining--
+        }
+        if (f < firstFloorForMajorThreats) {
+          monsterChoices = removeValueNamed(monsterChoices, "Maximum")
+          monsterChoices = removeValueNamed(monsterChoices, "Dragon")
+          monsterChoices = removeValueNamed(monsterChoices, "Golem")
+          monsterChoices = removeValueNamed(monsterChoices, "Killer")
         }
         if (f < firstFloorForHealers) {
           monsterChoices = removeValueNamed(monsterChoices, "Battnel")
@@ -193,7 +200,7 @@
           }
           slotsRemaining -= monsterSlots
 
-          let monsterLevel = Math.max(1, Math.round(monsterToAdd.scaling * f))
+          let monsterLevel = Math.max(1, Math.floor(monsterToAdd.scaling * f))
           //let's make Trolls always at least level 2, for old time's sake
           if (monsterToAdd.name === "Troll") {
             monsterLevel = Math.max(2, monsterLevel)
@@ -208,7 +215,7 @@
             data.writeByte(floorMonsterAddress++, floorMonster.level)
           }
         })
-        address += addressIncrement
+        address += constants.sectorSize
         f++
       }
     }
