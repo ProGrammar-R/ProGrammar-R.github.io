@@ -704,6 +704,7 @@
 
   function applyPortableElevators(options, data) {
     if (options.portableElevators) {
+      const maxPortableElevators = 0x02
       //make icon a chest
       data.writeByte(constants.romAddresses.elevatorIcon, 0x14)
       //make hold/usable
@@ -712,6 +713,12 @@
       data.writeByte(constants.romAddresses.elevatorAltPath, 0x14)
       //dd707 -> 0 to take alt path
       data.writeByte(constants.romAddresses.itemCategDamageTable+3, 0x00)
+
+      //give value to used ball and first 3 used scroll items to prevent them from taking the alt path
+      for (let i = 0; i < 80; i += 4) {
+        data.writeByte(constants.romAddresses.usedBallItemTable + i + 3, 0x0b)
+      }
+
       //replace nop on alt path with custom routine - 98a3c -> ff bc 00 0c    jal 8002f3fc
       data.writeInstruction(constants.romAddresses.elevatorAltPath+5, 0xffbc000c)
 
@@ -722,9 +729,10 @@
       data.writeByte(constants.romAddresses.windCrystalCheck2-20, 0x14)
       data.writeByte(constants.romAddresses.windCrystalCheck2-12, 0x02)
       data.writeLEShort(constants.romAddresses.windCrystalCheck2+0x78, 0x0214)
-      //change max portable elevators to 2
-      data.writeByte(constants.romAddresses.windCrystalCheck1, 0x03)
-      data.writeByte(constants.romAddresses.windCrystalCheck2, 0x03)
+
+      //set max portable elevators
+      data.writeByte(constants.romAddresses.windCrystalCheck1, maxPortableElevators)
+      data.writeByte(constants.romAddresses.windCrystalCheck2, maxPortableElevators)
 
       const customElevatorCode = [
         //custom routine to set custom item use routine triggered when take alt path
