@@ -284,6 +284,7 @@
     let optionString = util.optionsToString(options)
     nextAddress = writeTextToFile(data, nextAddress, "Seed:\\nhttps://adrando.com/?" + optionString + "," + seed.toString())
     fillTextToNextPrompt(data, nextAddress)
+    writeTextToFile(data, constants.romAddresses.balloonDescription, "It's a suspicious elevator.\\p\\nWanna go up?\\n\\0")
   }
 
   const exports = {

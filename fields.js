@@ -172,6 +172,7 @@
   const allOptions = {
     barongs:              new CheckOption('barongs',              'barongs',                  'b', null, false),
     ballElements:         new CheckOption('ballElements',         'ball-elements',            'B', null, false),
+    secondTower:          new CheckOption('secondTower',          'second-tower',             'c', null, false),
     derandomize:          new CheckOption('derandomize',          'derandomize',              'd', null, true),
     goDownTraps:          new CheckOption('goDownTraps',          'go-down-traps',            'D', null, false),
     enemizer:             new CheckOption('enemizer',             'enemizer',                 'e', null, false),

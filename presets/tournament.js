@@ -2,11 +2,11 @@
 
   // Logic metadata.
   const metadata = {
-    id: 'safe',
-    name: 'Safe',
-    description: 'No randomizations, with tutorial and intro skip.',
+    id: 'tournament',
+    name: 'Tournament',
+    description: 'Seeded tower, all skips, nothing else.',
     author: 'pro_grammar',
-    weight: -100,
+    weight: -80,
   }
 
   // Boilerplate.
@@ -30,6 +30,7 @@
   builder.tutorialSkip = true
   builder.introSkip = true
   builder.derandomize = true
+  builder.fastTutorial = true
 
   // Export.
   const preset = builder.build()

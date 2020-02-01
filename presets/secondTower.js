@@ -2,11 +2,11 @@
 
   // Logic metadata.
   const metadata = {
-    id: 'safe',
-    name: 'Safe',
-    description: 'No randomizations, with tutorial and intro skip.',
+    id: 'secondTower',
+    name: 'Enable Second Tower',
+    description: 'Just enables second tower, nothing else',
     author: 'pro_grammar',
-    weight: -100,
+    weight: -90,
   }
 
   // Boilerplate.
@@ -27,9 +27,10 @@
   // Create PresetBuilder.
   const builder = new PresetBuilder(metadata)
 
-  builder.tutorialSkip = true
-  builder.introSkip = true
-  builder.derandomize = true
+  builder.tutorialSkip = false
+  builder.introSkip = false
+  builder.derandomize = false
+  builder.secondTower = true
 
   // Export.
   const preset = builder.build()

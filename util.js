@@ -250,8 +250,8 @@
       data.writeShort(0x1c6de68,0x1468)
 
       //overwrite call to check_for_koh_icons to just return a constant v0 = 0
-      data.writeInstruction(0x1ea692c,0x8c66000c)
-      data.writeInstruction(0x218067c,0x8c66000c)
+      data.writeInstruction(constants.romAddresses.callCheckFor2ndTower1,0x8c66000c)
+      data.writeInstruction(constants.romAddresses.callCheckFor2ndTower2,0x8c66000c)
 
       //overwrite first alt RNG to call custom routine
       data.writeInstruction(0x1ea6e8c,0x7266000c)
@@ -266,8 +266,8 @@
       data.writeInstruction(0x2180bdc+0x38,0x00000000)
 
       const addresses = [
-        {start: 0x1ea7f70,},
-        {start: 0x2181cc0,}
+        {start: constants.romAddresses.checkIfTower2Availbl1,},
+        {start: constants.romAddresses.checkIfTower2Availbl2,}
       ]
 
       //write custom routine
@@ -346,6 +346,7 @@
     applyThemes(options, data, hex)
     applyQuestReload(options, data)
     applyPortableElevators(options, data)
+    applySecondTower(options, data)
     //if (options.experimentalChanges) {
       //always make cursor start at New Game
       //data.writeInstruction(0x43a920, 0x01000224)
@@ -399,9 +400,9 @@
         data.writeByte(0x1ea72c8, top)
         data.writeByte(0x2180ff0, top)
         data.writeByte(0x2181018, top)
-        //8001f48c
-        data.writeByte(0x1eae744, top)
-        data.writeByte(0x2188494, top)
+        //8001f48c - do not write here or else top floor will display as floor 40
+        // data.writeByte(0x1eae744, top)
+        // data.writeByte(0x2188494, top)
         //8003e16c
         data.writeByte(0x21f94, top + 1)
         data.writeByte(0x21f9c, top)
@@ -774,6 +775,68 @@
     }
   }
 
+  function applySecondTower(options, data) {
+    if (options.secondTower) {
+      //point suspicious elevator description to overwritten balloon item description
+      data.writeWord(constants.romAddresses.suspiciousElevatorDesc, 0x8002f220)
+
+      //overwrite call to check_for_koh_icons with custom routine to add second tower
+      data.writeInstruction(constants.romAddresses.callCheckFor2ndTower1,0xeebc000c)
+      data.writeInstruction(constants.romAddresses.callCheckFor2ndTower2,0xeebc000c)
+
+      //slightly alter Koh's possible response to Ghosh's text to squeeze in a call to update the elevator tile
+      //these aren't actually instructions, but rather text commands. This is just more compact
+      data.writeInstruction(constants.romAddresses.kohsReplyToGhoshPart, 0x82934c58)
+      data.writeInstruction(constants.romAddresses.kohsReplyToGhoshPart + 4, 0xf4028003)
+
+      //replace mallet description with custom code to add second tower at 0x8002f3b8
+      const addSecondTowerCode = [
+        {instruction: 0xd80a8287,}, //lh	v0,ad8(gp) (load floor number from 8008146c)
+        {instruction: 0xe8ffbd27,}, //addiu	sp,sp,-24
+        {instruction: 0x01000424,}, //li    a0,0x1
+        {instruction: 0x09004410,}, //beq	v0,a0,0x.... (skip if floor number is 1, which luckily a0 will always be)
+        {instruction: 0x1400bfaf,}, //sw	ra,20(sp)
+        {instruction: 0x0e80023c,}, //lui   v0,0x800e
+        {instruction: 0x04000324,}, //li    v1,0x4
+        {instruction: 0xe03c43a4,}, //sh    v1,0x3ce0(v0)=>floorElevators
+        {instruction: 0x08000424,}, //li    a0,0x8
+        //{instruction: 0x20000624,}, //li    a2,0x20         (assume this is already so)
+        //{instruction: 0xe63c40a4,}, //sh   zero,0x3ce6(v0)  (assume this is already so)
+        {instruction: 0xe23c44a4,}, //sh    a0,0x3ce2(v0)=>floorElevators[0].xCoord
+        {instruction: 0x09000524,}, //li    a1,0x9
+        {instruction: 0x8768020c,}, //jal   modifyFloorDataTypeOccupied
+        {instruction: 0xe43c45a4,}, //sh    a1,0x3ce4(v0)=>floorElevators[0].yCoord
+        {instruction: 0x1400bf8f,}, //lw	ra,20(sp)
+        {instruction: 0x00000000,}, //nop
+        {instruction: 0x0800e003,}, //jr	ra
+        {instruction: 0x1800bd27,}, //addiu	sp,sp,24
+      ]
+        //{instruction: 0x16bd000c,}, //jal   addSecondTowerCode2
+
+      //code to update tile, will reside at 0x8002f458
+      const addSecondTowerCode2 = [
+        {instruction: 0x0f80023c,}, //lui   v0,0x800f
+        {instruction: 0x01000324,}, //li    v1,0x1
+        {instruction: 0xb0ad43a4,}, //sh    v1,0xadb0(v0)=>tileStatus (eadb0)
+        {instruction: 0x0800e003,}, //jr	ra
+        {instruction: 0xb4ad40a4,}, //sh    zero,0xadb4(v0)=>tileStatus (eadb4)
+      ]
+
+      let addSecondTowerAddr = constants.romAddresses.malletDescription
+      addSecondTowerCode.forEach(function(instruction) {
+          data.writeInstruction(addSecondTowerAddr, instruction.instruction)
+          addSecondTowerAddr += 4
+        }
+      )
+      addSecondTowerAddr = constants.romAddresses.ropeDescription + 92
+      addSecondTowerCode2.forEach(function(instruction) {
+          data.writeInstruction(addSecondTowerAddr, instruction.instruction)
+          addSecondTowerAddr += 4
+        }
+      )
+    }
+  }
+
   function pauseAfterDeath(data) {
     // write text that is directed to after death to introduce a pause
     data.writeLEShort(constants.romAddresses.pauseAfterDeathText, 0x1101)
@@ -867,6 +930,7 @@
     themes,
     questReload,
     portableElevators,
+    secondTower,
   ) {
     this.id = id
     this.name = name
@@ -902,6 +966,7 @@
     this.themes = themes
     this.questReload = questReload
     this.portableElevators = portableElevators
+    this.secondTower = secondTower
   }
 
   function clone(obj) {

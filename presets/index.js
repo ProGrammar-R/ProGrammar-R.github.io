@@ -6,6 +6,8 @@
   } else {
     exports = [
       require('./safe'),
+      require('./secondTower'),
+      require('./tournament'),
     ]
   }
   exports.sort(function(a, b) {

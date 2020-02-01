@@ -173,6 +173,13 @@
                 <em>Challenges</em>
               </div>
               <div class="pure-u-12-24">
+                <input id="second-tower" type="checkbox">
+                <label for="second-tower">Enable second tower</label>
+              </div>
+              <div class="pure-u-12-24">
+                <!-- placeholder -->
+              </div>
+              <div class="pure-u-12-24">
                 <input id="single-room" type="checkbox">
                 <label for="single-room">All single-room floors</label>
               </div>
@@ -396,6 +403,18 @@
       </p>
       <hr>
       <h2><a name="changelog">Changelog</a></h2>
+      <h3><time>February 1, 2020</time></h3>
+      <ul>
+        <li>v1.17.0 Added option to enable the second tower and preset Enable Second Tower, which is the vanilla game with just the second tower enabled.
+          The second tower is a secret "hard mode" that I discovered, which will now appear as a second elevator to the left on floor 2 (after re-entering the tower).
+          I've only made changes to make it accessible and fix a few text-related issues, everything else is as the game designers programmed.
+          Also added a Tournament preset (standard settings for a Rock Me to the Top tournament match).
+        </li>
+      </ul>
+      <h3><time>January 22, 2020</time></h3>
+      <ul>
+        <li>v1.16.2 Fixed bug where floor 99 on endurance mode would show "40F" when loading into the floor.</li>
+      </ul>
       <h3><time>January 19, 2020</time></h3>
       <ul>
         <li>v1.16.1 Fixed bug where portable elevators would cause all balls and some scrolls to function like portable elevators.</li>
@@ -581,6 +600,8 @@
     <script src="text.js"></script>
     <script src="monsters.js"></script>
     <script src="presets/safe.js"></script>
+    <script src="presets/secondTower.js"></script>
+    <script src="presets/tournament.js"></script>
     <script src="presets/index.js"></script>
     <script src="index.js"></script>
   </body>

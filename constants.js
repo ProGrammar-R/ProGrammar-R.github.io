@@ -32,12 +32,15 @@
   }
 
   const romAddresses = {
+    balloonDescription:      0x10ca8, //RAM 0x8002f220
+    malletDescription:       0x10e40, //RAM 0x8002f3b8
     ropeDescription:         0x10e84, //RAM 0x8002f3ec
     goUpTrapDescription:     0x13260, //RAM 0x80031318
     anUpperFloorText:        0x1329b, //RAM 0x80031353
     pauseAfterDeathText:     0x55b71,
     initialStatsTable:       0x57f30, //RAM 0x8006d168
     elevatorIcon:            0x5e786, //RAM 0x80072cae
+    suspiciousElevatorDesc:  0x5e7a4, //RAM 0x80072ccc
     trapTable:               0x5e7a8, //RAM 0x80072cd0
     itemCategoryTable:       0x5f01c, //RAM 0x80073414
     elevatorUseOptions:      0x5f1bc, //RAM 0x800735b4
@@ -60,15 +63,19 @@
     isExhaustedBattleText: 0x1cbcc3c,
     toUpstairsBattleText:  0x1cbe450, //RAM 0x800e1af8
     multiElevatorSpawns1:  0x1ea5b1c, //RAM 0x80017a34
+    callCheckFor2ndTower1: 0x1ea692c, //RAM 0x80018714
     callReplaceKewneTut1:  0x1ea7210, //RAM 0x80018ec8
     tutorialFloorId1:      0x1ea75b8, //RAM 0x80019140
+    checkIfTower2Availbl1: 0x1ea7f70, //RAM 0x800199c8
     windCrystalCheck1:     0x1ead384, //RAM 0x8001e32c
     trapRollMaxSingleRm1:  0x1eae330, //RAM 0x8001f078
     trapRollMaxPerFloor1:  0x1eae398, //RAM 0x8001f0e0
     trapRollLowestId1:     0x1eae420, //RAM 0x8001f168
     multiElevatorSpawns2:  0x217f86c, //RAM 0x80017a34
+    callCheckFor2ndTower2: 0x218067c, //RAM 0x80018714
     callReplaceKewneTut2:  0x2180f60, //RAM 0x80018ec8
     tutorialFloorId2:      0x2181308, //RAM 0x80019140
+    checkIfTower2Availbl2: 0x2181cc0, //RAM 0x800199c8
     windCrystalCheck2:     0x21870d4, //RAM 0x8001e32c
     trapRollMaxSingleRm2:  0x2188080, //RAM 0x8001f078
     trapRollMaxPerFloor2:  0x21880e8, //RAM 0x8001f0e0
@@ -83,6 +90,7 @@
     debugFloorElevator:    0x249338e, // X Y 00 00 00 00
     debugFloorFirstItem:   0x2493394, // X Y ID category status quality
     debugFloorItemEnd:     0x2493514,
+    kohsReplyToGhoshPart:  0x2497096, //RAM 0x800f8dfe (this is the space after "[No thank")
     beldoLocation:         0x263cbb2, //RAM 0x800e604a
     beldoLevel:            0x263cbb7,
     beldoSetFast:          0x31cddcc, //RAM 0x80169fa4
