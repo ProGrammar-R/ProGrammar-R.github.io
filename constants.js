@@ -65,6 +65,7 @@
     multiElevatorSpawns1:  0x1ea5b1c, //RAM 0x80017a34
     callCheckFor2ndTower1: 0x1ea692c, //RAM 0x80018714
     callReplaceKewneTut1:  0x1ea7210, //RAM 0x80018ec8
+    floor2CheckFirstTime1: 0x1ea7324, //RAM 0x80018fdc
     tutorialFloorId1:      0x1ea75b8, //RAM 0x80019140
     checkIfTower2Availbl1: 0x1ea7f70, //RAM 0x800199c8
     windCrystalCheck1:     0x1ead384, //RAM 0x8001e32c
@@ -74,6 +75,7 @@
     multiElevatorSpawns2:  0x217f86c, //RAM 0x80017a34
     callCheckFor2ndTower2: 0x218067c, //RAM 0x80018714
     callReplaceKewneTut2:  0x2180f60, //RAM 0x80018ec8
+    floor2CheckFirstTime2: 0x2181074, //RAM 0x80018fdc
     tutorialFloorId2:      0x2181308, //RAM 0x80019140
     checkIfTower2Availbl2: 0x2181cc0, //RAM 0x800199c8
     windCrystalCheck2:     0x21870d4, //RAM 0x8001e32c

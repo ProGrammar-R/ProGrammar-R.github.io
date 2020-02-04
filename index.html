@@ -123,8 +123,8 @@
                 <label for="quest-reload">Tower saves can be loaded more than once</label>
               </div>
               <div class="pure-u-12-24">
-                <input id="portable-elevators" type="checkbox">
-                <label for="portable-elevators">Spawn portable elevators</label>
+                <input id="floor2" type="checkbox">
+                <label for="floor2">Floor 2 is always the Ghosh/Selfi floor</label>
               </div>
               <div id="hidden-spells-select" class="pure-u-1">
                 <label for="hidden-spells">Dormant spells awakened for</label>
@@ -135,21 +135,13 @@
                 <label for="non-native-spells-level">Spells level up regardless of monster's element</label>
               </div>
               <div class="pure-u-12-24">
-                <input id="new-balls" type="checkbox">
-                <label for="new-balls">Add new spell balls</label>
-              </div>
-              <div class="pure-u-12-24">
-                <input id="barong-items" type="checkbox">
-                <label for="barong-items">Spawn Barong-only items</label>
-              </div>
-              <div class="pure-u-12-24">
                 <input id="tutorial-barong" type="checkbox">
                 <label for="tutorial-barong">Barong on tutorial floor</label>
               </div>
               <div id="monster-spawns-select" class="pure-u-12-24">
                 <label for="monster-spawns">Monster spawn rate</label>
                 <select id="monster-spawns">
-                  <option value=0>Off</option>
+                <!-- <option value=0>Off</option> -->
                   <option value=1>Very low</option>
                   <option value=2>Low</option>
                   <option value=3>Normal</option>
@@ -167,6 +159,22 @@
                   <option value=1>Very high</option>
                   <option value=0>Max</option>
                 </select>
+              </div>
+              <div class="pure-u-1">
+                <br>
+                <em>Special items</em>
+              </div>
+              <div class="pure-u-12-24">
+                <input id="portable-elevators" type="checkbox">
+                <label for="portable-elevators">Spawn portable elevators</label>
+              </div>
+              <div class="pure-u-12-24">
+                <input id="new-balls" type="checkbox">
+                <label for="new-balls">Spawn new spell balls</label>
+              </div>
+              <div class="pure-u-12-24">
+                <input id="barong-items" type="checkbox">
+                <label for="barong-items">Spawn Barong-only items</label>
               </div>
               <div class="pure-u-1">
                 <br>
@@ -403,6 +411,12 @@
       </p>
       <hr>
       <h2><a name="changelog">Changelog</a></h2>
+      <h3><time>February 4, 2020</time></h3>
+      <ul>
+        <li>v1.18.0 Rearranged a few options into the Special items section. Added option to make floor 2 always be the predefined floor with Ghosh and/or Selfi.
+          This is primarily intended to let any % runs of the second tower begin the first time you enter the tower if so desired.
+        </li>
+      </ul>
       <h3><time>February 1, 2020</time></h3>
       <ul>
         <li>v1.17.0 Added option to enable the second tower and preset Enable Second Tower, which is the vanilla game with just the second tower enabled.

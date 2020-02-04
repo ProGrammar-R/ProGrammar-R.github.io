@@ -347,6 +347,7 @@
     applyQuestReload(options, data)
     applyPortableElevators(options, data)
     applySecondTower(options, data)
+    applyFloor2(options, data)
     //if (options.experimentalChanges) {
       //always make cursor start at New Game
       //data.writeInstruction(0x43a920, 0x01000224)
@@ -837,6 +838,13 @@
     }
   }
 
+  function applyFloor2(options, data) {
+    if (options.floor2) {
+      data.writeInstruction(constants.romAddresses.floor2CheckFirstTime1, 0x00000000)
+      data.writeInstruction(constants.romAddresses.floor2CheckFirstTime2, 0x00000000)
+    }
+  }
+
   function pauseAfterDeath(data) {
     // write text that is directed to after death to introduce a pause
     data.writeLEShort(constants.romAddresses.pauseAfterDeathText, 0x1101)
@@ -931,6 +939,7 @@
     questReload,
     portableElevators,
     secondTower,
+    floor2,
   ) {
     this.id = id
     this.name = name
@@ -967,6 +976,7 @@
     this.questReload = questReload
     this.portableElevators = portableElevators
     this.secondTower = secondTower
+    this.floor2 = floor2
   }
 
   function clone(obj) {

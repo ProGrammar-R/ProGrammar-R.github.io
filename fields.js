@@ -178,6 +178,7 @@
     enemizer:             new CheckOption('enemizer',             'enemizer',                 'e', null, false),
     starterElement:       new DropdownOption('starterElement',    'starter-element',          'E', null, -3),
     fastTutorial:         new CheckOption('fastTutorial',         'fast-tutorial',            'f', null, false),
+    floor2:               new CheckOption('floor2',               'floor2',                   'F', null, false),
     eggomizer:            new CheckOption('eggomizer',            'eggomizer',                'g', null, false),
     hiddenSpells:         new DropdownOption('hiddenSpells',      'hidden-spells',            'h', null, 0),
     themes:               new CheckOption('themes',               'themes',                   'H', null, false),
