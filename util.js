@@ -231,7 +231,42 @@
     return baseUrl + '?' + args.join(',')
   }
 
-  function setSeedAzureDreams(data, options, seed) {
+  function ror(toRotate, amount) {
+    const intSize = 0x20
+    amount &= (intSize-1)
+    let lowerResult = toRotate >>> amount
+    let upperResult = toRotate << (intSize - amount)
+    return upperResult | lowerResult
+  }
+
+  function validateOrReplaceSeed(seed, depth) {
+    const maxDepth = 10
+    if (depth > maxDepth) {
+      console.log("Reached max depth without finding a valid seed. Something is wrong.")
+      return seed
+    }
+    let hex = sjcl.hash.sha256.hash(seed)
+    let i = 0
+    let miniSeed1 = hex[i++] & 0xffff
+    miniSeed1 = changeEndianShort(miniSeed1) << 0x10
+    miniSeed1 = miniSeed1 | hex[i++] & 0xffff
+    let miniSeed2 = hex[i++] & 0xffff
+    miniSeed2 = changeEndianShort(miniSeed2) << 0x10
+    miniSeed2 = miniSeed2 | hex[i++] & 0xffff
+    let seeds = []
+    const maxFloor = 99
+    for (let floor = 1; floor <= maxFloor; floor++) {
+      let floorSeed = ror(miniSeed1, floor) ^ ror(miniSeed2, floor >>> 3)
+      if (seeds.includes(floorSeed)) {
+        console.log("System-generated seed lacks sufficient randomness, picking a new seed")
+        return validateOrReplaceSeed(seed + 1, depth + 1)
+      }
+      seeds.push(floorSeed)
+    }
+    return seed
+  }
+
+  function setSeedAzureDreams(data, options, seed, userSeed) {
     //very important
     data.writeInstruction(0x1c5879c,0x82778271)
     data.writeInstruction(0x1c587a0,0x826d8266)
@@ -242,6 +277,10 @@
     data.writeByte(0x20efd72,0x71)
     data.writeByte(0x20efd79,0x74)
     data.writeInstruction(0x20efd7a,0x826d826d)
+
+    if (!userSeed) {
+      seed = validateOrReplaceSeed(seed, 0)
+    }
 
     let hex = sjcl.hash.sha256.hash(seed)
 
@@ -301,12 +340,10 @@
                   {data: 0x0800e003, toSeed: false,},
                   {data: 0x00000224, toSeed: false,},
                   {data: 0x1f00a530, toSeed: false,},
-                  {data: 0xffff023c, toSeed: false,},
-                  {data: 0xffff4234, toSeed: false,},
-                  {data: 0x0610a200, toSeed: false,},
-                  {data: 0x26104200, toSeed: false,},
-                  {data: 0x24108200, toSeed: false,},
-                  {data: 0x0620a400, toSeed: false,},
+                  {data: 0x0610a400, toSeed: false,},
+                  {data: 0xe0ffa524, toSeed: false,},
+                  {data: 0x23280500, toSeed: false,},
+                  {data: 0x0420a400, toSeed: false,},
                   {data: 0x0800e003, toSeed: false,},
                   {data: 0x25208200, toSeed: false,}]
 

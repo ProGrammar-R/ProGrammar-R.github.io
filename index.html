@@ -428,6 +428,17 @@
       </p>
       <hr>
       <h2><a name="changelog">Changelog</a></h2>
+      <h3><time>Mar 8, 2020</time></h3>
+      <ul>
+        <li>v2.0.0 Fixed a bug in the core de-randomizing assembly code that would occasionally cause floors to repeat. This should substantially improve the
+          RNG seeding in terms of entropy, especially as nearing floors that are multiples of 32. Since the same seed number will now generate a different tower,
+          the major version number has been bumped to reflect this lack of compatibility.
+        </li>
+        <li>Also added a feature to automatically test system-generated seeds for potential repeated floors and choose a new seed if repeats are found.
+          User-provided are not checked, so I recommend allowing the system to fill in the seed field even though these sorts of repeats are statistically much
+          less likely.
+        </li>
+      </ul>
       <h3><time>February 5, 2020</time></h3>
       <ul>
         <li>v1.18.1 Added warning text about a bug when the 'Preset' checkbox is left checked when generating a seed; this will be removed when the bug is fixed.

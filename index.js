@@ -298,8 +298,10 @@
     info = newInfo()
     const options = getFormOptions()
     let seed = (new Date()).getTime().toString()
+    let userSeed = false
     if (elems.seed.value.length) {
       seed = elems.seed.value
+      userSeed = true
     }
     lastSeed = seed
     info[1]['Seed'] = seed
@@ -312,6 +314,7 @@
         options: options,
         seed: seed,
         info: info,
+        userSeed: userSeed,
       }, [this.result])
     }
     reader.readAsArrayBuffer(selectedFile)
@@ -529,6 +532,7 @@
     const argv = yargs.argv
     let options
     let seed
+    let userSeed = true
     let baseUrl
     let expectChecksum
     let haveChecksum
@@ -626,6 +630,7 @@
     // Create default options if none provided.
     if (typeof(seed) === 'undefined') {
       seed = (new Date()).getTime().toString()
+      userSeed = false
     }
     if (!options) {
       options = util.optionsFromString(constants.defaultOptions)
@@ -671,7 +676,7 @@
       console.error('\n' + err.message)
       process.exit(1)
     }
-    let hex = util.setSeedAzureDreams(check, applied, seed)
+    let hex = util.setSeedAzureDreams(check, applied, seed, userSeed)
     text.embedSeedAndFlagsInAngelText(check, applied, seed)
     traps.setTraps(check, applied)
     //text.writeBattleTextToFile(check, constants.romAddresses.isExhaustedBattleText, "collapsed.\\p\\0")
