@@ -582,7 +582,7 @@
     // Check for randomization string.
     if ('options' in argv) {
       try {
-        options = util.optionsFromString(argv.options)
+        options = util.optionsFromString(argv.options).allOptions
       } catch (e) {
         yargs.showHelp()
         console.error('\n' + e.message)
@@ -633,7 +633,7 @@
       userSeed = false
     }
     if (!options) {
-      options = util.optionsFromString(constants.defaultOptions)
+      options = util.optionsFromString(constants.defaultOptions).allOptions
     }
     // Set misc options.
     if ('checkVanilla' in argv) {
@@ -845,10 +845,10 @@
         haveChecksum = true
       }
       elems.seed.disabled = true
-      if (options.preset) {
+      if (rs.preset) {
         elems.preset.checked = true
         for (let i = 0; i < presets.length; i++) {
-          if (presets[i].id === options.preset) {
+          if (presets[i].id === rs.preset) {
             elems.presetId.selectedIndex = i
             break
           }

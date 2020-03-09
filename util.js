@@ -134,6 +134,7 @@
     let currentIndex
     let found
     const fieldNames = Object.getOwnPropertyNames(fields.allOptions)
+    let result = {}
     while (i < randomize.length) {
       currentIndex = i
       found = fieldNames.find(function(fieldName) {
@@ -158,7 +159,7 @@
           if (!arg.length) {
             throw new Error('Expected argument')
           }
-          options.preset = arg
+          result.preset = arg
           if (randomize[i] === ',') {
             i++
           }
@@ -167,7 +168,8 @@
         }
       }
     }
-    return fields.allOptions
+    result.allOptions = fields.allOptions
+    return result
   }
 
   function optionsToString(options) {
@@ -203,18 +205,19 @@
   function optionsFromUrl(url) {
     url = new URL(url)
     const args = url.search.slice(1).split(',')
-    let options
+    let optionsAndPreset
     let checksum
     let seed
     if (args.length > 2) {
-      options = optionsFromString(args.slice(0, args.length - 2).join(','))
+      optionsAndPreset = optionsFromString(args.slice(0, args.length - 2).join(','))
     } else {
-      options = optionsFromString(constants.defaultOptions)
+      optionsAndPreset = optionsFromString(constants.defaultOptions)
     }
     seed = decodeURIComponent(args.pop())
     checksum = parseInt(args.pop(), 16)
     return {
-      options: options,
+      options: optionsAndPreset.allOptions,
+      preset: optionsAndPreset.preset,
       checksum: checksum,
       seed: seed,
     }
