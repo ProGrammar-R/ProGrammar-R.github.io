@@ -49,18 +49,15 @@
               <div class="pure-u-1">
                 <p style="color:red">
                 If you are generating a seed for a tournament race,
-                please check the box to the left of 'Preset' and select 'Tournament' to get the right settings, but then
-                <em>
-                  uncheck the box to the left of 'Preset' before clicking 'Randomize'.
-                </em>
+                please check the box to the left of 'Preset' and select 'Tournament' to get the right settings.
                 <br>
                 <br>
-                The resulting link should not contain "P:tournament"; if it does,
-                the box to the left of preset was not unchecked before Randomize was clicked. Please refresh the page and repeat the process,
-                being sure to uncheck 'Preset' before clicking 'Randomize'.
+                Upload your BIN, click 'Randomize', then 'Copy URL' as usual. The resulting link should contain "P:tournament"; if it does not,
+                the box to the left of preset was unchecked before Randomize was clicked. The URL shown on the angel screen will look the same as usual
+                (the usual "ditfS:2..." instead of "P:tournament") so please validate that the runners have the same seed number.
                 <br>
                 <br>
-                Players do not need to do anything special. I apologize for the inconvenience; this should be resolved within 24 hours.
+                Players do not need to do anything special.
                 </p>
               </div>
               <div class="pure-u-1">
@@ -94,7 +91,7 @@
               </div>
               <div class="pure-u-12-24">
                 <input id="enemizer" type="checkbox">
-                <label for="enemizer">Randomize monsters</label>
+                <label for="enemizer">Randomize enemy monsters</label>
               </div>
               <div class="pure-u-12-24">
                 <input id="starting-items" type="checkbox">
@@ -128,7 +125,7 @@
                 <select id="starter"></select>
               </div>
               <div id="starter-element-select" class="pure-u-12-24">
-                <label for="starter-element">Monster's element</label>
+                <label for="starter-element">Starting monster's element</label>
                 <select id="starter-element"></select>
               </div>
               <div class="pure-u-1">
@@ -140,8 +137,15 @@
                 <label for="quest-reload">Tower saves can be loaded more than once</label>
               </div>
               <div class="pure-u-12-24">
+                <input id="item-cap" type="checkbox">
+                <label for="item-cap">Remove limit on items brought into tower</label>
+              </div>
+              <div class="pure-u-12-24">
                 <input id="floor2" type="checkbox">
                 <label for="floor2">Floor 2 is always the Ghosh/Selfi floor</label>
+              </div>
+              <div class="pure-u-12-24">
+                <!-- placeholder -->
               </div>
               <div id="hidden-spells-select" class="pure-u-1">
                 <label for="hidden-spells">Dormant spells awakened for</label>
@@ -360,7 +364,6 @@
           <input id="copy"
                  type="submit"
                  class="pure-button"
-                 disabled="disabled"
                  value="Copy seed">
         </p>
         <a id="download" style="display:none"></a>
@@ -428,6 +431,29 @@
       </p>
       <hr>
       <h2><a name="changelog">Changelog</a></h2>
+      <h3><time>March 10, 2020</time></h3>
+      <ul>
+        <li>v2.0.2 Added an option to remove limit on the number of items that can brought into tower.
+          Enabled seed to be copied before generating file to allow bots to generate seeds. These URLs lack checksums so they are not recommended for
+          tournament races. Clarified some option names.</li>
+      </ul>
+      <h3><time>March 9, 2020</time></h3>
+      <ul>
+        <li>v2.0.1 Fixed a bug that prevented loading seed URLs that were created from presets. The preset still doesn't show up in the angel's opening text
+          for the time being, but at least URLs containing presets can be shared.
+        </li>
+      </ul>
+      <h3><time>March 8, 2020</time></h3>
+      <ul>
+        <li>v2.0.0 Fixed a bug in the core de-randomizing assembly code that would occasionally cause floors to repeat. This should substantially improve the
+          RNG seeding in terms of entropy, especially as nearing floors that are multiples of 32. Since the same seed number will now generate a different tower,
+          the major version number has been bumped to reflect this lack of compatibility.
+        </li>
+        <li>Also added a feature to automatically test system-generated seeds for potential repeated floors and choose a new seed if repeats are found.
+          User-provided are not checked, so I recommend allowing the system to fill in the seed field even though these sorts of repeats are statistically much
+          less likely.
+        </li>
+      </ul>
       <h3><time>February 5, 2020</time></h3>
       <ul>
         <li>v1.18.1 Added warning text about a bug when the 'Preset' checkbox is left checked when generating a seed; this will be removed when the bug is fixed.

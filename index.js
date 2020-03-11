@@ -149,17 +149,17 @@
 
   function resetCopy() {
     if (elems.seed.value.length || (lastSeed && lastSeed.length)) {
-      elems.copy.disabled = false
+      //elems.copy.disabled = false
       elems.makeCue.disabled = false
     } else {
-      elems.copy.disabled = true
+      //elems.copy.disabled = true
       elems.makeCue.disabled = false
     }
   }
 
   function seedChange() {
     disableDownload()
-    elems.copy.disabled = true
+    //elems.copy.disabled = true
     elems.makeCue.disabled = true
     haveChecksum = false
   }
@@ -298,8 +298,10 @@
     info = newInfo()
     const options = getFormOptions()
     let seed = (new Date()).getTime().toString()
+    let userSeed = false
     if (elems.seed.value.length) {
       seed = elems.seed.value
+      userSeed = true
     }
     lastSeed = seed
     info[1]['Seed'] = seed
@@ -312,6 +314,7 @@
         options: options,
         seed: seed,
         info: info,
+        userSeed: userSeed,
       }, [this.result])
     }
     reader.readAsArrayBuffer(selectedFile)
@@ -374,7 +377,7 @@
   function copyHandler(event) {
     event.preventDefault()
     event.stopPropagation()
-    elems.seed.value = elems.seed.value || lastSeed || ''
+    elems.seed.value = elems.seed.value || lastSeed || (new Date()).getTime().toString()
     const url = util.optionsToUrl(
       getFormOptions(),
       checksum,
@@ -529,6 +532,7 @@
     const argv = yargs.argv
     let options
     let seed
+    let userSeed = true
     let baseUrl
     let expectChecksum
     let haveChecksum
@@ -578,7 +582,7 @@
     // Check for randomization string.
     if ('options' in argv) {
       try {
-        options = util.optionsFromString(argv.options)
+        options = util.optionsFromString(argv.options).allOptions
       } catch (e) {
         yargs.showHelp()
         console.error('\n' + e.message)
@@ -626,9 +630,10 @@
     // Create default options if none provided.
     if (typeof(seed) === 'undefined') {
       seed = (new Date()).getTime().toString()
+      userSeed = false
     }
     if (!options) {
-      options = util.optionsFromString(constants.defaultOptions)
+      options = util.optionsFromString(constants.defaultOptions).allOptions
     }
     // Set misc options.
     if ('checkVanilla' in argv) {
@@ -671,7 +676,7 @@
       console.error('\n' + err.message)
       process.exit(1)
     }
-    let hex = util.setSeedAzureDreams(check, applied, seed)
+    let hex = util.setSeedAzureDreams(check, applied, seed, userSeed)
     text.embedSeedAndFlagsInAngelText(check, applied, seed)
     traps.setTraps(check, applied)
     //text.writeBattleTextToFile(check, constants.romAddresses.isExhaustedBattleText, "collapsed.\\p\\0")
@@ -840,10 +845,10 @@
         haveChecksum = true
       }
       elems.seed.disabled = true
-      if (options.preset) {
+      if (rs.preset) {
         elems.preset.checked = true
         for (let i = 0; i < presets.length; i++) {
-          if (presets[i].id === options.preset) {
+          if (presets[i].id === rs.preset) {
             elems.presetId.selectedIndex = i
             break
           }

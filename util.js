@@ -134,6 +134,7 @@
     let currentIndex
     let found
     const fieldNames = Object.getOwnPropertyNames(fields.allOptions)
+    let result = {}
     while (i < randomize.length) {
       currentIndex = i
       found = fieldNames.find(function(fieldName) {
@@ -158,7 +159,7 @@
           if (!arg.length) {
             throw new Error('Expected argument')
           }
-          options.preset = arg
+          result.preset = arg
           if (randomize[i] === ',') {
             i++
           }
@@ -167,7 +168,8 @@
         }
       }
     }
-    return fields.allOptions
+    result.allOptions = fields.allOptions
+    return result
   }
 
   function optionsToString(options) {
@@ -203,18 +205,19 @@
   function optionsFromUrl(url) {
     url = new URL(url)
     const args = url.search.slice(1).split(',')
-    let options
+    let optionsAndPreset
     let checksum
     let seed
-    if (args.length > 2) {
-      options = optionsFromString(args.slice(0, args.length - 2).join(','))
+    if (args.length >= 2) {
+      optionsAndPreset = optionsFromString(args.slice(0, Math.max(args.length - 2, 1)).join(','))
     } else {
-      options = optionsFromString(constants.defaultOptions)
+      optionsAndPreset = optionsFromString(constants.defaultOptions)
     }
     seed = decodeURIComponent(args.pop())
     checksum = parseInt(args.pop(), 16)
     return {
-      options: options,
+      options: optionsAndPreset.allOptions,
+      preset: optionsAndPreset.preset,
       checksum: checksum,
       seed: seed,
     }
@@ -226,12 +229,49 @@
     if (options !== constants.defaultOptions) {
       args.push(options)
     }
-    args.push(checksum.toString(16))
+    if (checksum) {
+      args.push(checksum.toString(16))
+    }
     args.push(encodeURIComponent(seed))
     return baseUrl + '?' + args.join(',')
   }
 
-  function setSeedAzureDreams(data, options, seed) {
+  function ror(toRotate, amount) {
+    const intSize = 0x20
+    amount &= (intSize-1)
+    let lowerResult = toRotate >>> amount
+    let upperResult = toRotate << (intSize - amount)
+    return upperResult | lowerResult
+  }
+
+  function validateOrReplaceSeed(seed, depth) {
+    const maxDepth = 10
+    if (depth > maxDepth) {
+      console.log("Reached max depth without finding a valid seed. Something is wrong.")
+      return seed
+    }
+    let hex = sjcl.hash.sha256.hash(seed)
+    let i = 0
+    let miniSeed1 = hex[i++] & 0xffff
+    miniSeed1 = changeEndianShort(miniSeed1) << 0x10
+    miniSeed1 = miniSeed1 | hex[i++] & 0xffff
+    let miniSeed2 = hex[i++] & 0xffff
+    miniSeed2 = changeEndianShort(miniSeed2) << 0x10
+    miniSeed2 = miniSeed2 | hex[i++] & 0xffff
+    let seeds = []
+    const maxFloor = 99
+    for (let floor = 1; floor <= maxFloor; floor++) {
+      let floorSeed = ror(miniSeed1, floor) ^ ror(miniSeed2, floor >>> 3)
+      if (seeds.includes(floorSeed)) {
+        console.log("System-generated seed lacks sufficient randomness, picking a new seed")
+        return validateOrReplaceSeed(seed + 1, depth + 1)
+      }
+      seeds.push(floorSeed)
+    }
+    return seed
+  }
+
+  function setSeedAzureDreams(data, options, seed, userSeed) {
     //very important
     data.writeInstruction(0x1c5879c,0x82778271)
     data.writeInstruction(0x1c587a0,0x826d8266)
@@ -242,6 +282,10 @@
     data.writeByte(0x20efd72,0x71)
     data.writeByte(0x20efd79,0x74)
     data.writeInstruction(0x20efd7a,0x826d826d)
+
+    if (!userSeed) {
+      seed = validateOrReplaceSeed(seed, 0)
+    }
 
     let hex = sjcl.hash.sha256.hash(seed)
 
@@ -301,12 +345,10 @@
                   {data: 0x0800e003, toSeed: false,},
                   {data: 0x00000224, toSeed: false,},
                   {data: 0x1f00a530, toSeed: false,},
-                  {data: 0xffff023c, toSeed: false,},
-                  {data: 0xffff4234, toSeed: false,},
-                  {data: 0x0610a200, toSeed: false,},
-                  {data: 0x26104200, toSeed: false,},
-                  {data: 0x24108200, toSeed: false,},
-                  {data: 0x0620a400, toSeed: false,},
+                  {data: 0x0610a400, toSeed: false,},
+                  {data: 0xe0ffa524, toSeed: false,},
+                  {data: 0x23280500, toSeed: false,},
+                  {data: 0x0420a400, toSeed: false,},
                   {data: 0x0800e003, toSeed: false,},
                   {data: 0x25208200, toSeed: false,}]
 
@@ -348,6 +390,7 @@
     applyPortableElevators(options, data)
     applySecondTower(options, data)
     applyFloor2(options, data)
+    applyLiftItemCap(options, data)
     //if (options.experimentalChanges) {
       //always make cursor start at New Game
       //data.writeInstruction(0x43a920, 0x01000224)
@@ -640,34 +683,41 @@
 
   function makeFrog(options, data) {
     if (options.frog) {
-      let sourceAddress = 0x2EE8100
-      const frogAddress = 0x2F184C0
-      let destinationAddress = frogAddress
-      let sectorIndex = 0
-      let addressRemainder = 0
-      while (sourceAddress < frogAddress) {
-        sectorIndex = sourceAddress % constants.sectorSize
-        if (sectorIndex >= 24 && sectorIndex < 2072) { // don't overwrite section or checksum data
-          data.writeWord(destinationAddress, data.readWord(sourceAddress))
-          addressRemainder = sourceAddress % 28224
-          if (addressRemainder == 0x4a60) { // set monster type to be frog
-            data.writeByte(destinationAddress, 0x2e)
-          } else if (addressRemainder == 0x16f4 || addressRemainder == 0x16f8) { //overwrite missing animations for jumping up
-            data.writeWord(destinationAddress, 0x1d1d1d1d)
-          } else if (addressRemainder == 0x16ec || addressRemainder == 0x16f0) { //overwrite missing animations for getting hit
-            data.writeWord(destinationAddress, 0x29292929)
-          } else if (addressRemainder == 0x170c || addressRemainder == 0x1710) { //overwrite missing animations for dying
-            data.writeWord(destinationAddress, 0x0d0d0d0d)
-          } else if (addressRemainder == 0x53a4) { //prevent frog from attacking to prevent crash / softlock
-            data.writeShort(destinationAddress, 0x0000)
-          }
-        }
-        sourceAddress+=4
-        destinationAddress+=4
-      }
-      data.writeByte(0x1c7e2b0, 0xd1) //change call to is_monster_a_frog_or_salamander to only return if is a salamander
-      data.writeInstruction(0x375dac0, 0x00000000) //remove override of monster ID with backup monster ID in case of frog in line-up menu
+      addCharacter(data, 0x2e)
+      //add selfi
+      addCharacter(data, 0x32)
     }
+  }
+
+  function addCharacter(data, characterId) {
+    const sourceMonsterId = 0x2d
+    let sourceAddress = 0x2EE8100
+    const characterAddress = sourceAddress + (characterId - sourceMonsterId) * 0x303c0
+    let destinationAddress = characterAddress
+    let sectorIndex = 0
+    let addressRemainder = 0
+    while (sourceAddress < characterAddress) {
+      sectorIndex = sourceAddress % constants.sectorSize
+      if (sectorIndex >= 24 && sectorIndex < 2072) { // don't overwrite section or checksum data
+        data.writeWord(destinationAddress, data.readWord(sourceAddress))
+        addressRemainder = sourceAddress % 28224
+        if (addressRemainder == 0x4a60) { // set monster type to be chosen character type
+          data.writeByte(destinationAddress, characterId)
+        } else if (addressRemainder == 0x16f4 || addressRemainder == 0x16f8) { //overwrite missing animations for jumping up
+          data.writeWord(destinationAddress, 0x1d1d1d1d)
+        } else if (addressRemainder == 0x16ec || addressRemainder == 0x16f0) { //overwrite missing animations for getting hit
+          data.writeWord(destinationAddress, 0x29292929)
+        } else if (addressRemainder == 0x170c || addressRemainder == 0x1710) { //overwrite missing animations for dying
+          data.writeWord(destinationAddress, 0x0d0d0d0d)
+        } else if (addressRemainder == 0x53a4) { //prevent frog from attacking to prevent crash / softlock
+          data.writeShort(destinationAddress, 0x0000)
+        }
+      }
+      sourceAddress+=4
+      destinationAddress+=4
+    }
+    data.writeByte(0x1c7e2b0, 0xd1) //change call to is_monster_a_frog_or_salamander to only return if is a salamander
+    data.writeInstruction(0x375dac0, 0x00000000) //remove override of monster ID with backup monster ID in case of non-standard monster in line-up menu
   }
 
   function applyThemes(options, data, hex) {
@@ -845,6 +895,12 @@
     }
   }
 
+  function applyLiftItemCap(options, data) {
+    if (options.itemCap) {
+      data.writeByte(constants.romAddresses.towerItemCap, 21)
+    }
+  }
+
   function pauseAfterDeath(data) {
     // write text that is directed to after death to introduce a pause
     data.writeLEShort(constants.romAddresses.pauseAfterDeathText, 0x1101)
@@ -940,6 +996,7 @@
     portableElevators,
     secondTower,
     floor2,
+    itemCap,
   ) {
     this.id = id
     this.name = name
@@ -977,6 +1034,7 @@
     this.portableElevators = portableElevators
     this.secondTower = secondTower
     this.floor2 = floor2
+    this.itemCap = itemCap
   }
 
   function clone(obj) {

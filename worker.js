@@ -26,7 +26,7 @@ self.addEventListener('message', function(message) {
       data.seed,
     ))
     const options = self.adRando.util.Preset.options(data.options)
-    let hex = adRando.util.setSeedAzureDreams(check, options, data.seed)
+    let hex = adRando.util.setSeedAzureDreams(check, options, data.seed, data.userSeed)
     adRando.text.embedSeedAndFlagsInAngelText(check, options, data.seed)
     adRando.traps.setTraps(check, options)
     //adRando.util.pauseAfterDeath(check)
@@ -44,6 +44,7 @@ self.addEventListener('message', function(message) {
       data: fileData,
       checksum: checksum,
       info: data.info,
+      userSeed: data.userSeed,
     }, [fileData])
   } catch (e) {
     self.postMessage({error: e.message})
