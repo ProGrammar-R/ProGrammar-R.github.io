@@ -9,6 +9,7 @@ importScripts("items.js")
 importScripts("monsters.js")
 importScripts("presets/safe.js")
 importScripts("presets/secondTower.js")
+importScripts("presets/secondTowerRun.js")
 importScripts("presets/tournament.js")
 importScripts("ecc-edc-recalc-js/index.js")
 

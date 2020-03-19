@@ -37,6 +37,7 @@
     ropeDescription:         0x10e84, //RAM 0x8002f3ec
     goUpTrapDescription:     0x13260, //RAM 0x80031318
     anUpperFloorText:        0x1329b, //RAM 0x80031353
+    initialRedCollarStatus:  0x1ecd8, //RAM 0x8003b5d0
     pauseAfterDeathText:     0x55b71,
     initialStatsTable:       0x57f30, //RAM 0x8006d168
     elevatorIcon:            0x5e786, //RAM 0x80072cae

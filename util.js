@@ -391,6 +391,7 @@
     applySecondTower(options, data)
     applyFloor2(options, data)
     applyLiftItemCap(options, data)
+    applyBlueCollar(options, data)
     //if (options.experimentalChanges) {
       //always make cursor start at New Game
       //data.writeInstruction(0x43a920, 0x01000224)
@@ -901,6 +902,13 @@
     }
   }
 
+  function applyBlueCollar(options, data) {
+    if (options.blueCollar) {
+      data.writeShort(constants.romAddresses.initialRedCollarStatus, 0x101) //have both collars
+      data.writeByte(constants.romAddresses.initialRedCollarStatus + 11, 0xa6) //write hword instead
+    }
+  }
+
   function pauseAfterDeath(data) {
     // write text that is directed to after death to introduce a pause
     data.writeLEShort(constants.romAddresses.pauseAfterDeathText, 0x1101)
@@ -997,6 +1005,7 @@
     secondTower,
     floor2,
     itemCap,
+    blueCollar,
   ) {
     this.id = id
     this.name = name
@@ -1035,6 +1044,7 @@
     this.secondTower = secondTower
     this.floor2 = floor2
     this.itemCap = itemCap
+    this.blueCollar = blueCollar
   }
 
   function clone(obj) {

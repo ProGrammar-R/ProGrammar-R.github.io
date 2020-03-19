@@ -2,11 +2,11 @@
 
   // Logic metadata.
   const metadata = {
-    id: 'secondTower',
-    name: 'Only Second Tower',
-    description: 'Just enables second tower, nothing else',
+    id: 'secondTowerRun',
+    name: 'Speedrun Second Tower',
+    description: 'Default settings for speedrunning second tower from a new game',
     author: 'pro_grammar',
-    weight: -70,
+    weight: -80,
   }
 
   // Boilerplate.
@@ -27,10 +27,13 @@
   // Create PresetBuilder.
   const builder = new PresetBuilder(metadata)
 
-  builder.tutorialSkip = false
-  builder.introSkip = false
+  builder.tutorialSkip = true
+  builder.introSkip = true
+  builder.fastTutorial = true
   builder.derandomize = false
   builder.secondTower = true
+  builder.floor2 = true
+  builder.blueCollar = true
 
   // Export.
   const preset = builder.build()

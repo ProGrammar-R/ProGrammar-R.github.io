@@ -7,6 +7,7 @@
     exports = [
       require('./safe'),
       require('./secondTower'),
+      require('./secondTowerRun'),
       require('./tournament'),
     ]
   }

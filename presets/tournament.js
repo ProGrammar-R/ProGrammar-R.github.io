@@ -6,7 +6,7 @@
     name: 'Tournament',
     description: 'Seeded tower, all skips, nothing else.',
     author: 'pro_grammar',
-    weight: -80,
+    weight: -90,
   }
 
   // Boilerplate.
