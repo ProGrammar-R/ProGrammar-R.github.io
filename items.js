@@ -35,8 +35,8 @@
     { name: 'Healing Herb', type: TYPE.HERB, id: 0x08, modifiers: 0x00, inPool: false, survival: 1, address: 0x5e938, barong: false},
     { name: 'Poison',       type: TYPE.HERB, id: 0x09, modifiers: 0x00, inPool: false, survival: 1, address: 0x5e94c, barong: true},
     { name: 'Paralyze',     type: TYPE.HERB, id: 0x0a, modifiers: 0x00, inPool: false, survival: 1, address: 0x5e960, barong: true},
-    { name: 'Harash',       type: TYPE.HERB, id: 0x0b, modifiers: 0x00, inPool: false, survival: 1, address: 0x5e974, barong: true},
-    { name: 'Horrey',       type: TYPE.HERB, id: 0x0c, modifiers: 0x00, inPool: false, survival: 1, address: 0x5e988, barong: true},
+    { name: 'Harash',       type: TYPE.HERB, id: 0x0b, modifiers: 0x00, inPool: false, survival: 0, address: 0x5e974, barong: true},
+    { name: 'Horrey',       type: TYPE.HERB, id: 0x0c, modifiers: 0x00, inPool: false, survival: 0, address: 0x5e988, barong: true},
     { name: 'Sleep',        type: TYPE.HERB, id: 0x0d, modifiers: 0x00, inPool: false, survival: 1, address: 0x5e99c, barong: true},
     { name: 'Roehm',        type: TYPE.HERB, id: 0x0e, modifiers: 0x00, inPool: false, survival: 1, address: 0x5e9b0, barong: false},
     { name: 'Medicinal',    type: TYPE.HERB, id: 0x0f, modifiers: 0x00, inPool: true,  survival: 1, address: 0x5e9c4, barong: false},
@@ -86,7 +86,7 @@
     { name: 'Trap',       type: TYPE.SCROLL, id: 0x03, modifiers: 0x00, inPool: false, survival: 0, address: 0x5ee64},
     { name: 'Restore',    type: TYPE.SCROLL, id: 0x04, modifiers: 0x00, inPool: false, survival: 1, address: 0x5ee78},
     { name: 'De-curse',   type: TYPE.SCROLL, id: 0x05, modifiers: 0x00, inPool: false, survival: 0, address: 0x5ee8c},
-    { name: 'Flat',       type: TYPE.SCROLL, id: 0x06, modifiers: 0x00, inPool: false, survival: 0, address: 0x5eea0},
+    { name: 'Flat',       type: TYPE.SCROLL, id: 0x06, modifiers: 0x00, inPool: false, survival: 1, address: 0x5eea0},
     { name: 'Alchemic',   type: TYPE.SCROLL, id: 0x07, modifiers: 0x00, inPool: false, survival: 0, address: 0x5eeb4},
     //Crystal
     { name: 'Fire',   type: TYPE.CRYSTAL, id: 0x01, modifiers: 0x00, inPool: false, survival: 1, address: 0x5dbd8}, //+1
@@ -110,7 +110,7 @@
     { name: 'Blue',       type: TYPE.SAND, id: 0x02, modifiers: 0x00, inPool: false, survival: 1, address: 0x5eff4},
     { name: 'White',      type: TYPE.SAND, id: 0x03, modifiers: 0x00, inPool: false, survival: 1, address: 0x5f008},
     //Special
-    { name: 'Blue Collar',    type: TYPE.SPECIAL, id: 0x04, modifiers: 0x00, inPool: false, survival: 1, address: 0x5dc64}, //-3
+    { name: 'Blue Collar',    type: TYPE.SPECIAL, id: 0x04, modifiers: 0x00, inPool: false, survival: 0, address: 0x5dc64}, //-3
     { name: '?',              type: TYPE.SPECIAL, id: 0x08, modifiers: 0x00, inPool: false, survival: 0, address: 0x5dcb4}, 
     { name: 'Oleem',          type: TYPE.SPECIAL, id: 0x09, modifiers: 0x00, inPool: false, survival: 2, address: 0x5dcc8},
     //Coin
@@ -135,7 +135,7 @@
     { name: 'Bow Gun',        type: TYPE.SWORD, id: 0x0F, modifiers: 0x00, inPool: false, survival: 0, address: 0x5df70,},
     //Wand
     { name: 'Wooden Wand',    type: TYPE.WAND, id: 0x01, modifiers: 0x00, inPool: true, survival: 0, address: 0x5df98,}, //-5
-    { name: 'Trained Wand',   type: TYPE.WAND, id: 0x02, modifiers: 0x00, inPool: true, survival: 0, address: 0x5dfac,},
+    { name: 'Trained Wand',   type: TYPE.WAND, id: 0x02, modifiers: 0x00, inPool: true, survival: 1, address: 0x5dfac,},
     { name: 'Life Wand',      type: TYPE.WAND, id: 0x03, modifiers: 0x00, inPool: true, survival: 1, address: 0x5dfc0,},
     { name: 'Paralyze Wand',  type: TYPE.WAND, id: 0x04, modifiers: 0x00, inPool: true, survival: 1, address: 0x5dfd4,},
     { name: 'Money Wand',     type: TYPE.WAND, id: 0x05, modifiers: 0x00, inPool: true, survival: 0, address: 0x5dfe8,},
@@ -145,7 +145,7 @@
     { name: 'Seal Wand',      type: TYPE.WAND, id: 0x09, modifiers: 0x00, inPool: true, survival: 0, address: 0x5e038,},
     //Shield
     { name: 'Wooden Shield',  type: TYPE.SHIELD, id: 0x01, modifiers: 0x00, inPool: true, survival: 0, address: 0x5e060,}, //-5
-    { name: 'Leather Shield', type: TYPE.SHIELD, id: 0x02, modifiers: 0x00, inPool: true, survival: 0, address: 0x5e074,},
+    { name: 'Leather Shield', type: TYPE.SHIELD, id: 0x02, modifiers: 0x00, inPool: true, survival: 1, address: 0x5e074,},
     { name: 'Mirror Shield',  type: TYPE.SHIELD, id: 0x03, modifiers: 0x00, inPool: true, survival: 1, address: 0x5e088,},
     { name: 'Copper Shield',  type: TYPE.SHIELD, id: 0x04, modifiers: 0x00, inPool: true, survival: 0, address: 0x5e09c,},
     { name: 'Iron Shield',    type: TYPE.SHIELD, id: 0x05, modifiers: 0x00, inPool: true, survival: 0, address: 0x5e0b0,},
