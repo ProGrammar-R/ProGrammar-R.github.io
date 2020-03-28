@@ -330,6 +330,14 @@
                 <label for="experimental-changes">Experimental Changes</label>
               </div>
               <div class="pure-u-1">
+                <br>
+                <em>Bug fixes</em>
+              </div>
+              <div class="pure-u-12-24">
+                <input id="fix-crashes" type="checkbox">
+                <label for="fix-crashes">Fix some types of crashes</label>
+              </div>
+              <div class="pure-u-1">
                 <input id="clear"
                        type="submit"
                        class="pure-button hidden"
@@ -421,8 +429,7 @@
       <p>
         Known issues:
         <ul>
-          <li>When randomizing starting items, eggs of evolved monsters or Kewne will show up in-game as just " egg" [sic].</li>
-          <li>Defeating enemies on the highest floors in Normal/Hard endurance mode can give you too much EXP and cause the game to crash.</li>
+          <li>When randomizing starting items or eggs, the eggs of evolved monsters or Kewne will appear in-game as just " egg" [sic].</li>
         </ul>
       </p>
       <p>
@@ -432,6 +439,15 @@
       </p>
       <hr>
       <h2><a name="changelog">Changelog</a></h2>
+      <h3><time>March 28, 2020</time></h3>
+      <ul>
+        <li>v2.2.0 Added an option to fix some crashes that are present in the original game. Right now this only includes the crash that occurs when
+          gaining too much experience at once (specifically, between 32,767 and 39,480 EXP; higher amounts would only cause graphical glitches).
+          This is particularly useful for the second tower and survival modes, where this bug would be encountered more often. The game will still overflow
+          the amount of experience earned at once above 65,535 EXP; the text box will still show the pre-overflow value, but the pop-up will now now show
+          the actual amount earned.
+        </li>
+      </ul>
       <h3><time>March 24, 2020</time></h3>
       <ul>
         <li>v2.1.1 Tweaked items in survival mode: removed blue collar and Harash and Horrey herbs in favor of Flat scroll, Trained wand, and Leather shield.

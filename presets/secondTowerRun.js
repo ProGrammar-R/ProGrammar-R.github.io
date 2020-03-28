@@ -34,6 +34,7 @@
   builder.secondTower = true
   builder.floor2 = true
   builder.blueCollar = true
+  builder.fixCrashes = true
 
   // Export.
   const preset = builder.build()

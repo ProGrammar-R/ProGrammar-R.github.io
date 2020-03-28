@@ -57,7 +57,10 @@
     beldoCrashFixPart2:    0x1c6d498, //RAM 0x8009b2b0
     placeMonsterRollGamma: 0x1c73950, //RAM 0x800a0a58
     turnMonsterSpawnRate:  0x1c73d14, //RAM 0x800a0e1c
+    popupExperience1:      0x1c762a4, //RAM 0x800a2eec
+    popupExperience2:      0x1c76450, //RAM 0x800a2f68
     initMonsterSpawnRate:  0x1c7a720, //RAM 0x800a69e8
+    experiencePopupBug:    0x1c8ad8c, //RAM 0x800b4f14
     goUpTrapIncrement:     0x1ca4fe8, //RAM 0x800cbad0
     usedBallItemTable:     0x1cb922c, //RAM 0x800dd384
     statGrowthTable:       0x1cb9c94, //RAM 0x800ddcbc

@@ -203,6 +203,7 @@
     barongItems:          new CheckOption('barongItems',          'barong-items',             'U', null, false),
     survival:             new CheckOption('survival',             'survival',                 'v', null, false),
     newBalls:             new CheckOption('newBalls',             'new-balls',                'w', null, false),
+    fixCrashes:           new CheckOption('fixCrashes',           'fix-crashes',              'x', null, false),
   }
 
   function get(properName) {

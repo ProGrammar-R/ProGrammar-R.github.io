@@ -31,6 +31,7 @@
   builder.introSkip = false
   builder.derandomize = false
   builder.secondTower = true
+  builder.fixCrashes = true
 
   // Export.
   const preset = builder.build()

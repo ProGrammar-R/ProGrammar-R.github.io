@@ -392,6 +392,7 @@
     applyFloor2(options, data)
     applyLiftItemCap(options, data)
     applyBlueCollar(options, data)
+    applyFixCrashes(options, data)
     //if (options.experimentalChanges) {
       //always make cursor start at New Game
       //data.writeInstruction(0x43a920, 0x01000224)
@@ -909,6 +910,30 @@
     }
   }
 
+  function applyFixCrashes(options, data) {
+    if (options.fixCrashes) {
+      const fixExperienceCrash = [
+        {instruction: 0x80002232,}, //andi	v0,s1,0x80     if this is for EXP,
+        {instruction: 0x91ff4014,}, //bnez	v0,0x800b4d60    treat normally after
+        {instruction: 0x21180002,}, //move v1,s0             setting the signed experience amount to the unsigned amount
+        {instruction: 0x27280300,}, //nor  a1,zero,v1
+      ]
+
+      let experiencePopupBugAddr = constants.romAddresses.experiencePopupBug
+      fixExperienceCrash.forEach(function(instruction) {
+          data.writeInstruction(experiencePopupBugAddr, instruction.instruction)
+          experiencePopupBugAddr += 4
+        }
+      )
+
+      const fixExperiencePopupBeingSigned = [constants.romAddresses.popupExperience1, constants.romAddresses.popupExperience2]
+      fixExperiencePopupBeingSigned.forEach(function(fixAddress) {
+        data.writeInstruction(fixAddress, 0x21304002) //move	a2,s2
+        data.writeInstruction(fixAddress + 4, 0x00000000) //nop
+      })
+    }
+  }
+
   function pauseAfterDeath(data) {
     // write text that is directed to after death to introduce a pause
     data.writeLEShort(constants.romAddresses.pauseAfterDeathText, 0x1101)
@@ -1006,6 +1031,7 @@
     floor2,
     itemCap,
     blueCollar,
+    fixCrashes,
   ) {
     this.id = id
     this.name = name
@@ -1045,6 +1071,7 @@
     this.floor2 = floor2
     this.itemCap = itemCap
     this.blueCollar = blueCollar
+    this.fixCrashes = fixCrashes
   }
 
   function clone(obj) {
