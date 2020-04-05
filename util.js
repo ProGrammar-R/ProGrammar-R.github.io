@@ -931,6 +931,13 @@
         data.writeInstruction(fixAddress, 0x21304002) //move	a2,s2
         data.writeInstruction(fixAddress + 4, 0x00000000) //nop
       })
+
+      //fix infinite loop in placeMonsterInRoom when trying to spawn > level 99 monster
+      data.writeInstruction(constants.romAddresses.placeMonsterLeveledUp, 0x08000412)
+      //ditto for the poor soul that steps on a monster den on floor 99 of the second tower
+      data.writeInstruction(constants.romAddresses.monsterDenLeveledUp, 0x08000412)
+      //ditto for egg-bombing with Koh level 50+
+      data.writeInstruction(constants.romAddresses.eggBombLevelUp, 0x07002412)
     }
   }
 

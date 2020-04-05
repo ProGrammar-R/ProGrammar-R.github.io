@@ -30,6 +30,7 @@
   builder.tutorialSkip = true
   builder.introSkip = true
   builder.derandomize = true
+  builder.fixCrashes = true
 
   // Export.
   const preset = builder.build()

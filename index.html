@@ -47,20 +47,6 @@
                 <label for="derandomize">Seeded tower (de-randomize floors)</label>
               </div>
               <div class="pure-u-1">
-                <p style="color:red">
-                If you are generating a seed for a tournament race,
-                please check the box to the left of 'Preset' and select 'Tournament' to get the right settings.
-                <br>
-                <br>
-                Upload your BIN, click 'Randomize', then 'Copy URL' as usual. The resulting link should contain "P:tournament"; if it does not,
-                the box to the left of preset was unchecked before Randomize was clicked. The URL shown on the angel screen will look the same as usual
-                (the usual "ditfS:2..." instead of "P:tournament") so please validate that the runners have the same seed number.
-                <br>
-                <br>
-                Players do not need to do anything special.
-                </p>
-              </div>
-              <div class="pure-u-1">
               <br>
                 <em>Skips</em>
               </div>
@@ -214,7 +200,7 @@
                 <label for="single-room">All single-room floors</label>
               </div>
               <div id="endurance-select" class="pure-u-12-24">
-                <label for="endurance">Endurance mode (99 floors)</label>
+                <label for="endurance">Endurance (99 floors)</label>
                 <select id="endurance">
                   <option value=0>Off</option>
                   <option value=30>Easy (+30 levels / 40 floors)</option>
@@ -430,15 +416,30 @@
         Known issues:
         <ul>
           <li>When randomizing starting items or eggs, the eggs of evolved monsters or Kewne will appear in-game as just " egg" [sic].</li>
+          <li>In seeded tower mode, monster spawns after the event on floor 31 are not consistent.</li>
+          <li>In seeded tower mode, monster spawns vary based on the number of familiars.</li>
         </ul>
       </p>
       <p>
-        Please report any other issues, especially inconsistent spawns of a given floor on the same trip up the tower using
+        Please report any other issues, especially inconsistent spawns of a given floor on the same trip up the tower (when seeded tower is enabled) using
         <a href="https://github.com/ProGrammar-R/ProGrammar-R.github.io/issues/new">GitHub issues</a>
         or the #randomizer channel in the <a href="https://discordapp.com/invite/m2dB3m7">Azure Dreams Speedruns</a> discord.
       </p>
       <hr>
-      <h2><a name="changelog">Changelog</a></h2>
+      <h2><a name="changelog" href="changelog.html">Changelog</a></h2>
+      <h3><time>April 4, 2020</time></h3>
+      <ul>
+        <li>v2.3.0 The option "Fix some types of crashes" fixes more crashes present in the original game.
+          This now includes crashes caused by trying to spawn monsters with level > 99.
+          This should fix floor 99 of the second tower and egg-bombing when Koh is level 50+.
+        </li>
+        <li>Added tooltips to options which are not self-evident. 
+        </li>
+        <li>Default states of options now match the vanilla game, which should fix issues with sharing certain seeds.
+        </li>
+        <li>Minor changes: moved full changelog to a separate page, removed tournament explainer, "Safe" present now has fix crashes option turned on.
+        </li>
+      </ul>
       <h3><time>March 28, 2020</time></h3>
       <ul>
         <li>v2.2.0 Added an option to fix some crashes that are present in the original game. Right now this only includes the crash that occurs when
@@ -480,205 +481,6 @@
           User-provided are not checked, so I recommend allowing the system to fill in the seed field even though these sorts of repeats are statistically much
           less likely.
         </li>
-      </ul>
-      <h3><time>February 5, 2020</time></h3>
-      <ul>
-        <li>v1.18.1 Added warning text about a bug when the 'Preset' checkbox is left checked when generating a seed; this will be removed when the bug is fixed.
-          Thanks to LoonyCloud for reporting this bug.
-        </li>
-      </ul>
-      <h3><time>February 4, 2020</time></h3>
-      <ul>
-        <li>v1.18.0 Rearranged a few options into the Special items section. Added option to make floor 2 always be the predefined floor with Ghosh and/or Selfi.
-          This is primarily intended to let any % runs of the second tower begin the first time you enter the tower if so desired.
-        </li>
-      </ul>
-      <h3><time>February 1, 2020</time></h3>
-      <ul>
-        <li>v1.17.0 Added option to enable the second tower and preset Enable Second Tower, which is the vanilla game with just the second tower enabled.
-          The second tower is a secret "hard mode" that I discovered, which will now appear as a second elevator to the left on floor 2 (after re-entering the tower).
-          I've only made changes to make it accessible and fix a few text-related issues, everything else is as the game designers programmed.
-          Also added a Tournament preset (standard settings for a Rock Me to the Top tournament match).
-        </li>
-      </ul>
-      <h3><time>January 22, 2020</time></h3>
-      <ul>
-        <li>v1.16.2 Fixed bug where floor 99 on endurance mode would show "40F" when loading into the floor.</li>
-      </ul>
-      <h3><time>January 19, 2020</time></h3>
-      <ul>
-        <li>v1.16.1 Fixed bug where portable elevators would cause all balls and some scrolls to function like portable elevators.</li>
-      </ul>
-      <h3><time>January 12, 2020</time></h3>
-      <ul>
-        <li>v1.16.0 Enemy levels in enemizer are now rounded down to better match the original game and improve balance.
-          Dragons, Maximums, Golems, and Killers will no longer appear below floor 4 in enemizer to improve balance.
-           Added option to spawn portable elevators. These must be triggered by standing on one and selecting "At feet" from the menu,
-           selecting the "Give" option, or throwing one at a monster; selecting "Use" will have no effect due to certain limitations.</li>
-      </ul>
-      <h3><time>November 23, 2019</time></h3>
-      <ul>
-        <li>v1.15.0 Added an option to randomize floor theme (appearance), including five previously unused themes.
-          Added an option to allow in-tower saves to be loaded more than once. Removed wind crystals from survival mode.
-          Also fixed a bug where enemy monsters elements were always randomized, even with element randomization off.</li>
-      </ul>
-      <h3><time>November 10, 2019</time></h3>
-      <ul>
-        <li>v1.14.2 Fixed a crash that occurred in survival mode when entering the tower for the first time with Kewne as your familiar.</li>
-        <li>v1.14.1 Tweaked resources in survival mode to replace some stat-restoring herbs with sands.</li>
-        <li>v1.14.0 Added survival mode, where the tutorial floor has been replaced with a floor containing a set of many useful items.
-          However, items will not spawn in the tower as usual– only coins will appear. Naturally, settings like
-          "spawn Barong-only items" and "randomize starting items" will have no effect. This new floor does have an elevator, but it is only visible
-          on the minimap.
-        </li>
-      </ul>
-      <h3><time>November 3, 2019</time></h3>
-      <ul>
-        <li>v1.13.0 Monsters can now have their elements randomized within a floor, though enemy monster spells may not match their element.
-          Fixed the elevator spawn rate on the safe preset to be correct default.
-        </li>
-      </ul>
-      <h3><time>October 19, 2019</time></h3>
-      <ul>
-        <li>v1.12.0 Added an option to replace Go Up traps with Go Down traps that send Koh down a floor instead.</li>
-      </ul>
-      <h3><time>October 13, 2019</time></h3>
-      <ul>
-        <li>v1.11.2 Fixed a bug where upper bound of enemy spawn rate was never set.</li>
-        <li>v1.11.1 Fixed a bug with elevator spawn rate in seeds.</li>
-        <li>v1.11.0 Added options for changing elevator and monster spawn rates. Added options to replace tutorial Pulunpa with a Barong
-          and to allow Barong-only items to spawn normally. Note that this does not change very rare spawns like Geropita Fruit.</li>
-      </ul>
-      <h3><time>October 6, 2019</time></h3>
-      <ul>
-        <li>v1.10.0 Refactored how fields are managed. Added support for changing trap spawn rates.
-            Be aware individial trap spawn rates are relative and matter less when the overall spawn rate is increased.</li>
-      </ul>
-      <h3><time>September 15, 2019</time></h3>
-      <ul>
-        <li>v1.9.0 Added an option for a true boss fight where several things have been changed compared to the original game. Further changes may be made after testers give their opinions.</li>
-      </ul>
-      <h3><time>September 12, 2019</time></h3>
-      <ul>
-        <li>v1.8.2 Fixed a bug where using endurance mode with time difficulty off would result in very low level monsters; thanks to Vega Sera for reporting this.</li>
-        <li>v1.8.1 Fixed a bug where using a seed URL with the new balls option would always enable item randomization.</li>
-      </ul>
-      <h3><time>September 8, 2019</time></h3>
-      <ul>
-        <li>v1.8.0 Added time difficulty mode, where monster difficulties increase over time (tracked since game first loads). Options that require another option will now be hidden if the prerequisite isn't met.
-            Fixed a bug where "Randomize Barong floors" could be unchecked when using a seed URL. Fixed a bug in the generated URL shown in the angel's text.</li>
-      </ul>
-      <h3><time>August 27, 2019</time></h3>
-      <ul>
-        <li>v1.7.4 Added custom domain "adrando.com". Added Sustainna's lovely favicon, which is used with permission (also licensed under MPL 2.0). Embedded full URL seed into angel's text.</li>
-        <li>v1.7.3 Fixed bug in original game that meant when randomizing monster elements, Manoevas wouldn't copy palettes of target monsters.
-                   Kewne's and Hikewne's elements will no longer be randomized in when selecting enemizer + monster element randomization since they do not change palette when changing element.</li>
-      </ul>
-      <h3><time>August 25, 2019</time></h3>
-      <ul>
-        <li>v1.7.2 Removed pause after death to resolve softlocks.</li>
-      </ul>
-      <h3><time>August 25, 2019</time></h3>
-      <ul>
-        <li>v1.7.1 Fixed bug that causes 'Copy Seed' to crash tab.</li>
-      </ul>
-      <h3><time>August 24, 2019</time></h3>
-      <ul>
-        <li>v1.7.0 Added options to randomize eggs and enemy elements, make tutorial faster, and disable de-randomization.</li>
-      </ul>
-      <h3><time>August 14, 2019</time></h3>
-      <ul>
-        <li>v1.6.4 <del>Introduced a pause after Koh dies that players have to press a button to clear, so commentators have an easier way to see what floor a player died on.</del> Removed in v1.7.2</li>
-      </ul>
-      <h3><time>August 12, 2019</time></h3>
-      <ul>
-        <li>v1.6.3 Made endurance mode have three difficulties as defined by the enemy scaling, where "Normal" was the previous version of endurance mode.
-        Added option to add new spell balls, which will now only appear as possible starting items in itemizer if this is checked.</li>
-      </ul>
-      <h3><time>August 9, 2019</time></h3>
-      <ul>
-        <li>v1.6.2 Fixed URLs generated when pressing "Copy seed", so link sharing should now work. Seed is now embedded into angel's opening text.
-        Adjusted help text based on most commonly received questions</li>
-      </ul>
-      <h3><time>August 4, 2019</time></h3>
-      <ul>
-        <li>v1.6.1-beta Added option to randomize spell ball elements. Balls with non-native elements use the name and description of the corresponding spell.</li>
-      </ul>
-      <h3><time>July 31, 2019</time></h3>
-      <ul>
-        <li>v1.6.0-beta Added endurance mode, where tower now has 99 floors. This is somewhat experimental, as very high level enemies can give you too much EXP and cause a crash.
-                        Also, while the end now occurs on floor 99, the graphic for that floor still says Floor 40.
-                        Seeding had to be slightly adjusted to allow for more than 40 floors to prevent repeated floors.</li>
-      </ul>
-      <h3><time>July 28, 2019</time></h3>
-      <ul>
-        <li>v1.5.5 Fixed bug with intro skip where entering your house would cause the game to freeze. Improved intro skip to bypass another loading screen and movie.</li>
-      </ul>
-      <h3><time>July 21, 2019</time></h3>
-      <ul>
-        <li>v1.5.4 Fixed 'constants is not defined' error.</li>
-      </ul>
-      <ul>
-        <li>v1.5.3 Removed Ultimate egg from the itemizer egg pool, due to it <a href="https://gfycat.com/foolhardyflimsyguineapig">instantly disappearing from one's inventory</a> upon getting it.
-        Thanks to Baldwin for reporting this.</li>
-      </ul>
-      <h3><time>July 19, 2019</time></h3>
-      <ul>
-        <li>v1.5.2-beta Itemizer can give one more new possible starting ball. Marked as beta because this is implemented a little bit more experimentally, but will allow for more possibilities in the future.</li>
-        <li>v1.5.1 Itemizer now actually gives random starting items. Added two otherwise unused balls to the pool of potential starting balls. Thanks to Sand_Knight_ for reporting this.</li>
-      </ul>
-      <h3><time>July 18, 2019</time></h3>
-      <ul>
-        <li>v1.5.0 Tweaked UI. Added option to randomize starting items within item category (suggested by DonForgo and Sand_Knight_). All items will be identified except for the egg (for techincal reasons).
-        The egg may not have an associated color, in which case it is the evolved form of a monster.
-        All weapons and shields have no modifiers, are uncursed, and all balls will have 5 charges (1 for Acid Rain). Medicinal herb will always be unchanged.</li>
-      </ul>
-      <h3><time>July 15, 2019</time></h3>
-      <ul>
-        <li>v1.4.6 Fixed bug with atypical element choice.</li>
-        <li>v1.4.5 Added options to choose starter's element and to awaken dormant spells on just the starting monster type.</li>
-      </ul>
-      <h3><time>July 14, 2019</time></h3>
-      <ul>
-        <li>v1.4.4 Fixed minor bug where randomizing starter element on Hikewne would also randomize the element on Dark Shoot, which caused problems with direct magic.</li>
-        <li>Fixed link to discord.</li>
-      </ul>
-      <h3><time>July 13, 2019</time></h3>
-      <ul>
-        <li>v1.4.3 Fixed bug when randomizing starter element where initial spell's element would not match starter's new element (if different).</li>
-        <li>v1.4.2 Added options to allow hidden spells to be available by default and random starter element (suggested by Sand_Knight_ and Baldwin).</li>
-      </ul>
-      <h3><time>July 9, 2019</time></h3>
-      <ul>
-        <li>v1.4.1 Added option to allow spells to level up even when the monster does not share the spell's native element (suggested by Baldwin).</li>
-        <li>v1.4.0 Added option to choose or randomize starting monster. Kewne will still pretend to be your familiar in cutscenes.</li>
-      </ul>
-      <h3><time>July 2, 2019</time></h3>
-      <ul>
-        <li>v1.3.0 Added option to automatically skip most of the otherwise unskippable introductory cutscenes. There is still a lot of loading, but it's a much improved experience for races and practice.</li>
-      </ul>
-      <h3><time>June 23, 2019</time></h3>
-      <ul>
-        <li>v1.2.2 Changed enemizer so Nyuels and Battnels no longer spawn below floor 6.</li>
-        <li>v1.2.1 Fixed bug in enemizer that prevented most enemies from spawning above level 1.</li>
-        <li>v1.2.0 Added monster shuffle option (a.k.a. enemizer).</li>
-      </ul>
-      <h3><time>June 21, 2019</time></h3>
-      <ul>
-        <li>v1.1.0-beta Added support for tutorial skip (not captured in URL).</li>
-        <li>Fixed link for reporting issues.</li>
-      </ul>
-      <h3><time>June 19, 2019</time></h3>
-      <ul>
-        <li>v1.0.4 Added support for all single-room floors (not captured in URL).</li>
-      </ul>
-      <h3><time>June 15, 2019</time></h3>
-      <ul>
-        <li>v1.0.3 Fixed more sources of RNG, added cue file generation, fixed front-end bugs.</li>
-      </ul>
-      <h3><time>June 14, 2019</time></h3>
-      <ul>
-        <li>v.1.0.0 First public release.</li>
       </ul>
     </div>
     <div id="dev-border"></div>

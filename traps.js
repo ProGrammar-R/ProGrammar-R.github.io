@@ -209,7 +209,7 @@
       values,
       defaultValue,
     ) {
-      super(properName, elementName, '', values, defaultValue, 'trap');
+      super(properName, elementName, '', values, defaultValue, null);
       this.trapId = TRAP_TYPES[this.properName]
       this.parent = null;
     }

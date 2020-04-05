@@ -150,6 +150,7 @@ select:disabled {
 .tooltip-wrapper {
     cursor: help;
     position: relative;
+    left: 0.25em;
 }
 
 .tooltip-wrapper .tooltip {
