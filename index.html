@@ -22,7 +22,7 @@
           <span id="status"></span>
           <input id="file" type="file" accept=".bin,.iso">
         </p>
-        <div class="pure-u-16-24">
+        <div class="pure-u-1">
           <fieldset>
             <legend>Gameplay options</legend>
             <div class="pure-g">
@@ -230,6 +230,17 @@
               <div class="pure-u-1">
                 <br>
                 <em>Traps</em>
+                <span class="tooltip-wrapper">
+                  <span class="tooltip-indicator">?</span>
+                  <span class="tooltip hidden">
+                    <span>The default options are not all "normal" because they reflect the actual settings in the game.
+                      The game spawns traps in a peculiar way, so the trap customization options may not work as you expect.
+                      The game picks some number of traps to spawn; the game determines a "budget" for traps and assigns a "cost" to each trap type.
+                      It then picks a trap type at random and checks if it can afford that trap. The setting for each trap type changes that "cost".
+                      To maximize seeing a particular type of trap, turn off other traps from the beginning and end of the list.
+                    </span>
+                  </span>
+                </span>
               </div>
               <div id="trap-spawns-select" class="pure-u-12-24">
                 <label for="trap-spawns">Trap spawn rate</label>
@@ -429,6 +440,7 @@
       <h2><a name="changelog" href="changelog.html">Changelog</a></h2>
       <h3><time>April 4, 2020</time></h3>
       <ul>
+        <li>v2.3.1 Tweaked layout. Added tooltip for traps.</li>
         <li>v2.3.0 The option "Fix some types of crashes" fixes more crashes present in the original game.
           This now includes crashes caused by trying to spawn monsters with level > 99.
           This should fix floor 99 of the second tower and egg-bombing when Koh is level 50+.
