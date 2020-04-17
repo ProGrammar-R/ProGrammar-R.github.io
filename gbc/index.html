@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <title>Azure Dreams GBC (De-)Randomizer</title>
+    <link rel="stylesheet"
+          href="https://unpkg.com/purecss@1.0.0/build/pure-min.css">
+    <link rel="stylesheet"
+          href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
+    <link rel="stylesheet" href="../index.css">
+    <link rel="icon" type="image/png" href="../favicon.png">
+  </head>
+  <body>
+    <div id="version"></div>
+    <div id="content">
+      <h1>Azure Dreams GBC (De-)Randomizer</h1>
+      <div>
+        by pro_grammar
+      </div>
+      <form id="form" class="pure-g">
+        <p id="target" class="pure-u-1">
+          <span id="status"></span>
+          <input id="file" type="file" accept=".gbc">
+        </p>
+        <div class="pure-u-1">
+          <fieldset>
+            <legend>Gameplay options</legend>
+            <div class="pure-g">
+              <div class="pure-u-1">
+                <label for="seed">Seed:</label>
+                <input id="seed" type="text" placeholder="Optional">
+              </div>
+              <div class="pure-u-12-24">
+                <input id="preset" type="checkbox">
+                <label for="preset">Preset</label>
+                <select id="preset-id"></select>
+                <span class="tooltip-wrapper">
+                  <span class="tooltip-indicator">?</span>
+                  <span class="tooltip hidden">
+                    <span id="preset-description"></span>
+                    <span id="preset-author"></span>
+                  </span>
+                </span>
+              </div>
+              <div class="pure-u-12-24">
+                <input id="derandomize" type="checkbox">
+                <label for="derandomize">Seeded tower (de-randomize floors)</label>
+              </div>
+              <div class="pure-u-1" hidden>
+                <input id="experimental-changes" type="checkbox">
+                <label for="experimental-changes">Experimental Changes</label>
+              </div>
+              <div class="pure-u-1">
+                <input id="clear"
+                       type="submit"
+                       class="pure-button hidden"
+                       value="Clear">
+              </div>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Other Options</legend>
+            <div class="pure-g">
+              <div class="pure-u-1">
+                <input id="append-seed" type="checkbox">
+                <label for="append-seed">Append seed to filename</label>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        <div class="pure-u-10-24 spoilers" hidden>
+          <textarea id="spoilers" rows="8" cols="32" disabled="disabled">
+          </textarea>
+        </div>
+        <p class="pure-u-1">
+          <input id="randomize"
+                 type="submit"
+                 class="pure-button pure-button-primary"
+                 disabled="disabled"
+                 value="Randomize">
+          <input id="copy"
+                 type="submit"
+                 class="pure-button"
+                 value="Copy seed">
+        </p>
+        <a id="download" style="display:none"></a>
+        <div id="loader"></div>
+      </form>
+      <div id="notification">Copied to clipboard</div>
+      <hr>
+      <h2><a name="help">Help</a></h2>
+      <p>
+        This (de-)randomizer targets the original USA release of Azure Dreams for the Game Boy Color. You will need an image of your game
+        pak in GBC format.
+      </p>
+      <p>
+        To use this site, first put your GBC file into the top box.
+        Next, choose whatever options you want to use.
+        If you cannot change any options, the link you clicked contained a seed
+        (in which case you should use the same settings as the other person).
+        Now click Randomize and a new GBC file will be created.
+      </p>
+      <p>
+        Do not overwrite your original GBC file; keep it somewhere safe or you may need to obtain it again from your original game pak.
+      </p>
+      <hr>
+      <h2><a name="about">About</a></h2>
+      <p>
+        The (de-)randomizer sets the each floor layout based off of the floor number
+        and a random seed. As such, each trip up the tower should be unique but consistent with anyone else using the same seed.
+      </p>
+      <p>
+        This (de-)randomizer is a fan project and is not affiliated with Konami/KCE Nagoya, the developer and publisher of Azure Dreams (GBC).
+        Please support the official release.
+      </p>
+      <hr>
+      <h2><a name="links">Links and Acknowledgments</a></h2>
+      <ul>
+        <li><a href="https://discordapp.com/invite/m2dB3m7">Azure Dreams Speedruns</a>, an AD discord server. All are welcome, from casual fans to speedrunners.</li>
+        <li><a href="/">Azure Dreams (PS1) (De-)Randomizer</a>, a much more fully featured (de-)randomizer for the PS1 version of Azure Dreams.</li>  
+        <li><a href="https://sotn.io/">SotN Randomizer</a>, from which this project is derived.
+               (under the terms of the <a href="https://github.com/3snowp7im/SotN-Randomizer/blob/master/LICENSE">WTFPL</a> - thanks Wild Mouse).</li>
+        <li><a href="https://twitter.com/sustainna">Sustainna</a>, for creating the site's favicon.</li>
+        <li><a href="https://www.mozilla.org/en-US/MPL/">Mozilla Public License 2.0</a>, the license under which this software is released.</li>
+      </ul>
+      <hr>
+      <h2><a name="bugs">Bugs</a></h2>
+      <p>
+        Known issues:
+        <ul>
+          <li>None.</li>
+        </ul>
+      </p>
+      <p>
+        Please report any other issues, especially inconsistent spawns of a given floor on the same trip up the tower (when seeded tower is enabled) using
+        <a href="https://github.com/ProGrammar-R/ProGrammar-R.github.io/issues/new">GitHub issues</a>
+        or the #randomizer channel in the <a href="https://discordapp.com/invite/m2dB3m7">Azure Dreams Speedruns</a> discord. Please be clear whether you
+        are referring to the PS1 or GBC version of the game.
+      </p>
+      <hr>
+      <h2><a name="changelog" href="changelog.html">Changelog</a></h2>
+      <h3><time>April 16, 2020</time></h3>
+      <ul>
+        <li>v2.4.0 First version that supports Game Boy Color release of Azure Dreams.</li>
+      </ul>
+    </div>
+    <div id="dev-border"></div>
+    <script src="constants.js"></script>
+    <script src="fields.js"></script>
+    <script src="util.js"></script>
+    <script src="presets/safe.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>
