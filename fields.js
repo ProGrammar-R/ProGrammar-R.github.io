@@ -39,6 +39,10 @@
       return this.currentValue;
     }
 
+    getDefault() {
+      return this.defaultValue;
+    }
+
     initialize(document) {
       this.elem = document.getElementById(this.elementName);
       // bring element state in line with current value

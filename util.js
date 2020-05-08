@@ -194,7 +194,9 @@
       if (field) {
         //TODO this next line probably isn't necessary, but if this function gets reused, it will be. Refactor to avoid the need to do this.
         field.set(options[someOption])
-        randomize += field.toOptionValue()
+        if (field.get() != field.getDefault()) {
+          randomize += field.toOptionValue()
+        }
       } else {
         throw new Error('Unknown option: ' + someOption)
       }
