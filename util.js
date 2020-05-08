@@ -393,6 +393,7 @@
     applyLiftItemCap(options, data)
     applyBlueCollar(options, data)
     applyFixCrashes(options, data)
+    applyWidescreen(options, data)
     //if (options.experimentalChanges) {
       //always make cursor start at New Game
       //data.writeInstruction(0x43a920, 0x01000224)
@@ -803,13 +804,12 @@
         {instruction: 0x00000000,}, //nop
         {instruction: 0xffff6324,}, //addiu v1,v1,0xffff
         {instruction: 0x6a3443a4,}, //sh v1,0x346a(v0)
-                                    //check if user is koh, and if so, skip to end
-        {instruction: 0x13008390,}, //lbu v1,0x13(a0)
-        {instruction: 0x00000000,}, //nop
-        {instruction: 0x04006010,}, //beq v1,r0,8002f444
-                                    //set koh's action to go up and wipe item (only triggered when giving)
+                                    //set koh's action to go up and wipe item
         {instruction: 0x25000324,}, //li  v1,25
         {instruction: 0x523543a4,}, //sh v1,0x3552(v0)
+        {instruction: 0x443540ac,}, //sw r0,0x3544(v0)
+        {instruction: 0x803543a4,}, //sh v1,0x3580(v0)
+        //{instruction: 0x00000000,},
         {instruction: 0xce62020c,}, //jal 0x80098b38
         {instruction: 0x2120a000,}, //move a0,a1
                                     //end routine
@@ -938,6 +938,51 @@
       data.writeInstruction(constants.romAddresses.monsterDenLeveledUp, 0x08000412)
       //ditto for egg-bombing with Koh level 50+
       data.writeInstruction(constants.romAddresses.eggBombLevelUp, 0x07002412)
+    }
+  }
+
+  function applyWidescreen(options, data) {
+    if (options.experimentalChanges) {
+      const width = 0x180;
+      data.writeShort(0x1aac0, width) //80037c08, renderTextBoxNameHandle
+      data.writeShort(0x213c0, width) //8003d7f8, defineDrawAndDispEnvs
+      data.writeShort(0x2151c, width) //8003d824, defineDrawAndDispEnvs
+      data.writeShort(0x21534, width) //8003d83c, defineDrawAndDispEnvs
+      data.writeShort(0x21554, width) //8003d85c, defineDrawAndDispEnvs
+      data.writeShort(0x3a540, width) //80053538, performFadeFromBlackScreenEffect
+      data.writeShort(0x3a718, width) //80053710, performFadeToBlackScreenEffect
+      data.writeShort(0x1c6e178, width) //8009be60, floorModificationHandleRoutine
+      data.writeShort(0x1c70bfc, width) //8009e2f4, handleMinimap
+      data.writeShort(0x1c70cac, width) //8009e3a4, handleMinimap
+      data.writeShort(0x1c79c74, width) //800a606c, someRenderingMethod_800a5fc0
+      data.writeShort(0x1c79c98, width) //800a6090, someRenderingMethod_800a5fc0
+
+      //fix culling
+      data.writeShort(0x71bcc8,  width/2) //800ab8e0, town culling
+      data.writeShort(0x71bd08,  width/2) //800ab920
+      data.writeByte( 0x71bd14,   0x58) //800ab92c, initial culling x
+      data.writeShort(0x71bd24, 0x212)  //800ab93c, initial culling limit
+
+      // data.writeShort(0x1ea3ea0, width/2) //80016148, setFloorRenderingParametersToDefault
+      // data.writeShort(0x1ea3eb0, width/2) //80016158, setFloorRenderingParametersToDefault
+      // data.writeByte( 0x1ea3ee4, 0x58)  //8001618c, setFloorRenderingParametersToDefault, might remove
+      // data.writeShort(0x1ea3ef4, 0x212) //8001619c, setFloorRenderingParametersToDefault
+      // data.writeShort(0x217dbf0, width/2) //80016148, setFloorRenderingParametersToDefault
+      // data.writeShort(0x217dc00, width/2) //80016158, setFloorRenderingParametersToDefault
+      // data.writeByte( 0x217dc34, 0x58)  //8001618c, setFloorRenderingParametersToDefault, might remove
+      // data.writeShort(0x217dc44, 0x212) //8001619c, setFloorRenderingParametersToDefault
+
+      //fix menus
+      data.writeShort(0x312a4,   width) //8004b59c, loadMenuFunctionsIntoActiveMemory
+      data.writeShort(0x1bae710, width) //8004b59c, loadMenuFunctionsIntoActiveMemory
+      data.writeShort(0x20efd60, width) //8004b59c, loadMenuFunctionsIntoActiveMemory
+
+      //re-center Koh
+      //data.writeByte(0x6e778, width/2) //80080b60, initialFloorXRelativeToTowerCamera
+
+      data.writeShort(0x388baa0, width) //??, ??
+      data.writeShort(0x3891814, width) //??, ??
+
     }
   }
 

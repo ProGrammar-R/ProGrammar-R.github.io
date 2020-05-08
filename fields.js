@@ -237,7 +237,7 @@
   const bossTooltip = 'SPOILERS: Changes the mechanics of the final boss fight to remove the condition where you must lose to win. Changes the final boss\'s stats and more.';
 
   const portableElevatorsTooltip = 'New items called "Elevators" will spawn in the first tower. They can be picked up like ordinary items, and placed down and stepped on ' +
-   'to act like elevators. This elevator function can be directly triggered by giving them to, or throwing them at, a monster. The "Use" command does nothing for technical reasons.';
+   'to act like elevators. The elevator can be directly triggered by the "Use" command or giving them to, or throwing them at, a monster.';
 
   const barongItemsTooltip = 'The herbs that can ordinarily only be found from a Barong or in the second tower will spawn like normal.';
 
