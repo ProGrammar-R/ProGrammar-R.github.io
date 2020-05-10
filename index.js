@@ -835,6 +835,8 @@
     let options
     let seed
     if (url.search.length) {
+      fields.get('starter').set(fields.get('starter').getDefault())
+      fields.get('traps').set(fields.get('traps').getDefault())
       const rs = util.optionsFromUrl(window.location.href)
       options = rs.options
       seed = rs.seed

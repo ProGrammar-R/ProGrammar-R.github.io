@@ -327,11 +327,19 @@
       Object.getOwnPropertyNames(TRAP_TYPES).forEach(function(trapTypeName) {
         const trapId = TRAP_TYPES[trapTypeName];
         const trapValue = decodedTrapString[i++];
-        if (trapId === 0) {
-          data.writeByte(constants.romAddresses.trapRollMaxSingleRm1, TRAP_SPAWN_RATES[trapValue].maxTrapsRoll);
-          data.writeByte(constants.romAddresses.trapRollMaxSingleRm1 + 0x18, TRAP_SPAWN_RATES[trapValue].maxTrapsRoll);
-          data.writeByte(constants.romAddresses.trapRollMaxSingleRm2, TRAP_SPAWN_RATES[trapValue].maxTrapsRoll);
-          data.writeByte(constants.romAddresses.trapRollMaxSingleRm2 + 0x18, TRAP_SPAWN_RATES[trapValue].maxTrapsRoll);
+        if (trapId === TRAP_TYPES.spawns) {
+          if (trapValue === TRAP_SPAWNS.Max) {
+            const loadMaxInstruction = 0x20000224 // li v0, 0x20
+            data.writeInstruction(constants.romAddresses.trapRollMaxSingleRm1, loadMaxInstruction);
+            data.writeInstruction(constants.romAddresses.trapRollMaxSingleRm1 + 0x18, loadMaxInstruction);
+            data.writeInstruction(constants.romAddresses.trapRollMaxSingleRm2, loadMaxInstruction);
+            data.writeInstruction(constants.romAddresses.trapRollMaxSingleRm2 + 0x18, loadMaxInstruction);
+          } else {
+            data.writeByte(constants.romAddresses.trapRollMaxSingleRm1, TRAP_SPAWN_RATES[trapValue].maxTrapsRoll);
+            data.writeByte(constants.romAddresses.trapRollMaxSingleRm1 + 0x18, TRAP_SPAWN_RATES[trapValue].maxTrapsRoll);
+            data.writeByte(constants.romAddresses.trapRollMaxSingleRm2, TRAP_SPAWN_RATES[trapValue].maxTrapsRoll);
+            data.writeByte(constants.romAddresses.trapRollMaxSingleRm2 + 0x18, TRAP_SPAWN_RATES[trapValue].maxTrapsRoll);
+          }
           data.writeShort(constants.romAddresses.trapRollMaxPerFloor1, TRAP_SPAWN_RATES[trapValue].maxWeightRoll);
           data.writeShort(constants.romAddresses.trapRollMaxPerFloor2, TRAP_SPAWN_RATES[trapValue].maxWeightRoll);
         } else {
@@ -353,6 +361,7 @@
       data.writeByte(constants.romAddresses.trapRollLowestId2 + 8, lastActiveTrap);
     }
     applyGoDownTraps(options, data)
+    applyAltTrapAlgorithm(options, data)
   }
 
   function applyGoDownTraps(options, data) {
@@ -372,6 +381,97 @@
       //text.writeTextToFile(data, constants.romAddresses.anUpperFloorText, "\\3a lower")
       //update pointer to trap name
       data.writeWord(constants.romAddresses.trapTable + 4 * constants.rowLength.trap + 4, 0x80031354)
+    }
+  }
+
+  function applyAltTrapAlgorithm(options, data) {
+    if (options.altTrapAlgorithm) {
+      let i = 0;
+      decodedTrapString = decodeTrapString(options.traps);
+      let trapLikelihoods = []
+      Object.getOwnPropertyNames(TRAP_TYPES).forEach(function(trapTypeName) {
+        const trapId = TRAP_TYPES[trapTypeName];
+        const trapValue = decodedTrapString[i++];
+        trapLikelihoods[trapId] = trapId === TRAP_TYPES.spawns ? 0 : ((trapValue ^ 0x3) & 0x3)
+      })
+      for (i = TRAP_TYPES.reversal; i <= TRAP_TYPES.monsterDen; i++) {
+        if (!trapLikelihoods[i]) {
+          trapLikelihoods[i] = 0
+        }
+        trapLikelihoods[i] = trapLikelihoods[i] + trapLikelihoods[i - 1]
+      }
+
+      const maxTrap = Math.max(trapLikelihoods[i - 1] - 1, 0) //subtract 1 because otherwise top roll would never be exceeded by loaded value
+      const maxTrapInstruction = 0x524 + (maxTrap << 0x18)
+
+      const setupAddresses = [constants.romAddresses.setTrapsInitBudget1, constants.romAddresses.setTrapsInitBudget2]
+
+      const setupRoutine = [
+        0x0e80033c, //    lui        v1,0x800e
+        0x48367224, //    addiu      s2,v1,0x3648
+        0x0280033c, //    lui        v1,0x8002
+        0x07000010, //    b	        0x8001f0fc
+        0xe4f07324, //     addiu      s3,v1,0xf0e4
+        trapLikelihoods[0]  << 0x18 | trapLikelihoods[1]  << 0x10 | trapLikelihoods[2]  << 0x8 | trapLikelihoods[3], //stored at 8001f0e4
+        trapLikelihoods[4]  << 0x18 | trapLikelihoods[5]  << 0x10 | trapLikelihoods[6]  << 0x8 | trapLikelihoods[7],
+        trapLikelihoods[8]  << 0x18 | trapLikelihoods[9]  << 0x10 | trapLikelihoods[10] << 0x8 | trapLikelihoods[11],
+        trapLikelihoods[12] << 0x18 | trapLikelihoods[13] << 0x10 | trapLikelihoods[14] << 0x8 | trapLikelihoods[15],
+        trapLikelihoods[16] << 0x18 | trapLikelihoods[17] << 0x10 | trapLikelihoods[18] << 0x8 | trapLikelihoods[19],
+        0xffffffff,
+      ]
+
+      setupAddresses.forEach(function(address) {
+        let a = 0
+        let v = 0
+        while (v < setupRoutine.length) {
+          data.writeInstruction(address + a, setupRoutine[v])
+          a = a + 4
+          v++
+        }
+      })
+
+      const addresses = [constants.romAddresses.setTrapsChooseType1, constants.romAddresses.setTrapsChooseType2]
+
+      //write custom routine
+      const routine = [                  //8001f158
+                  0x000040a2, //_sb        zero,0x0(s2)
+                  0x00000424, //li         a0,0x0
+                  0x699b020c, //jal        getRollBetween
+                  maxTrapInstruction, //_li        a1,0xXX
+                  0x00001024, //li         s0,0
+                  //loop
+                  0x21287002, //addu      a1,s3,s0
+                  0x0000a490, //lbu	      a0,0(a1)
+                  0x00000000, //nop
+                  0x2b288200, //sltu	    a1,a0,v0
+                  0xfbffa014, //bnez	    a1,0x8001f16c
+                  0x01001026, //addiu	    s0,s0,1
+                  0xf9ff8210, //beq	a0,v0,0x8003826c
+                  0x00000000,
+                  0x1500022e, //sltiu      v0,s0,0x15
+                  0x56004010, //beqz	    v0,0x8001f2ec
+                  0xffff1026, //addiu	    s0,s0,-1
+                  0x0e80023c, //_lui      v0,0x800e
+                  0x21280002, //move	a1,s0
+                  0x00000000,
+                  0x00000000,
+                  0x00000000,
+                  0x00000000,
+                  0x00000000,
+                  0x00000000,
+                  0x00000000,
+                  0x00000000,
+                  0x00000000,]
+
+      addresses.forEach(function(address) {
+        let a = 0
+        let v = 0
+        while (v < routine.length) {
+          data.writeInstruction(address + a, routine[v])
+          a = a + 4
+          v++
+        }
+      })
     }
   }
 

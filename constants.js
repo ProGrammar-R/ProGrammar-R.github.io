@@ -61,6 +61,8 @@
     popupExperience1:      0x1c762a4, //RAM 0x800a2eec
     popupExperience2:      0x1c76450, //RAM 0x800a2f68
     initMonsterSpawnRate:  0x1c7a720, //RAM 0x800a69e8
+    resetElementStartAtk:  0x1c88fd0, //RAM 0x800b34e8
+    resetElementAfterMix:  0x1c898cc, //RAM 0x800b3cb4
     experiencePopupBug:    0x1c8ad8c, //RAM 0x800b4f14
     eggBombLevelUp:        0x1c8dee4, //RAM 0x800b794c
     goUpTrapIncrement:     0x1ca4fe8, //RAM 0x800cbad0
@@ -70,6 +72,7 @@
     itemCategDamageTable:  0x1cb95ac, //RAM 0x800dd704
     isExhaustedBattleText: 0x1cbcc3c,
     toUpstairsBattleText:  0x1cbe450, //RAM 0x800e1af8
+    hardcodeKohProperty1:  0x1ea5094, //RAM 0x800170dc
     multiElevatorSpawns1:  0x1ea5b1c, //RAM 0x80017a34
     callCheckFor2ndTower1: 0x1ea692c, //RAM 0x80018714
     callReplaceKewneTut1:  0x1ea7210, //RAM 0x80018ec8
@@ -78,8 +81,11 @@
     checkIfTower2Availbl1: 0x1ea7f70, //RAM 0x800199c8
     windCrystalCheck1:     0x1ead384, //RAM 0x8001e32c
     trapRollMaxSingleRm1:  0x1eae330, //RAM 0x8001f078
+    setTrapsInitBudget1:   0x1eae388, //RAM 0x8001f0d0
     trapRollMaxPerFloor1:  0x1eae398, //RAM 0x8001f0e0
+    setTrapsChooseType1:   0x1eae410, //RAM 0x8001f158
     trapRollLowestId1:     0x1eae420, //RAM 0x8001f168
+    hardcodeKohProperty2:  0x217ede4, //RAM 0x800170dc
     multiElevatorSpawns2:  0x217f86c, //RAM 0x80017a34
     callCheckFor2ndTower2: 0x218067c, //RAM 0x80018714
     callReplaceKewneTut2:  0x2180f60, //RAM 0x80018ec8
@@ -88,7 +94,9 @@
     checkIfTower2Availbl2: 0x2181cc0, //RAM 0x800199c8
     windCrystalCheck2:     0x21870d4, //RAM 0x8001e32c
     trapRollMaxSingleRm2:  0x2188080, //RAM 0x8001f078
+    setTrapsInitBudget2:   0x21880d8, //RAM 0x8001f0d0
     trapRollMaxPerFloor2:  0x21880e8, //RAM 0x8001f0e0
+    setTrapsChooseType2:   0x2188160, //RAM 0x8001f158
     trapRollLowestId2:     0x2188170, //RAM 0x8001f168
     floorMonsterTable:     0x24638e8, //RAM 0x800ddc7c
     tutorialFloorLayout:   0x248ce50,

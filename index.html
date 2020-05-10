@@ -73,7 +73,8 @@
                 <label for="themes">Randomize floor themes (appearances)</label>
               </div>
               <div class="pure-u-12-24">
-                <!-- placeholder -->
+                <input id="eggomizer" type="checkbox">
+                <label for="eggomizer">Randomize eggs</label>
               </div>
               <div class="pure-u-12-24">
                 <input id="enemizer" type="checkbox">
@@ -103,8 +104,11 @@
                 </select>
               </div>
               <div class="pure-u-12-24">
-                <input id="eggomizer" type="checkbox">
-                <label for="eggomizer">Randomize eggs</label>
+                <!-- placeholder, remove when show selector for koh's element -->
+              </div>
+              <div hidden id="koh-element-select" class="pure-u-12-24">
+                <label for="koh-element">Koh's element</label>
+                <select id="koh-element"></select>
               </div>
               <div id="starter-select" class="pure-u-12-24">
                 <label for="starter">Starting monster</label>
@@ -233,11 +237,9 @@
                 <span class="tooltip-wrapper">
                   <span class="tooltip-indicator">?</span>
                   <span class="tooltip hidden">
-                    <span>The default options are not all "normal" because they reflect the actual settings in the game.
-                      The game spawns traps in a peculiar way, so the trap customization options may not work as you expect.
-                      The game picks some number of traps to spawn; the game determines a "budget" for traps and assigns a "cost" to each trap type.
-                      It then picks a trap type at random and checks if it can afford that trap. The setting for each trap type changes that "cost".
-                      To maximize seeing a particular type of trap, turn off other traps from the beginning and end of the list.
+                    <span>The default options are not all "Average" because they reflect the actual settings in the game.
+                      The game normally spawns traps in a peculiar way, so the trap customization options may not work as you expect.
+                      To make things work as you would expect, check the option "Make trap spawns match above selections more closely".
                     </span>
                   </span>
                 </span>
@@ -317,6 +319,10 @@
               <div class="pure-u-6-24">
                 <label for="trap-monster-den">Monster den</label>
                 <select id="trap-monster-den"></select>
+              </div>
+              <div class="pure-u-12-24">
+                <input id="alt-trap-algorithm" type="checkbox">
+                <label for="alt-trap-algorithm">Make trap spawns match above selections more closely</label>
               </div>
               <div class="pure-u-12-24">
                 <input id="go-down-traps" type="checkbox">
@@ -440,6 +446,15 @@
       </p>
       <hr>
       <h2><a name="changelog" href="changelog.html">Changelog</a></h2>
+      <h3><time>May 10, 2020</time></h3>
+      <ul>
+        <li>v2.5.0 Added option to make trap selection closely match trap options selected. I strongly recommend using this whenever customizing
+          frequency because it makes things work as most people would expect. Selecting a trap spawn rate of max will now spawn more traps.
+          Fixed another bug around default starter and traps that prevented
+          saved preferences from being applied.
+        </li>
+        <li>v2.4.3 Fixed a bug that prevented Kewne from being the default starter and the default trap settings from being applied.</li>
+      </ul>
       <h3><time>May 7, 2020</time></h3>
       <ul>
         <li>v2.4.2 Default options are now omitted from generated URLs.</li>

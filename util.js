@@ -395,6 +395,7 @@
     applyLiftItemCap(options, data)
     applyBlueCollar(options, data)
     applyFixCrashes(options, data)
+    applyKohElement(options, data, hex)
     applyWidescreen(options, data)
     //if (options.experimentalChanges) {
       //always make cursor start at New Game
@@ -943,6 +944,26 @@
     }
   }
 
+  function applyKohElement(options, data, hex) {
+    if (options.kohElement) {
+      const randomKohElementHexSeed = 2;
+      const lcgSeed = hex.length > randomKohElementHexSeed ? Math.abs(hex[randomKohElementHexSeed]) : 15;
+      const lcg = new util.LCG(constants.lcgConstants.modulus, constants.lcgConstants.multiplier, constants.lcgConstants.increment, lcgSeed)
+      let kohElement = options.kohElement == -1 ? lcg.rollBetween(0,3) : (options.kohElement & 0xff)
+      if (kohElement === 3) {
+        kohElement = 4;
+      }
+      const keepElement = 0xf8 + kohElement;
+      //keep element when attacking
+      data.writeByte(constants.romAddresses.resetElementStartAtk, keepElement) //800b34e8
+      //keep element after mix magic attack
+      data.writeByte(constants.romAddresses.resetElementAfterMix, keepElement) //800b3cb4
+      //set initial element
+      data.writeByte(constants.romAddresses.hardcodeKohProperty1, kohElement)
+      data.writeByte(constants.romAddresses.hardcodeKohProperty2, kohElement)
+    }
+  }
+
   function applyWidescreen(options, data) {
     if (options.experimentalChanges) {
       const width = 0x180;
@@ -1060,6 +1081,7 @@
     barongs,
     starter,
     nonnativeSpellsLevel,
+    kohElement,
     starterElement,
     hiddenSpells,
     newBalls,
@@ -1078,6 +1100,7 @@
     elevatorSpawns,
     monsterSpawns,
     goDownTraps,
+    altTrapAlgorithm,
     themes,
     questReload,
     portableElevators,
@@ -1100,6 +1123,7 @@
     this.barongs = barongs,
     this.starter = starter,
     this.nonnativeSpellsLevel = nonnativeSpellsLevel,
+    this.kohElement = kohElement,
     this.starterElement = starterElement,
     this.hiddenSpells = hiddenSpells,
     this.newBalls = newBalls,
@@ -1118,6 +1142,7 @@
     this.elevatorSpawns = elevatorSpawns
     this.monsterSpawns = monsterSpawns
     this.goDownTraps = goDownTraps
+    this.altTrapAlgorithm = altTrapAlgorithm
     this.themes = themes
     this.questReload = questReload
     this.portableElevators = portableElevators

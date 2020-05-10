@@ -131,7 +131,6 @@
 
   function setEnemizer(options, data, hex) {
     if (options.enemizer) {
-      const addressIncrement = 0x930
       const maxMonsterTypesPerFloor = 4
       const firstPossibleBarongFloor = 10
       const normalBarongFloorLSD = 6

@@ -199,6 +199,9 @@
     }
   }
 
+  const altTrapAlgorithmTooltip = 'Recommended if customizing individual traps. The original game chooses traps with nearly equal weighting (except monster dens), ' +
+   'so changing the trap likelihoods doesn\'t work as most people would expect. This option makes the game\'s trap selection closely reflect the options chosen.'
+
   const barongsTooltip = 'Barongs normally appear on all two digit floors ending with 6 (i.e. 16, 26, 36). This option randomizes that digit (e.g. 12, 22, 32).'
   
   const ballElementsTooltip = 'Spell balls will have an random element. If the new element is not their native element, they will be named by the equivalent spell.';
@@ -232,6 +235,9 @@
   const startingItemsTooltip = 'Replaces the items on the tutorial floor with a random weapon, shield, spell ball, egg, and the usual medicinal herb. ' +
    'Note that the egg may be that of an evolved monster or Kewne, in which case it will not have a name.';
 
+  const kohElementToolTip = 'Set or randomize Koh\'s element. When using a mix magic attack that applies an element (e.g. Flame Sword), the resulting attack will ' +
+  'have Koh\'s element, the mix magic element, and any element from Koh\'s weapon.'
+
   const monsterElementsTooltip = 'Depending on your selection, monster elements will either be randomized by type (e.g. all Trolls are wind) or will have a random ' +
   'element each time they spawn, in which case you can choose whether they have spells that match their default element or a random element by monster type.';
 
@@ -253,7 +259,17 @@
   const fixCrashesTooltip = 'Fix some crashes that were present in the original game. Presently this includes the crash when gaining too much EXP from a single monster ' +
    'and the crashes that occur when trying to spawn a monster will a level > 99 (such as when egg-bombing with Koh\'s level is 50+).';
 
+  const kohElementOptions =
+  {
+    Randomized: -1,
+    Default: 0,
+    Fire: 1,
+    Water: 2,
+    Wind: 4
+  }
+
   const allOptions = {
+    altTrapAlgorithm:     new CheckOption('altTrapAlgorithm',     'alt-trap-algorithm',       'a', null, false, altTrapAlgorithmTooltip),
     barongs:              new CheckOption('barongs',              'barongs',                  'b', null, false, barongsTooltip),
     ballElements:         new CheckOption('ballElements',         'ball-elements',            'B', null, false, ballElementsTooltip),
     secondTower:          new CheckOption('secondTower',          'second-tower',             'c', null, false, secondTowerTooltip),
@@ -269,6 +285,7 @@
     themes:               new CheckOption('themes',               'themes',                   'H', null, false, null),
     introSkip:            new CheckOption('introSkip',            'intro-skip',               'i', null, false, introSkipTooltip),
     startingItems:        new CheckOption('startingItems',        'starting-items',           'I', null, false, startingItemsTooltip),
+    kohElement:           new DropdownOption('kohElement',        'koh-element',              'k', kohElementOptions, 0, kohElementToolTip),
     blueCollar:           new CheckOption('blueCollar',           'blue-collar',              'l', null, false, null),
     elevatorSpawns:       new DropdownOption('elevatorSpawns',    'elevator-spawns',          'L', null, 63,    null),
     nonnativeSpellsLevel: new CheckOption('nonnativeSpellsLevel', 'non-native-spells-level',  'n', null, false, null),
