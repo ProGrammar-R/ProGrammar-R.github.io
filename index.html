@@ -197,11 +197,12 @@
                 <label for="second-tower">Enable second tower</label>
               </div>
               <div class="pure-u-12-24">
-                <!-- placeholder -->
-              </div>
-              <div class="pure-u-12-24">
                 <input id="single-room" type="checkbox">
                 <label for="single-room">All single-room floors</label>
+              </div>
+              <div class="pure-u-12-24">
+                <input id="survival" type="checkbox">
+                <label for="survival">Survival (20 item challenge)</label>
               </div>
               <div id="endurance-select" class="pure-u-12-24">
                 <label for="endurance">Endurance (99 floors)</label>
@@ -226,10 +227,6 @@
                   <option value=2>+1 per 2 minutes</option>
                   <option value=1>+1 every minute</option>
                 </select>
-              </div>
-              <div class="pure-u-1">
-                <input id="survival" type="checkbox">
-                <label for="survival">Survival (pick 20 items from tutorial floor, but items don't spawn; overrides starting item randomization)</label>
               </div>
               <div class="pure-u-1">
                 <br>
@@ -446,6 +443,13 @@
       </p>
       <hr>
       <h2><a name="changelog" href="changelog.html">Changelog</a></h2>
+      <h3><time>May 17, 2020</time></h3>
+      <ul>
+        <li>v2.5.1 Directly modified floor layouts for fast tutorial floor and 2nd floor (when second tower enabled). As a result,
+          you'll now actually see the elevator on the first step when fast tutorial floor is enabled. When the second tower is enabled,
+          the elevator to the second tower will always be visible on the Ghosh/Selfi floor (before it would only appear if Ghosh appeared).
+        </li>
+      </ul>
       <h3><time>May 10, 2020</time></h3>
       <ul>
         <li>v2.5.0 Added option to make trap selection closely match trap options selected. I strongly recommend using this whenever customizing

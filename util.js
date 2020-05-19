@@ -840,10 +840,12 @@
       data.writeInstruction(constants.romAddresses.callCheckFor2ndTower1,0xeebc000c)
       data.writeInstruction(constants.romAddresses.callCheckFor2ndTower2,0xeebc000c)
 
-      //slightly alter Koh's possible response to Ghosh's text to squeeze in a call to update the elevator tile
-      //these aren't actually instructions, but rather text commands. This is just more compact
-      data.writeInstruction(constants.romAddresses.kohsReplyToGhoshPart, 0x82934c58)
-      data.writeInstruction(constants.romAddresses.kohsReplyToGhoshPart + 4, 0xf4028003)
+      //set tile appearance to elevator
+      data.writeByte(constants.romAddresses.f2suspElevAppearance, 0x01)
+      //set tile status to be walkable
+      data.writeByte(constants.romAddresses.f2suspElevAppearance + 5, 0x06) //copy the two bytes of tile status from 6 bytes back
+      //set other water tiles to be void, since they read from the top-left elevator slot and would otherwise also look like elevators
+      data.writeLEShort(constants.romAddresses.f2waterAppearance, 0x04e4)
 
       //replace mallet description with custom code to add second tower at 0x8002f3b8
       const addSecondTowerCode = [
@@ -867,25 +869,9 @@
         {instruction: 0x0800e003,}, //jr	ra
         {instruction: 0x1800bd27,}, //addiu	sp,sp,24
       ]
-        //{instruction: 0x16bd000c,}, //jal   addSecondTowerCode2
-
-      //code to update tile, will reside at 0x8002f458
-      const addSecondTowerCode2 = [
-        {instruction: 0x0f80023c,}, //lui   v0,0x800f
-        {instruction: 0x01000324,}, //li    v1,0x1
-        {instruction: 0xb0ad43a4,}, //sh    v1,0xadb0(v0)=>tileStatus (eadb0)
-        {instruction: 0x0800e003,}, //jr	ra
-        {instruction: 0xb4ad40a4,}, //sh    zero,0xadb4(v0)=>tileStatus (eadb4)
-      ]
 
       let addSecondTowerAddr = constants.romAddresses.malletDescription
       addSecondTowerCode.forEach(function(instruction) {
-          data.writeInstruction(addSecondTowerAddr, instruction.instruction)
-          addSecondTowerAddr += 4
-        }
-      )
-      addSecondTowerAddr = constants.romAddresses.ropeDescription + 92
-      addSecondTowerCode2.forEach(function(instruction) {
           data.writeInstruction(addSecondTowerAddr, instruction.instruction)
           addSecondTowerAddr += 4
         }

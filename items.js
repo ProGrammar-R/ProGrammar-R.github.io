@@ -256,6 +256,10 @@
       //if fast tutorial, move elevator Y coordinate
       if (options.fastTutorial) {
         data.writeByte(constants.romAddresses.tutorialElevatorYpos, 0x31)
+        //make tile appearance an elevator
+        data.writeByte(constants.romAddresses.tutorialNewElevator, 0x01)
+        //set tile height to 0 instead of 0x20 (elevators are already 0x20 high) by reading 5 bytes from 0x12 units back instead of 0x6 back
+        data.writeByte(constants.romAddresses.tutorialNewElevator + 1, 0x12)
       }
 
       if (options.ballElements) {

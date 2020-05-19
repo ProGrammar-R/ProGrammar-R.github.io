@@ -74,6 +74,7 @@
     toUpstairsBattleText:  0x1cbe450, //RAM 0x800e1af8
     hardcodeKohProperty1:  0x1ea5094, //RAM 0x800170dc
     multiElevatorSpawns1:  0x1ea5b1c, //RAM 0x80017a34
+    predefElevatorAppear1: 0x1ea68cf, //RAM 0x800186b7
     callCheckFor2ndTower1: 0x1ea692c, //RAM 0x80018714
     callReplaceKewneTut1:  0x1ea7210, //RAM 0x80018ec8
     floor2CheckFirstTime1: 0x1ea7324, //RAM 0x80018fdc
@@ -87,6 +88,7 @@
     trapRollLowestId1:     0x1eae420, //RAM 0x8001f168
     hardcodeKohProperty2:  0x217ede4, //RAM 0x800170dc
     multiElevatorSpawns2:  0x217f86c, //RAM 0x80017a34
+    predefElevatorAppear2: 0x218061f, //RAM 0x800186b7
     callCheckFor2ndTower2: 0x218067c, //RAM 0x80018714
     callReplaceKewneTut2:  0x2180f60, //RAM 0x80018ec8
     floor2CheckFirstTime2: 0x2181074, //RAM 0x80018fdc
@@ -104,6 +106,9 @@
     tutorialStartingItems: 0x248cf78, // X Y ID category status quality
     tutorialTrap:          0x248cf9e, // X Y ID category
     tutorialPulunpa:       0x248cfac, // X Y ID category ??? level
+    tutorialNewElevator:   0x248d844,
+    f2suspElevAppearance:  0x2492b66, //RAM 0x800eadb0
+    f2waterAppearance:     0x2492c87,
     debugFloorLayout:      0x2493360, 
     debugFloorElevator:    0x249338e, // X Y 00 00 00 00
     debugFloorFirstItem:   0x2493394, // X Y ID category status quality

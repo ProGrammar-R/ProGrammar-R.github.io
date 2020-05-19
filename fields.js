@@ -207,8 +207,7 @@
   const ballElementsTooltip = 'Spell balls will have an random element. If the new element is not their native element, they will be named by the equivalent spell.';
 
   const secondTowerTooltip = 'Enables the second tower from the start, which was postgame content present in the original game but inaccessible by normal means. ' +
-   'To access it, go to the second floor where Ghosh and Selfi appear. ' + 'After dealing with Ghosh, go to the top-left of the map and a new elevator will be present. '
-   'Right now, for technical reasons, Ghosh must be the only character that appears or the elevator to the second tower will not appear.';
+   'To access it, go to the second floor where Ghosh and Selfi appear. ' + 'After dealing with Ghosh, go to the top-left of the map and a new elevator will be present.';
 
   const itemCapTooltip = 'It is not possible to bring more than 5 items into the tower by normal means. This option removes that restriction.';
 
@@ -221,7 +220,7 @@
   const starterElementTooltip = 'Set or randomize your starting familiar\'s element. Atypical means one of the two non-native elements for that monster will be chosen at random.';
 
   const fastTutorialTooltip = 'All items on the tutorial floor will be moved to directly in front of where Koh enters. The elevator will be one tile beyond the items, ' +
-   'but is presently not visible due to technical reasons. Just walk (not run) straight forward and you will get the elevator prompt on the first stair.'
+   'so there isn\'t any need to go through the whole floor. The tile where the elevator originally was still looks like an elevator, but does nothing.'
 
   const tutorialBarongTooltip = 'Replace the Pulunpa on the tutorial floor (the first floor of the tower on your first visit) with a Barong. ' +
    'With "Fast tutorial floor" enabled, the Barong is moved closer, just up the first set of stairs.';
