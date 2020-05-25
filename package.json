@@ -1,6 +1,6 @@
 {
   "name": "AD-DeRandomizer",
-  "version": "2.5.1-0",
+  "version": "2.6.0-preview1",
   "description": "This is a romhacking tool to de-randomize some things about `Azure Dreams (PS1)`.",
   "main": "index.js",
   "dependencies": {

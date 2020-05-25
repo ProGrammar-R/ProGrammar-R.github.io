@@ -25,39 +25,65 @@
             <label for="y-coord">yCoord:</label>
             <input id="y-coord" type="number"></input>
           </div>
-
-          <div class="pure-u-1">
-            Mode:
+          <div class="pure-u-1 space-down">
+            View mode:
+          </div>
+          <div class="pure-u-3-24">
           </div>
           <div class="pure-u-6-24">
+            <label for="appearance-mode">Appearance</label>
+            <input type="radio" id="appearance-mode" name="view-mode" value="appearance" checked>
           </div>
           <div class="pure-u-6-24">
-            <label for="apply-mode">Apply</label>
-            <input type="radio" id="apply-mode" name="edit-mode" value="apply">
+            <label for="height-mode">Height</label>
+            <input type="radio" id="height-mode" name="view-mode" value="height">
+          </div>
+          <div class="pure-u-6-24">
+            <label for="rooms-mode">Rooms</label>
+            <input type="radio" id="rooms-mode" name="view-mode" value="rooms">
+          </div>
+          <div class="pure-u-1 space-down">
+            Edit mode:
+          </div>
+          <div class="pure-u-3-24">
           </div>
           <div class="pure-u-6-24">
             <label for="select-mode">Select</label>
             <input type="radio" id="select-mode" name="edit-mode" value="select" checked>
           </div>
-          <div class="pure-u-1">
-
+          <div class="pure-u-6-24">
+            <label for="apply-mode">Apply</label>
+            <input type="radio" id="apply-mode" name="edit-mode" value="apply">
           </div>
-          <div class="pure-u-12-24">
+          <div class="pure-u-1 space-down">
+            Status:
+          </div>
+          <div class="pure-u-3-24">
+          </div>
+          <div class="pure-u-6-24">
+            <label for="status-no-tile">No tile</label>
+            <input type="checkbox" id="status-no-tile">
+          </div>
+          <div class="pure-u-6-24">
+            <label for="status-no-spawns">No spawns</label>
+            <input type="checkbox" id="status-no-spawns">
+          </div>
+          <div class="pure-u-6-24">
+            <label for="status-water">Water</label>
+            <input type="checkbox" id="status-water">
+          </div>
+          <div class="pure-u-12-24 space-down">
             <label for="tile-height">Height:</label>
             <input id="tile-height" type="number"></input>
           </div>
-          <div class="pure-u-12-24">
-            <label for="tile-status">Status:</label>
-            <input id="tile-status" type="number"></input>
-          </div>
           <div>
-            <div class="pure-u-1">
+            <div class="pure-u-1 space-down">
               Appearance:
             </div>
             <div>
               <input id="tile-appearance" type="number"></input>
             </div>
-            <div class="pure-u-1">
+            <div class="pure-u-1 space-down">
               <label for="import-export">Import/Export:</label>
             </div>
             <div class="pure-u-1">
@@ -65,7 +91,7 @@
             </div>
             <div class="pure-u-12-24">
               <!-- <label for="y-coord">Import file</label> -->
-              <input id="import-file" type="file"></input>
+              <input id="import-file" type="file" accept=".json"></input>
             </div>
             <div class="pure-u-4-24">
               <button id="import-text">Import text</button>
@@ -75,6 +101,7 @@
             </div>
             <div class="pure-u-4-24">
               <button id="export-file">Export file</button>
+              <a id="download-file" style="display:none"></a>
             </div>
           </div>
         </form>
