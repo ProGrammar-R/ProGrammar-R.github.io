@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <title>Azure Dreams PS1 (De-)Randomizer floor editor</title>
+    <link rel="stylesheet"
+          href="https://unpkg.com/purecss@1.0.0/build/pure-min.css">
+    <link rel="stylesheet"
+          href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
+    <link rel="stylesheet" href="index.css">
+    <link rel="icon" type="image/png" href="../favicon.png">
+  </head>
+  <body>
+    <div id="content" class="hflow">
+      <div id="floor-area">
+        
+      </div>
+      <div id="side-bar">
+        <form id="form" class="pure-g">
+          <div class="pure-u-12-24">
+            <label for="x-coord">xCoord:</label>
+            <input id="x-coord" type="number"></input>
+          </div>
+          <div class="pure-u-12-24">
+            <label for="y-coord">yCoord:</label>
+            <input id="y-coord" type="number"></input>
+          </div>
+
+          <div class="pure-u-1">
+            Mode:
+          </div>
+          <div class="pure-u-6-24">
+          </div>
+          <div class="pure-u-6-24">
+            <label for="apply-mode">Apply</label>
+            <input type="radio" id="apply-mode" name="edit-mode" value="apply">
+          </div>
+          <div class="pure-u-6-24">
+            <label for="select-mode">Select</label>
+            <input type="radio" id="select-mode" name="edit-mode" value="select" checked>
+          </div>
+          <div class="pure-u-1">
+
+          </div>
+          <div class="pure-u-12-24">
+            <label for="tile-height">Height:</label>
+            <input id="tile-height" type="number"></input>
+          </div>
+          <div class="pure-u-12-24">
+            <label for="tile-status">Status:</label>
+            <input id="tile-status" type="number"></input>
+          </div>
+          <div>
+            <div class="pure-u-1">
+              Appearance:
+            </div>
+            <div>
+              <input id="tile-appearance" type="number"></input>
+            </div>
+            <div class="pure-u-1">
+              <label for="import-export">Import/Export:</label>
+            </div>
+            <div class="pure-u-1">
+              <textarea id="import-export" cols="40" rows="5"></textarea>
+            </div>
+            <div class="pure-u-12-24">
+              <!-- <label for="y-coord">Import file</label> -->
+              <input id="import-file" type="file"></input>
+            </div>
+            <div class="pure-u-4-24">
+              <button id="import-text">Import text</button>
+            </div>
+            <div class="pure-u-4-24">
+              <button id="export-text">Export text</button>
+            </div>
+            <div class="pure-u-4-24">
+              <button id="export-file">Export file</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script src="index.js"></script>
+  </body>
+</html>
