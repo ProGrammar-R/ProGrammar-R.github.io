@@ -16,6 +16,16 @@ h1 {
     clear: both;
 }
 
+.hflow {
+    display: flex;
+    padding: 0 0;
+}
+
+.vflow {
+    flex-direction: column;
+    padding-left: 1em;
+}
+
 #dev-border.dev {
     border: .5em solid rgba(255, 255, 0, .5);
     border-image: repeating-linear-gradient(
@@ -36,6 +46,10 @@ h1 {
 #spoilers {
     display: block;
     margin: 0 auto;
+}
+
+.soft-bg {
+    background-color: #c2baba;
 }
 
 h3 time {
