@@ -7,6 +7,7 @@ html, body {
     padding-left: 1em;
     /* padding-top: 0.5em; */
     height: 100%;
+    background-color: lightslategray;
 }
 
 #version {
@@ -45,7 +46,6 @@ html, body {
   padding: 3em 1em;
   /* align-content: flex-end; */
   width: 30%;
-  color: blue;
 }
 
 .edit-mode {

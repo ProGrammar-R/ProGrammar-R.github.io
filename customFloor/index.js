@@ -37,8 +37,7 @@
     index: 0
   };
 
-
-  let floor;
+  let floor = null;
   let pageIsSetUp = false;
 
   let minHeight = minPossibleHeight;
@@ -109,7 +108,7 @@
   function getFloorTileByCoords(xCoord, yCoord) {
     xCoord = xCoord & 0xff;
     yCoord = yCoord & 0xff;
-    if (!areCoordsValid(xCoord, yCoord)) {
+    if (!areCoordsValid(xCoord, yCoord) || floor === null) {
       return undefined;
     }
     let fTile;
@@ -250,6 +249,9 @@
   }
 
   function makeTilesReflectViewMode() {
+    if (floor === null) {
+      return;
+    }
     let firstTile = true;
     for (const tile of floor.tiles) {
       const sTile = getTileElemByCoords(tile.xCoord, tile.yCoord);
@@ -501,6 +503,9 @@
   }
 
   function changeSpawnsHandler(event) {
+    if (floor === null) {
+      return;
+    }
     floor.spawnRandomItems = !!document.getElementById('spawns-items').checked;
     floor.spawnRandomTraps = !!document.getElementById('spawns-traps').checked;
     floor.spawnRandomMonsters = !!document.getElementById('spawns-monsters').checked;
@@ -552,7 +557,23 @@
     event.stopPropagation();
   }
 
+  function keyPressHandler(event) {
+    const keyCode = event.which;
+    if (keyCode != null) {
+      const keyString = String.fromCharCode(keyCode);
+      switch (keyString) {
+      case "a":
+        document.getElementById('apply-mode').click();
+        break;
+      case "s":
+        document.getElementById('select-mode').click();
+        break;
+      }
+    }
+  }
+
   function setUpPage() {
+    document.onkeypress = keyPressHandler;
     const floorArea = document.getElementById('floor-area');
     tileNumber = 0;
     for (row = 0; row < tilesPerAxis; row++) {
@@ -567,7 +588,6 @@
         tile.className = 'floor-tile';
         tile.xCoord = tileIndex;
         tile.yCoord = row;
-        //tile.textContent= '.';
         tile.addEventListener('click', tileHandler);
         tileRow.appendChild(tile);
       }
