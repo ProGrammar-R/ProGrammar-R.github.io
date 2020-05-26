@@ -3,8 +3,40 @@
   const urlText = window.location.href;
   const urlBase = window.location.href.match('.*/');
   const clearURl = new URL(urlBase + 'clear.png');
+  const standardBackgroundColor = 'background-color:#044020';
   const minPossibleHeight = -32768;
   const maxPossibleHeight = 32767;
+  const NO_SPAWN = 99;
+
+  const TYPE = {
+    HERB:     0x1,
+    FRUIT:    0x2,
+    SEED:     0x3,
+    BALL:     0x4,
+    SCROLL:   0x5,
+    CRYSTAL:  0x6,
+    BELL:     0x7,
+    GLASSES:  0x8,
+    LOUPE:    0x9,
+    SAND:     0xA,
+    GIFT:     0xB,
+    SPECIAL:  0xC,
+    QUEST:    0xD,
+    COIN:     0xE,
+    SWORD:    0xF,
+    WAND:     0x10,
+    SHIELD:   0x11,
+    EGG:      0x12,
+    FAMILIAR: 0x13,
+    ELEVATOR: 0x14,
+    TRAP:     0x15,
+  }
+
+  const exportBytes = {
+    data: new Uint8Array(0x1000),
+    index: 0
+  };
+
 
   let floor;
   let pageIsSetUp = false;
@@ -121,10 +153,12 @@
   }
 
   function updateVisibleTile(eTile, fTile, recalc) {
-    switch (getViewMode()) {
+    const viewMode = getViewMode();
+    switch (viewMode) {
       case "appearance":
         const newSrc = new URL(urlBase + 'tiles/Appr'+fTile.appearance+'.png');
         eTile.src = newSrc;
+        eTile.alt = '';
         break;
       case "height":
         if (recalc) {
@@ -153,7 +187,7 @@
           eTile.style = 'background-color:black';
           eTile.alt = 'Empty';
         } else {
-          eTile.style = 'background-color:blue';
+          eTile.style = standardBackgroundColor;
           eTile.alt = 'Hallway';
           roomLoop:
           for (let room of floor.rooms) {
@@ -172,6 +206,42 @@
                 eTile.alt = 'Door';
                 break;
               }
+            }
+          }
+        }
+        break;
+      case "elevators":
+      case "items":
+      case "traps":
+      case "monsters":
+        eTile.src = clearURl;
+        if (fTile.appearance == 0 || fTile.appearance == 3) {
+          eTile.style = 'background-color:black';
+          eTile.alt = 'Empty';
+        } else {
+          eTile.style = standardBackgroundColor;
+          eTile.alt = 'No ' + viewMode;
+          for (let floorObject of floor[viewMode]) {
+            if (fTile.xCoord == floorObject.xCoord && fTile.yCoord == floorObject.yCoord) {
+              switch (viewMode) {
+                case "elevators":
+                  eTile.style = 'background-color:green';
+                  eTile.alt = 'Elevator';
+                  break;
+                case "items":
+                  eTile.style = 'background-color:blue';
+                  eTile.alt = 'Item';
+                  break;
+                case "traps":
+                  eTile.style = 'background-color:fuchsia';
+                  eTile.alt = 'Trap';
+                  break;
+                case "monsters":
+                  eTile.style = 'background-color:red';
+                  eTile.alt = 'Monster';
+                  break;
+              }
+              break;
             }
           }
         }
@@ -224,6 +294,141 @@
   function setCoords(x, y) {
     document.getElementById('x-coord').value = x;
     document.getElementById('y-coord').value = y;
+  }
+
+  function fillBytes(toWrite, count) {
+    for (let i = 0; i < count; i++){
+      exportBytes.data[exportBytes.index++] = toWrite & 0xff;
+    }
+  }
+
+  function writeByte(toWrite, index) {
+    if (index === null) {
+      exportBytes.data[exportBytes.index++] = toWrite & 0xff;
+    } else {
+      exportBytes.data[index] = toWrite & 0xff;
+    }
+  }
+
+  function writeLEUshort(toWrite, index) {
+    if (index === null) {
+      exportBytes.data[exportBytes.index++] = toWrite & 0xff;
+      exportBytes.data[exportBytes.index++] = toWrite >>> 8;
+    } else {
+      exportBytes.data[index] = toWrite & 0xff;
+      exportBytes.data[index+1] = toWrite >>> 8;
+    }
+  }
+
+  function writeLEShort(toWrite, index) {
+    writeLEUshort(toWrite, index);
+  }
+
+  function writeRooms() {
+    for (let room of floor.rooms) {
+      writeLEUshort(room.xCoord, null);
+      writeLEUshort(room.yCoord, null);
+      writeLEUshort(room.xSize, null);
+      writeLEUshort(room.ySize, null);
+      for (let door of room.doors) {
+        writeByte(door.xCoord, null);
+        writeByte(door.yCoord, null);
+        writeLEUshort(door.unk_0, null);
+      }
+      writeUshort(0, null);
+    }
+    fillBytes(0, 8);
+  }
+  
+  function writeElevators() {
+    for (let elevator of floor.elevators) {
+      writeByte(elevator.xCoord, null);
+      writeByte(elevator.yCoord, null);
+      writeUshort(0, null);
+    }
+    writeUshort(0, null);
+  }
+
+  function writeItems() {
+    let count = 0;
+    for (let item of floor.items) {
+      if (count++ >= 32) {
+        break;
+      }
+      writeByte(item.xCoord, null);
+      writeByte(item.yCoord, null);
+      writeByte(item.id, null);
+      writeByte(item.category, null);
+      writeByte(item.status, null);
+      writeByte(item.quality, null);
+    }
+    if (floor.doNotSpawnItems) {
+      writeByte(NO_SPAWN, null);
+      fillBytes(0, 5);
+    }
+    writeUshort(0, null);
+  }
+  
+  function writeTraps() {
+    let count = 0;
+    for (let trap of floor.traps) {
+      if (count++ >= 30) {
+        break;
+      }
+      writeByte(trap.xCoord, null);
+      writeByte(trap.yCoord, null);
+      writeByte(trap.id, null);
+      writeByte(TYPE.TRAP, null);
+      writeByte(trap.status, null);
+      writeByte(trap.graphicId, null);
+    }
+    if (floor.doNotSpawnTraps) {
+      writeByte(NO_SPAWN, null);
+      fillBytes(0, 5);
+    }
+    writeUshort(0, null);
+    return count;
+  }
+  
+  function writeMonsters(count) {
+    for (let monster of floor.monsters) {
+      if (count++ >= 31) {
+        break;
+      }
+      writeByte(monster.xCoord, null);
+      writeByte(monster.yCoord, null);
+      writeByte(monster.id, null);
+      writeByte(TYPE.FAMILIAR, null);
+      writeByte(monster.unk_0, null);
+      writeByte(monster.level, null);
+    }
+    if (floor.doNotSpawnMonsters) {
+      writeByte(NO_SPAWN, null);
+      fillBytes(0, 5);
+    }
+    writeUshort(0, null);
+  }
+
+  function writeTiles() {
+  }
+
+  function writeFloor() {
+    writeLEUshort(6, null);
+    writeLEUshort(6, null);
+  
+    writeRooms();
+    writeElevators();
+    writeItems();
+    writeTraps();
+    writeMonsters();
+    writeTiles();
+  }
+
+  function processImport() {
+    makeTilesReflectViewMode();
+    document.getElementById('spawns-items').checked = floor.spawnRandomItems;
+    document.getElementById('spawns-traps').checked = floor.spawnRandomTraps;
+    document.getElementById('spawns-monsters').checked = floor.spawnRandomMonsters;
   }
 
   function tileHandler(event) {
@@ -295,6 +500,14 @@
     event.stopPropagation();
   }
 
+  function changeSpawnsHandler(event) {
+    floor.spawnRandomItems = !!document.getElementById('spawns-items').checked;
+    floor.spawnRandomTraps = !!document.getElementById('spawns-traps').checked;
+    floor.spawnRandomMonsters = !!document.getElementById('spawns-monsters').checked;
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
   function importFileHandler(event) {
     const importFileField = document.getElementById('import-file');
     if (importFileField.files[0]) {
@@ -303,7 +516,7 @@
         const importExportField = document.getElementById('import-export');
         importExportField.value = this.result;
         floor = JSON.parse(importExportField.value);
-        makeTilesReflectViewMode(); 
+        processImport();
       }
       reader.readAsText(importFileField.files[0]);
     }
@@ -314,7 +527,7 @@
   function importTextHandler(event) {
     const importExportField = document.getElementById('import-export');
     floor = JSON.parse(importExportField.value);
-    makeTilesReflectViewMode();
+    processImport();
     event.preventDefault();
     event.stopPropagation();
   }
@@ -370,6 +583,13 @@
     document.getElementById('appearance-mode').addEventListener('change', viewModeHandler);
     document.getElementById('height-mode').addEventListener('change', viewModeHandler);
     document.getElementById('rooms-mode').addEventListener('change', viewModeHandler);
+    document.getElementById('elevators-mode').addEventListener('change', viewModeHandler);
+    document.getElementById('items-mode').addEventListener('change', viewModeHandler);
+    document.getElementById('traps-mode').addEventListener('change', viewModeHandler);
+    document.getElementById('monsters-mode').addEventListener('change', viewModeHandler);
+    document.getElementById('spawns-items').addEventListener('change', changeSpawnsHandler);
+    document.getElementById('spawns-traps').addEventListener('change', changeSpawnsHandler);
+    document.getElementById('spawns-monsters').addEventListener('change', changeSpawnsHandler);
     return true;
   }
 
