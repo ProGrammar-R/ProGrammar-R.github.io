@@ -2,7 +2,8 @@
   const tilesPerAxis = 64;
   const urlText = window.location.href;
   const urlBase = window.location.href.match('.*/');
-  const clearURl = new URL(urlBase + 'clear.png');
+  const clearURL = new URL(urlBase + 'clear.png');
+  const clearNumberURLs = [new URL(urlBase + 'clear0.png'), new URL(urlBase + 'clear1.png'), new URL(urlBase + 'clear2.png'), new URL(urlBase + 'clear3.png')]
   const standardBackgroundColor = 'background-color:#044020';
   const minPossibleHeight = -32768;
   const maxPossibleHeight = 32767;
@@ -163,7 +164,7 @@
         if (recalc) {
           recalculateMinMaxHeight();
         }
-        eTile.src = clearURl;
+        eTile.src = clearURL;
         if (fTile.appearance == 0 || fTile.appearance == 3) {
           eTile.style = 'background-color:black';
         } else if (fTile.height == 0) {
@@ -181,7 +182,7 @@
         }
         break;
       case "rooms":
-        eTile.src = clearURl;
+        eTile.src = clearURL;
         if (fTile.appearance == 0 || fTile.appearance == 3) {
           eTile.style = 'background-color:black';
           eTile.alt = 'Empty';
@@ -193,7 +194,10 @@
             for (let door of room.doors) {
               if (fTile.xCoord == door.xCoord && fTile.yCoord == door.yCoord) {
                 eTile.style = 'background-color:green';
-                eTile.alt = 'Door';
+                eTile.alt = 'Door'+door.unk;
+                if (Number.isInteger(door.unk) && door.unk >= 0 && door.unk < clearNumberURLs.length) {
+                  eTile.src = clearNumberURLs[door.unk];
+                }
                 break roomLoop;
               }
             }
@@ -213,7 +217,7 @@
       case "items":
       case "traps":
       case "monsters":
-        eTile.src = clearURl;
+        eTile.src = clearURL;
         if (fTile.appearance == 0 || fTile.appearance == 3) {
           eTile.style = 'background-color:black';
           eTile.alt = 'Empty';
