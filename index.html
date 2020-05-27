@@ -448,6 +448,12 @@
       </p>
       <hr>
       <h2><a name="changelog" href="changelog.html">Changelog</a></h2>
+      <h3><time>May 27, 2020</time></h3>
+      <ul>
+        <li>v2.6.0-preview4 CustomFloors: Made doors take precedence over room tiles, since they seem to actually be more like waypoints for monster AI
+          and can appear in the interior of rooms.
+        </li>
+      </ul>
       <h3><time>May 25, 2020</time></h3>
       <ul>
         <li>v2.6.0-preview3 Added the site's icon, and added a fun <a href="404.html">404 page</a> (thanks to Sustainna for the image).
@@ -506,39 +512,6 @@
           This is particularly useful for the second tower and survival modes, where this bug would be encountered more often. The game will still overflow
           the amount of experience earned at once above 65,535 EXP; the text box will still show the pre-overflow value, but the pop-up will now now show
           the actual amount earned.
-        </li>
-      </ul>
-      <h3><time>March 24, 2020</time></h3>
-      <ul>
-        <li>v2.1.1 Tweaked items in survival mode: removed blue collar and Harash and Horrey herbs in favor of Flat scroll, Trained wand, and Leather shield.
-          If you still want the blue collar, enable the separate option to start with it.
-        </li>
-      </ul>
-      <h3><time>March 18, 2020</time></h3>
-      <ul>
-        <li>v2.1.0 Added option to start with the blue collar. Added new preset for speedrunning second tower.</li>
-      </ul>
-      <h3><time>March 10, 2020</time></h3>
-      <ul>
-        <li>v2.0.2 Added an option to remove limit on the number of items that can brought into tower.
-          Enabled seed to be copied before generating file to allow bots to generate seeds. These URLs lack checksums so they are not recommended for
-          tournament races. Clarified some option names.</li>
-      </ul>
-      <h3><time>March 9, 2020</time></h3>
-      <ul>
-        <li>v2.0.1 Fixed a bug that prevented loading seed URLs that were created from presets. The preset still doesn't show up in the angel's opening text
-          for the time being, but at least URLs containing presets can be shared.
-        </li>
-      </ul>
-      <h3><time>March 8, 2020</time></h3>
-      <ul>
-        <li>v2.0.0 Fixed a bug in the core de-randomizing assembly code that would occasionally cause floors to repeat. This should substantially improve the
-          RNG seeding in terms of entropy, especially as nearing floors that are multiples of 32. Since the same seed number will now generate a different tower,
-          the major version number has been bumped to reflect this lack of compatibility.
-        </li>
-        <li>Also added a feature to automatically test system-generated seeds for potential repeated floors and choose a new seed if repeats are found.
-          User-provided are not checked, so I recommend allowing the system to fill in the seed field even though these sorts of repeats are statistically much
-          less likely.
         </li>
       </ul>
     </div>

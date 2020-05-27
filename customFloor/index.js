@@ -190,6 +190,13 @@
           eTile.alt = 'Hallway';
           roomLoop:
           for (let room of floor.rooms) {
+            for (let door of room.doors) {
+              if (fTile.xCoord == door.xCoord && fTile.yCoord == door.yCoord) {
+                eTile.style = 'background-color:green';
+                eTile.alt = 'Door';
+                break roomLoop;
+              }
+            }
             for (let yOffset = 0; yOffset < room.ySize; yOffset++) {
               for (let xOffset = 0; xOffset < room.xSize; xOffset++) {
                 if (fTile.xCoord == (room.xCoord + xOffset) && fTile.yCoord == (room.yCoord + yOffset)) {
@@ -197,13 +204,6 @@
                   eTile.alt = 'Room';
                   break roomLoop;
                 }
-              }
-            }
-            for (let door of room.doors) {
-              if (fTile.xCoord == door.xCoord && fTile.yCoord == door.yCoord) {
-                eTile.style = 'background-color:green';
-                eTile.alt = 'Door';
-                break;
               }
             }
           }
