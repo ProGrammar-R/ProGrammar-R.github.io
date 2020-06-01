@@ -395,6 +395,7 @@
     applyLiftItemCap(options, data)
     applyBlueCollar(options, data)
     applyFixCrashes(options, data)
+    applyFixBugs(options, data)
     applyKohElement(options, data, hex)
     applyWidescreen(options, data)
     //if (options.experimentalChanges) {
@@ -930,6 +931,13 @@
     }
   }
 
+  function applyFixBugs(options, data) {
+    if (options.fixBugs) {
+      //make Salamander particle size 2x1 so it is visible as a 1x1 square
+      data.writeByte(constants.romAddresses.salamParticleGraphic + 10, 2)
+    }
+  }
+
   function applyKohElement(options, data, hex) {
     if (options.kohElement) {
       const randomKohElementHexSeed = 2;
@@ -1095,6 +1103,7 @@
     itemCap,
     blueCollar,
     fixCrashes,
+    fixBugs
   ) {
     this.id = id
     this.name = name
@@ -1137,6 +1146,7 @@
     this.itemCap = itemCap
     this.blueCollar = blueCollar
     this.fixCrashes = fixCrashes
+    this.fixBugs = fixBugs
   }
 
   function clone(obj) {

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <title>Azure Dreams PS1 guide - Bugs</title>
+    <link rel="stylesheet"
+          href="https://unpkg.com/purecss@1.0.0/build/pure-min.css">
+    <link rel="stylesheet"
+          href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
+    <link rel="stylesheet" href="../index.css">
+    <link rel="icon" type="image/png" href="../favicon.png">
+  </head>
+  <body>
+    <div id="content">
+      <h1>List of Bugs in Azure Dreams</h1>
+      <div>This is a non-exhaustive list of bugs present in Azure Dreams, grouped by type.</div>
+      <h2>Crashes</h2>
+      <h3>Bugs that cause the game to encounter an exception from which it can't recover, or enter an infinite loop.</h3>
+      <ul>
+        <li>(Fixable with 'Fix some crashes' option) Attempting to spawn a monster above level 99 by visiting the 99th floor in the second tower or egg-bombing
+          when Koh is level 50+ causes the game to enter an infinite loop.
+        </li>
+        <li>(Fixable with 'Fix some crashes' option) Gaining between 32,767 and 39,480 EXP (inclusive) causes the game to try to read out of bounds memory and crash.
+        </li>
+      </ul>
+      <h2>Softlocks</h2>
+      <h3>Bugs where game logic is waiting for some action to occur but it never does.</h3>
+      <div>The minimap, HUD, and camera can still be controlled as normal, but movement or other game actions cannot be performed.
+        The game has logic to detect softlocks which activates after 30 seconds (900 frames),
+        reseting a few variables that track pending actions and letting game logic run for one loop. Issues that are resolved by this are classified
+        as temporary softlocks (time losses) and cataloged below. The issues that aren't automatically resolved are listed here.
+        By holding down the desired button to buffer your input for the once per 30 seconds unlock, it may be possible to escape these softlocks, e.g. by
+        holding Square to bring up your menu and select a Wind crystal to leave.
+      </div>
+      <ul>
+        <li>Feeding a Mazarr seed to a U-Boat that is out of MP causes a softlock because the pending experience gain is never resolved for some reason.
+        </li>
+        <li>A Salamander (the temporary monster summoned by Fire crystals) killing an enemy off-screen causes a softlock for some reason.
+          The exact conditions to trigger this aren't known.
+        </li>
+      </ul>
+      <h2>Time losses (temporary softlocks)</h2>
+      <h3>Softlocks that are resolved automatically after 30 seconds.</h3>
+      <ul>
+        <li>
+          Throwing an Oleem at a Manoeva that is transformed into an item causes a temporary softlock.
+        </li>
+        <li>Having a Golem as one of your collared familiars, allowing it to enter its idle animation, pressing (or optionally holding) Select,
+          not taking any other actions for 30 seconds, then taking an action causes a temporary softlock. The Golem is one of two monsters that
+          has an idle animation (the other being Kewne).<br>
+          Unlike Kewne, the Golem has code to not exit its idle animation when Select is pressed.
+          Holding Select will not zoom in on the minimap as normal, and pressing any other buttons while Select is held will have no effect
+          (except Start, which would soft-reset the game). Regardless of whether you pressed or held the button, Koh will not enter his idle animation.
+          30 seconds after you first pressed Select, the game will show the minimap in full (if you kept it held for those 30 seconds)
+          and Koh will re-enter his idle animation. You then have one action before the game locks for 30 seconds.
+          If you were facing the Golem and adjacent to it, walking towards the Golem will allow you to walk into the same tile as it.
+        </li>
+      </ul>
+      <h2>Game logic</h2>
+      <h3>Bugs where the developers clearly intended one thing to happen but something else happens instead (not purely cosmetic).</h3>
+      <div>
+        Note that this only includes cases where the code or context unambiguously indicates that something should behave differently than it actually does,
+        generally due to a mistake or limitation.
+        The first point below is a great example of how the original intention is clear, not just a matter of my opinion.
+      </div>
+      <ul>
+        <li>Each collared familiar with the talent "Strength increased" should raise the damage dealt by Koh's attack and the Flame/Blizzard Sword, Wind Cutter,
+          and unarmed equivalent mix-magic attacks by 1/8, but because the code in question checks <em>Koh</em> for this talent, no increase ever occurs. <br>
+          This is clearly intended as there is a function that is called for the sole purpose of performing this check, but the aforementioned bug means it
+          always returns the same result, 0. 
+          This intended behavior is even referenced in a tip given by a developer in an interview in a strategy guide and can be seen in the GBC game.
+        </li>
+        <li>Salamanders cannot hit monsters in some circumstances. The exact conditions to trigger this aren't known.
+        </li>
+        <li>The mix magic of DeoRock, Gaia Shoot, causes water elemental damage despite DeoRock being a wind elemental spell.
+          This affects both the damage calculation and the appearance of the explosion when enemies are hit.
+        </li>
+        <li>Barongs are supposed to do a rarity check to ensure that you get something exactly as rare as the item you threw in
+          (or less, if it doesn't find one the first four times). Due to a mistake they they check the rarity of the item you threw in against itself,
+          so that check always passes and the item received doesn't take the rarity of the original item into account.
+        </li>
+        <li>Earning more that 65,535 EXP at once will cause the value to overflow and wrap around to 0, due to the memory location only being two bytes.
+          This could have been improved by at least capping EXP gains at 65,535.
+        </li>
+        <li>
+          Since evolved monsters and their predecessors generally gain stats at different rates, evolving a Nyuel to a Battnel and then decreasing its level
+          can cause some stats to underflow, wrapping around to 255. This could potentially be applied to other monsters that evolve
+          by feeding them a Leva fruit to delay evolution beyond level 20.
+        </li>
+        <li>
+          Manoevas that have transformed into Pickets and stolen an item will not lose that item when transforming back due to the Picket being bagged.<br>
+          This is clearly not intended as reverting the Manoeva by bagging it directly <em>will</em> cause it to give up its item.
+          This can be exploited as Manoevas holding items that transform into Pickets can thow up a copy of that held item while keeping the original.
+        </li>
+        <li>
+          Although the De-curse scroll removes the curse on equipped equipment that prevents you from removing it, the Cursed status effect which reduces
+          Koh's luck range persists until leaving the tower or using a Cure-all or Healing herb.<br>
+          Note that there are both status effects and status conditions. The De-curse scroll does remove the Cursed status <em>condition</em>
+          and removing the Cursed status condition does remove the Cursed status <em>effect</em>,
+          but the Cursed status condition isn't applied by cursed equipment, only the effect, probably because this would cause it to be
+          removed automatically after a finite number of turns. Manually setting the status condition does make the De-curse scoll work as intended,
+          as well as show an otherwise unseen portrait of a cursed Koh in the tower menu.
+        </li>
+        <li>Only units that are paralyzed, asleep, blind, or out of MP (henceforth referred to as being incapacitated) have a chance to dodge attacks
+          based on luck, despite all other combat-related checks disfavoring these statuses. Since these are all immbolizing statuses,
+          this should apply to only non-incapacitated monsters.<br>
+          There are two accuracy related checks. The first checks if the attacker is accurate, based on the attacker's accuracy and luck. If a monster is
+          incapacitated, this check automatically succeeds.
+          After calculating the damage roll and whether the attack crits, only incapacitated defending units have a chance to dodge if
+          the defending unit successfully makes a saving throw to dodge, which happens if its "evasion" plus a roll from 0 to the defender's luck - 1 is >= 128
+          (assuming non-zero luck; zero luck is the equivalent of rolling a 0). Since the "evasion" of all units always appears to be 0
+          (n.b. this is different from agility, see point below), an incapacitated defending unit would need at least 129 luck to be capable of rolling 128+.
+          This means that in practice this issue has no effect, as the standard monster with the highest luck still only has 100 luck initially.
+        </li>
+      </ul>
+      <h2>Graphical bugs</h2>
+      <h3>Cosmetic issues that have no effect on gameplay.</h3>
+      <ul>
+        <li>(Fixable with 'Fix some minor bugs' option) The Salamander's attack should cause orange particles to rise from it,
+          but since the particle's size is set to 1x1 and
+          they are always sufficiently far from the game's camera due to the camera zoom being set in combat,
+          they aren't shown at all.<br>Had the developers truly intended these to not be shown, they would have skipped over the
+          CPU-consuming function calls to allocate and animate them, or possibly set a dimension to 0.
+        </li>
+        <li>(Fixable with 'Fix some crashes' option) Gaining more than 39,480 EXP from a single unit shows a graphical glitch
+          or incorrect text such as "MISS!!".
+        </li>
+        <li>Rotating the camera while heating an egg in the tower, cancelling the heating before the egg finishes hatching,
+          and then (without turning the camera) walking in the direction that Koh was facing before heating the egg
+          will cause Koh to walk in that direction without turning to face it, making him appear to be strafing or moonwalking.
+        </li>
+      </ul>
+      <h2>Speculation</h2>
+      <h3>Places where I suspect something might be intended to work differently, but might have been deliberately made otherwise.</h3>
+      <ul>
+        <li>The above added dodge chance uses a value I call evasion, which is always 0, isn't part of a unit's persisted stats,
+          and is only used for the added dodge chance explained in the above point. However, the game does have an unshown stat called agility
+          which is tracked but never used, and which would be a much better fit for this role assuming the above point were also fixed.<br>
+          Each monster has its own initial agility value and agility growth value. The game dutifully tracks this when leveling up or down
+          as part of a monster's permanent stats, meaning they persist when leaving the tower.
+          The game even increases this stat by one each time the unit consumes a Mahell seed.<br>
+          Nevertheless, the stat is never used. It seems likely that this was intended to be used for either evasion or possibly turn order.
+          It's possible that it goes deliberately unused for dodging as high agility monsters (such as the Nyuel) would always dodge
+          above level 51, unused for turn order due to complications in how that is determined, and unused for things such as the monster racetrack
+          due to the game-breaking potential of having an overly-fast monster.
+        </li>
+      </ul>
+    </div>
+  </body>
+</html>

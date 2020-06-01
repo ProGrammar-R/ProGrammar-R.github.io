@@ -258,6 +258,9 @@
   const fixCrashesTooltip = 'Fix some crashes that were present in the original game. Presently this includes the crash when gaining too much EXP from a single monster ' +
    'and the crashes that occur when trying to spawn a monster will a level > 99 (such as when egg-bombing with Koh\'s level is 50+).';
 
+   const fixBugsTooltip = 'Restores behavior that was clearly intended by the developers but doesn\'t function due to a bug. ' +
+   'Currently this only includes restoring the particles that the salamander should spawn when attacking.';
+
   const kohElementOptions =
   {
     Randomized: -1,
@@ -304,6 +307,7 @@
     survival:             new CheckOption('survival',             'survival',                 'v', null, false, survivalTooltip),
     newBalls:             new CheckOption('newBalls',             'new-balls',                'w', null, false, newBallsTooltip),
     fixCrashes:           new CheckOption('fixCrashes',           'fix-crashes',              'x', null, false, fixCrashesTooltip),
+    fixBugs:              new CheckOption('fixBugs',              'fix-bugs',                 'X', null, false, fixBugsTooltip),
   }
 
   function get(properName) {

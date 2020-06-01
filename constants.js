@@ -70,6 +70,7 @@
     usedBallItemTable:     0x1cb922c, //RAM 0x800dd384
     statGrowthTable:       0x1cb9c94, //RAM 0x800ddcbc
     itemCategDamageTable:  0x1cb95ac, //RAM 0x800dd704
+    salamParticleGraphic:  0x1cbc978, //RAM 0x800e03b0
     isExhaustedBattleText: 0x1cbcc3c,
     toUpstairsBattleText:  0x1cbe450, //RAM 0x800e1af8
     hardcodeKohProperty1:  0x1ea5094, //RAM 0x800170dc
