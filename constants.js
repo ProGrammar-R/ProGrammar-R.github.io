@@ -22,7 +22,31 @@
     SHIELD:   0x11,
     EGG:      0x12,
     FAMILIAR: 0x13,
+    ELEVATOR: 0x14,
     TRAP:     0x15,
+  }
+
+  const TRAP_TYPES = {
+    spawns: 0, //pseudo type
+    reversal: 1,
+    slow: 2,
+    warp: 3,
+    goUp: 4,
+    chaos: 5,
+    //blank
+    bomb: 7,
+    slam: 8,
+    sleep: 9,
+    blinder: 10,
+    poison: 11,
+    prison: 12,
+    frog: 13,
+    bump: 14,
+    crack: 15,
+    upheaval: 16,
+    seal: 17,
+    rust: 18,
+    monsterDen: 19,
   }
 
   const rowLength = {
@@ -159,6 +183,7 @@
   const exports = {
     defaultOptions: defaultOptions,
     TYPE: TYPE,
+    TRAP_TYPES: TRAP_TYPES,
     rowLength: rowLength,
     romAddresses: romAddresses,
     monsterStats: monsterStats,

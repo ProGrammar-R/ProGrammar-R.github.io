@@ -62,6 +62,14 @@ html, body {
   height: 6em;
 }
 
+.semi-narrow-input {
+    width: 8em;
+  }
+
+.narrow-input {
+  width: 3em;
+}
+
 h1 {
     clear: both;
 }

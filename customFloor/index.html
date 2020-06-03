@@ -94,13 +94,111 @@
           </div>
           <div class="pure-u-8-24 space-down">
             <label for="tile-height">Height:</label>
-            <input id="tile-height" type="number"></input>
+            <input id="tile-height" type="number">
           </div>
           <div class="pure-u-3-24 space-down">
           </div>
           <div class="pure-u-8-24 space-down">
             <label for="tile-appearance">Appearance:</label>
-            <input id="tile-appearance" type="number"></input>
+            <input id="tile-appearance" type="number">
+          </div>
+          <div class="pure-u-1 space-down">
+            <div class="pure-u-4-24 space-down">
+              <label for="tile-elevator">Elevator</label>
+              <input id="tile-elevator" type="checkbox">
+            </div>
+            <div class="pure-u-8-24 space-down">
+              <label for="tile-elevator-type">Type</label>
+              <select id="tile-elevator-type" name="elevator-type" disabled>
+                <option value="0">Normal</option>
+                <option value="1">Warp home</option>
+                <option value="2">Suspicious</option>
+              </select>
+            </div>
+          </div>
+          <div class="space-down">
+            <div class="pure-u-4-24 space-down">
+              <label for="tile-item">Item</label>
+              <input id="tile-item" type="checkbox">
+            </div>
+            <div class="pure-u-5-24 space-down">
+              <label for="tile-item-id">ID</label>
+              <input id="tile-item-id" type="number" class="narrow-input" disabled>
+            </div>
+            <div class="pure-u-4-24 space-down">
+              <label for="tile-item-category">Category</label>
+              <select id="tile-item-category" name="item-category" disabled>
+                <option value="">--</option>
+                <option value="1">Herb</option>
+                <option value="2">Fruit</option>
+                <option value="3">Seed</option>
+                <option value="4">Ball</option>
+                <option value="5">Scroll</option>
+                <option value="6">Crystal</option>
+                <option value="7">Bell</option>
+                <option value="8">Glasses</option>
+                <option value="9">Loupe</option>
+                <option value="10">Sand</option>
+                <option value="11">Gift</option>
+                <option value="12">Misc</option>
+                <option value="13">Quest</option>
+                <option value="14">Coin</option>
+                <option value="15">Sword</option>
+                <option value="16">Wand</option>
+                <option value="17">Shield</option>
+                <option value="18">Egg</option>
+              </select>
+            </div>
+            <div class="pure-u-5-24 space-down">
+              <label for="tile-item-quality">Quality</label>
+              <input id="tile-item-quality" type="number" class="narrow-input" disabled>
+            </div>
+            <div class="pure-u-1-24">
+            </div>
+            <div class="pure-u-5-24 space-down">
+              <label for="tile-item-unidentified">Unidentified</label>
+              <input id="tile-item-unidentified" type="checkbox" disabled>
+              <label for="tile-item-cursed">Cursed</label>
+              <input id="tile-item-cursed" type="checkbox" disabled>
+            </div>
+          </div>
+          <div class="space-down" style="width:100%">
+            <div class="pure-u-4-24 space-down">
+              <label for="tile-trap">Trap</label>
+              <input id="tile-trap" type="checkbox">
+            </div>
+            <div class="pure-u-7-24 space-down">
+              <label for="tile-trap-id">ID</label>
+              <select id="tile-trap-id" name="trap-id" disabled>
+                <option value="">--</option>
+              </select>
+            </div>
+            <div class="pure-u-8-24 space-down vflow">
+              <label for="tile-trap-hidden">Hidden</label>
+              <input id="tile-trap-hidden" type="checkbox" disabled><br>
+              <label for="tile-trap-not-attackable">Not attackable</label>
+              <input id="tile-trap-not-attackable" type="checkbox" disabled>
+            </div>
+            <div class="pure-u-5-24 space-down" hidden>
+              <label for="tile-trap-level">Level</label>
+              <input id="tile-trap-level" type="number" class="narrow-input" disabled>
+            </div>
+          </div>
+          <div class="space-down" style="width:100%">
+            <div class="pure-u-4-24 space-down">
+              <label for="tile-monster">Monster</label>
+              <input id="tile-monster" type="checkbox">
+            </div>
+            <div class="pure-u-6-24 space-down">
+              <label for="tile-monster-id">ID</label>
+              <select id="tile-monster-id" name="monster-id" disabled>
+                <option value="">--</option>
+              </select>
+            </div>
+            <div class="pure-u-6-24 space-down">
+              <label for="tile-monster-level">Level</label>
+              <input id="tile-monster-level" type="number" class="narrow-input" disabled>
+            </div>
           </div>
           <div class="pure-u-1 space-down">
             Random spawns:
@@ -143,9 +241,15 @@
             <button id="export-file">Export file</button>
             <a id="download-file" style="display:none"></a>
           </div>
+          <div class="pure-u-4-24">
+            <button id="export-bin">Export BIN</button>
+            <a id="bin-file" style="display:none"></a>
+          </div>
         </form>
       </div>
     </div>
+    <script src="../constants.js"></script>
+    <script src="../monsters.js"></script>
     <script src="index.js"></script>
   </body>
 </html>
