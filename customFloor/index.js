@@ -31,7 +31,14 @@
 
   const elems = {}
 
-  let floor = null;
+  let floor = {
+    rooms: [],
+    elevators: [],
+    items: [],
+    traps: [],
+    monsters: [],
+    tiles: [],
+  };
   let pageIsSetUp = false;
 
   let minHeight = minPossibleHeight;
@@ -102,7 +109,7 @@
   function getFloorTileByCoords(xCoord, yCoord) {
     xCoord = xCoord & 0xff;
     yCoord = yCoord & 0xff;
-    if (!areCoordsValid(xCoord, yCoord) || floor === null) {
+    if (!areCoordsValid(xCoord, yCoord)) {
       return undefined;
     }
     let fTile;
@@ -184,12 +191,12 @@
           eTile.alt = 'Hallway';
           roomLoop:
           for (let room of floor.rooms) {
-            for (let door of room.doors) {
-              if (fTile.xCoord == door.xCoord && fTile.yCoord == door.yCoord) {
+            for (let waypoint of room.waypoints) {
+              if (fTile.xCoord == waypoint.xCoord && fTile.yCoord == waypoint.yCoord) {
                 eTile.style = 'background-color:green';
-                eTile.alt = 'Door'+door.unk;
-                if (Number.isInteger(door.unk) && door.unk >= 0 && door.unk < clearNumberURLs.length) {
-                  eTile.src = clearNumberURLs[door.unk];
+                eTile.alt = 'waypoint-'+waypoint.relativeHeight;
+                if (Number.isInteger(waypoint.relativeHeight) && waypoint.relativeHeight >= 0 && waypoint.relativeHeight < clearNumberURLs.length) {
+                  eTile.src = clearNumberURLs[waypoint.relativeHeight];
                 }
                 break roomLoop;
               }
@@ -393,6 +400,7 @@
     const xCoord = getXCoord();
     const yCoord = getYCoord();
     if (areCoordsValid(xCoord, yCoord)) {
+      makeRoomMatchCoords(xCoord, yCoord);
       makeElevatorMatchCoords(xCoord, yCoord);
       makeItemMatchCoords(xCoord, yCoord);
       makeTrapMatchCoords(xCoord, yCoord);
@@ -441,6 +449,13 @@
     elems.tileMonsterId.value = enabled ? 1 : "";
     elems.tileMonsterLevel.disabled = !enabled;
     elems.tileMonsterLevel.value = enabled ? 1 : "";
+  }
+
+  function setRoomEnabled(enabled) {
+    elems.tileRoomXSize.disabled = !enabled;
+    elems.tileRoomXSize.value = enabled ? 1 : "";
+    elems.tileRoomYSize.disabled = !enabled;
+    elems.tileRoomYSize.value = enabled ? 1 : "";
   }
 
   function makeElevatorMatchCoords(xCoord, yCoord) {
@@ -496,7 +511,7 @@
         elems.tileTrapHidden.checked = trap.status & itemUnidentified !== 0;
         elems.tileTrapNotAttackable.checked = trap.status & itemCursed !== 0;
         elems.tileTrapLevel.hidden = trap.id != constants.TRAP_TYPES.monsterDen;
-        elems.tileTrapLevel.value = trap.graphicId;
+        elems.tileTrapLevel.value = trap.level;
       }
     }
     if (!foundMatch && !!elems.tileTrap.checked) {
@@ -521,6 +536,25 @@
     if (!foundMatch && !!elems.tileMonster.checked) {
       elems.tileMonster.checked = false;
       setMonsterEnabled(false);
+    }
+  }
+
+  function makeRoomMatchCoords(xCoord, yCoord) {
+    let foundMatch = false;
+    for (let room of floor.rooms) {
+      if (room.xCoord === xCoord && room.yCoord === yCoord) {
+        foundMatch = true;
+        if (!elems.tileRoom.checked) {
+          elems.tileRoom.checked = true;
+          setRoomEnabled(true);
+        }
+        elems.tileRoomXSize.value = room.xSize;
+        elems.tileRoomYSize.value = room.ySize;
+      }
+    }
+    if (!foundMatch && !!elems.tileRoom.checked) {
+      elems.tileRoom.checked = false;
+      setRoomEnabled(false);
     }
   }
 
@@ -682,7 +716,7 @@
           yCoord: yCoord,
           id: elems.tileTrapId.value & 0xff,
           status: 0,
-          graphicId: elems.tileTrapLevel.value & 0xff,         
+          level: elems.tileTrapLevel.value & 0xff,         
         };
         floor.traps.push(trap);
       } else {
@@ -750,7 +784,7 @@
     if (areCoordsValid(xCoord, yCoord)) {
       for (let trap of floor.traps) {
         if (trap.xCoord == xCoord && trap.yCoord == yCoord) {
-          trap.graphicId = elems.tileTrapLevel.value & 0xff;
+          trap.level = elems.tileTrapLevel.value & 0xff;
         }
       }
     }
@@ -812,6 +846,68 @@
         }
       }
     }
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  function tileRoomHandler(event) {
+    const xCoord = getXCoord();
+    const yCoord = getYCoord();
+    if (areCoordsValid(xCoord, yCoord)) {
+      setRoomEnabled(!!elems.tileRoom.checked);
+      if (elems.tileRoom.checked) {
+        const room = {
+          xCoord: xCoord,
+          yCoord: yCoord,
+          xSize: elems.tileRoomXSize.value & 0xff,
+          ySize: elems.tileRoomYSize.value & 0xff,
+          waypoints: []
+        };
+        floor.rooms.push(room);
+        updateVisibleByCoords(xCoord, yCoord);
+      } else {
+        floor.rooms = floor.rooms.filter(function(room) {
+          room.xCoord != xCoord || room.yCoord != yCoord
+        });
+        makeTilesReflectViewMode();
+      }
+    }
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  function tileRoomXSizeHandler(event) {
+    const xCoord = getXCoord();
+    const yCoord = getYCoord();
+    if (areCoordsValid(xCoord, yCoord)) {
+      if (xCoord + parseInt(elems.tileRoomXSize.value) > tilesPerAxis) {
+        elems.tileRoomXSize.value = tilesPerAxis - xCoord;
+      }
+      for (let room of floor.rooms) {
+        if (room.xCoord == xCoord && room.yCoord == yCoord) {
+          room.xSize = parseInt(elems.tileRoomXSize.value);
+        }
+      }
+    }
+    makeTilesReflectViewMode();
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  function tileRoomYSizeHandler(event) {
+    const xCoord = getXCoord();
+    const yCoord = getYCoord();
+    if (areCoordsValid(xCoord, yCoord)) {
+      if (yCoord + parseInt(elems.tileRoomYSize.value) > tilesPerAxis) {
+        elems.tileRoomYSize.value = tilesPerAxis - yCoord;
+      }
+      for (let room of floor.rooms) {
+        if (room.xCoord == xCoord && room.yCoord == yCoord) {
+          room.ySize = parseInt(elems.tileRoomYSize.value);
+        }
+      }
+    }
+    makeTilesReflectViewMode();
     event.preventDefault();
     event.stopPropagation();
   }
@@ -901,12 +997,13 @@
         tile.type = 'image';
         tile.src = 'tiles/Appr0.png'
         tile.tileNumber = tileNumber;
-        tile.id = 'tile-' + tileNumber++;
+        tile.id = 'tile-' + tileNumber;
         tile.className = 'floor-tile';
         tile.xCoord = tileIndex;
         tile.yCoord = row;
         tile.addEventListener('click', tileHandler);
         tileRow.appendChild(tile);
+        floor.tiles[tileNumber++] = {xCoord: tile.xCoord, yCoord: tile.yCoord, appearance: 0, height: 0, status: 0};
       }
       floorArea.appendChild(tileRow);
     }
@@ -947,6 +1044,9 @@
     elems.tileMonster = document.getElementById('tile-monster');
     elems.tileMonsterId = document.getElementById('tile-monster-id');
     elems.tileMonsterLevel = document.getElementById('tile-monster-level');
+    elems.tileRoom = document.getElementById('tile-room');
+    elems.tileRoomXSize = document.getElementById('tile-room-x-size');
+    elems.tileRoomYSize = document.getElementById('tile-room-y-size');
 
     document.getElementById('tile-appearance').addEventListener('change', appearanceChangeHandler);
     document.getElementById('tile-height').addEventListener('change', heightChangeHandler);
@@ -984,6 +1084,9 @@
     elems.tileMonster.addEventListener('change', tileMonsterHandler);
     elems.tileMonsterId.addEventListener('change', tileMonsterIdHandler);
     elems.tileMonsterLevel.addEventListener('change', tileMonsterLevelHandler);
+    elems.tileRoom.addEventListener('change', tileRoomHandler);
+    elems.tileRoomXSize.addEventListener('change', tileRoomXSizeHandler);
+    elems.tileRoomYSize.addEventListener('change', tileRoomYSizeHandler);
     return true;
   }
 

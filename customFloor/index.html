@@ -102,6 +102,20 @@
             <label for="tile-appearance">Appearance:</label>
             <input id="tile-appearance" type="number">
           </div>
+          <div class="space-down" style="width:100%">
+            <div class="pure-u-4-24 space-down">
+              <label for="tile-room">Room</label>
+              <input id="tile-room" type="checkbox">
+            </div>
+            <div class="pure-u-6-24 space-down">
+              <label for="tile-room-x-size">xSize</label>
+              <input id="tile-room-x-size" type="number" class="narrow-input" disabled>
+            </div>
+            <div class="pure-u-6-24 space-down">
+              <label for="tile-room-y-size">ySize</label>
+              <input id="tile-room-y-size" type="number" class="narrow-input" disabled>
+            </div>
+          </div>
           <div class="pure-u-1 space-down">
             <div class="pure-u-4-24 space-down">
               <label for="tile-elevator">Elevator</label>
@@ -128,7 +142,7 @@
             <div class="pure-u-4-24 space-down">
               <label for="tile-item-category">Category</label>
               <select id="tile-item-category" name="item-category" disabled>
-                <option value="">--</option>
+                <option value="" disabled>--</option>
                 <option value="1">Herb</option>
                 <option value="2">Fruit</option>
                 <option value="3">Seed</option>
@@ -170,7 +184,7 @@
             <div class="pure-u-7-24 space-down">
               <label for="tile-trap-id">ID</label>
               <select id="tile-trap-id" name="trap-id" disabled>
-                <option value="">--</option>
+                <option value="" disabled>--</option>
               </select>
             </div>
             <div class="pure-u-8-24 space-down vflow">
@@ -192,7 +206,7 @@
             <div class="pure-u-6-24 space-down">
               <label for="tile-monster-id">ID</label>
               <select id="tile-monster-id" name="monster-id" disabled>
-                <option value="">--</option>
+                <option value="" disabled>--</option>
               </select>
             </div>
             <div class="pure-u-6-24 space-down">
@@ -242,7 +256,7 @@
             <a id="download-file" style="display:none"></a>
           </div>
           <div class="pure-u-4-24">
-            <button id="export-bin">Export BIN</button>
+            <button id="export-bin" hidden>Export BIN</button>
             <a id="bin-file" style="display:none"></a>
           </div>
         </form>

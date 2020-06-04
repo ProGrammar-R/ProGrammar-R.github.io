@@ -71,10 +71,10 @@
       writeLEUshort(room.yCoord, null);
       writeLEUshort(room.xSize, null);
       writeLEUshort(room.ySize, null);
-      for (let door of room.doors) {
-        writeByte(door.xCoord, null);
-        writeByte(door.yCoord, null);
-        writeLEUshort(door.unk, null);
+      for (let waypoint of room.waypoints) {
+        writeByte(waypoint.xCoord, null);
+        writeByte(waypoint.yCoord, null);
+        writeLEUshort(waypoint.relativeHeight, null);
       }
       writeUshort(0, null);
     }
@@ -121,7 +121,7 @@
       writeByte(trap.id, null);
       writeByte(constants.TYPE.TRAP, null);
       writeByte(trap.status, null);
-      writeByte(trap.graphicId, null);
+      writeByte(trap.level, null);
     }
     if (!floor.spawnRandomTraps) {
       writeByte(NO_SPAWN, null);
