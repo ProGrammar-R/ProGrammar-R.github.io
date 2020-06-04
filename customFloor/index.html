@@ -118,12 +118,29 @@
           </div>
           <div class="pure-u-1 space-down">
             <div class="pure-u-4-24 space-down">
+              <label for="tile-waypoint">Waypoint</label>
+              <input id="tile-waypoint" type="checkbox">
+            </div>
+            <div class="pure-u-8-24 space-down">
+              <label for="tile-waypoint-relative-height">Relative height</label>
+              <select id="tile-waypoint-relative-height" name="waypoint-relative-height" disabled>
+                <option value="" disabled>--</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+              </select>
+            </div>
+          </div>
+          <div class="pure-u-1 space-down">
+            <div class="pure-u-4-24 space-down">
               <label for="tile-elevator">Elevator</label>
               <input id="tile-elevator" type="checkbox">
             </div>
             <div class="pure-u-8-24 space-down">
               <label for="tile-elevator-type">Type</label>
               <select id="tile-elevator-type" name="elevator-type" disabled>
+                <option value="" disabled>--</option>
                 <option value="0">Normal</option>
                 <option value="1">Warp home</option>
                 <option value="2">Suspicious</option>
@@ -190,7 +207,7 @@
             <div class="pure-u-8-24 space-down vflow">
               <label for="tile-trap-hidden">Hidden</label>
               <input id="tile-trap-hidden" type="checkbox" disabled><br>
-              <label for="tile-trap-not-attackable">Not attackable</label>
+              <label for="tile-trap-not-attackable">Cannot activate</label>
               <input id="tile-trap-not-attackable" type="checkbox" disabled>
             </div>
             <div class="pure-u-5-24 space-down" hidden>
@@ -242,7 +259,7 @@
             <textarea id="import-export" cols="40" rows="5"></textarea>
           </div>
           <div class="pure-u-12-24">
-            <!-- <label for="y-coord">Import file</label> -->
+            <!-- <label for="import-file">Import file</label> -->
             <input id="import-file" type="file" accept=".json"></input>
           </div>
           <div class="pure-u-4-24">

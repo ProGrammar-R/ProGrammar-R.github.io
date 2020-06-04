@@ -414,6 +414,7 @@
     const yCoord = getYCoord();
     if (areCoordsValid(xCoord, yCoord)) {
       makeRoomMatchCoords(xCoord, yCoord);
+      makeWaypointMatchCoords(xCoord, yCoord);
       makeElevatorMatchCoords(xCoord, yCoord);
       makeItemMatchCoords(xCoord, yCoord);
       makeTrapMatchCoords(xCoord, yCoord);
@@ -423,9 +424,21 @@
     event.stopPropagation();
   }
 
+  function setRoomEnabled(enabled) {
+    elems.tileRoomXSize.disabled = !enabled;
+    elems.tileRoomXSize.value = enabled ? 1 : "";
+    elems.tileRoomYSize.disabled = !enabled;
+    elems.tileRoomYSize.value = enabled ? 1 : "";
+  }
+
+  function setWaypointEnabled(enabled) {
+    elems.tileWaypointRelativeHeight.disabled = !enabled;
+    elems.tileWaypointRelativeHeight.value = enabled ? 0 : "";
+  }
+
   function setElevatorEnabled(enabled) {
     elems.tileElevatorType.disabled = !enabled;
-    elems.tileElevatorType.value = 0;
+    elems.tileElevatorType.value = enabled ? 0 : "";
   }
 
   function setItemEnabled(enabled) {
@@ -464,11 +477,43 @@
     elems.tileMonsterLevel.value = enabled ? 1 : "";
   }
 
-  function setRoomEnabled(enabled) {
-    elems.tileRoomXSize.disabled = !enabled;
-    elems.tileRoomXSize.value = enabled ? 1 : "";
-    elems.tileRoomYSize.disabled = !enabled;
-    elems.tileRoomYSize.value = enabled ? 1 : "";
+  function makeRoomMatchCoords(xCoord, yCoord) {
+    let foundMatch = false;
+    for (let room of floor.rooms) {
+      if (room.xCoord === xCoord && room.yCoord === yCoord) {
+        foundMatch = true;
+        if (!elems.tileRoom.checked) {
+          elems.tileRoom.checked = true;
+          setRoomEnabled(true);
+        }
+        elems.tileRoomXSize.value = room.xSize;
+        elems.tileRoomYSize.value = room.ySize;
+      }
+    }
+    if (!foundMatch && !!elems.tileRoom.checked) {
+      elems.tileRoom.checked = false;
+      setRoomEnabled(false);
+    }
+  }
+
+  function makeWaypointMatchCoords(xCoord, yCoord) {
+    let foundMatch = false;
+    for (let room of floor.rooms) {
+      for (let waypoint of room.waypoints) {
+        if (waypoint.xCoord === xCoord && waypoint.yCoord === yCoord) {
+          foundMatch = true;
+          if (!elems.tileWaypoint.checked) {
+            elems.tileWaypoint.checked = true;
+            setWaypointEnabled(true);
+          }
+          elems.tileWaypointRelativeHeight.value = waypoint.relativeHeight;
+        }
+      }
+    }
+    if (!foundMatch && !!elems.tileWaypoint.checked) {
+      elems.tileWaypoint.checked = false;
+      setWaypointEnabled(false);
+    }
   }
 
   function makeElevatorMatchCoords(xCoord, yCoord) {
@@ -552,23 +597,78 @@
     }
   }
 
-  function makeRoomMatchCoords(xCoord, yCoord) {
-    let foundMatch = false;
-    for (let room of floor.rooms) {
-      if (room.xCoord === xCoord && room.yCoord === yCoord) {
-        foundMatch = true;
-        if (!elems.tileRoom.checked) {
-          elems.tileRoom.checked = true;
-          setRoomEnabled(true);
+  function getDistanceBetweenValueAndBounds(val, lowerBound, upperBound) {
+    if (val < lowerBound) {
+      return lowerBound - val;
+    }
+    if (val > upperBound) {
+      return val - upperBound;
+    }
+    return 0;
+  }
+
+  function getIndexOfClosestRoomToCoords(xCoord, yCoord) {
+    let minDistance = 2 * tilesPerAxis;
+    let roomIndexMinDistance = -1;
+    for (let roomIndex = 0; roomIndex < floor.rooms.length; roomIndex++) {
+      const room = floor.rooms[roomIndex];
+      const combinedXYdistance = getDistanceBetweenValueAndBounds(xCoord, room.xCoord, room.xCoord + room.xSize) +
+                                 getDistanceBetweenValueAndBounds(yCoord, room.yCoord, room.yCoord + room.ySize);
+      if (combinedXYdistance < minDistance) {
+        minDistance = combinedXYdistance;
+        roomIndexMinDistance = roomIndex;
+        //if distance is 0, then we are inside the room, so stop search
+        if (minDistance === 0) {
+          break;
         }
-        elems.tileRoomXSize.value = room.xSize;
-        elems.tileRoomYSize.value = room.ySize;
       }
     }
-    if (!foundMatch && !!elems.tileRoom.checked) {
-      elems.tileRoom.checked = false;
-      setRoomEnabled(false);
+    return roomIndexMinDistance;
+  }
+
+  function tileWaypointHandler(event) {
+    const xCoord = getXCoord();
+    const yCoord = getYCoord();
+    if (areCoordsValid(xCoord, yCoord)) {
+      setWaypointEnabled(!!elems.tileWaypoint.checked);
+      if (elems.tileWaypoint.checked) {
+        const waypoint = {
+          xCoord: xCoord,
+          yCoord: yCoord,
+          relativeHeight: 0
+        };
+        const roomIndex = getIndexOfClosestRoomToCoords(xCoord, yCoord);
+        if (roomIndex >= 0) {
+          floor.rooms[roomIndex].waypoints.push(waypoint);
+        }
+      } else {
+        for (let room of floor.rooms) {
+          room.waypoints = room.waypoints.filter(function(waypoint) {
+            return waypoint.xCoord != xCoord || waypoint.yCoord != yCoord
+          });
+        }
+      }
+      updateVisibleByCoords(xCoord, yCoord);
     }
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  function tileWaypointRelativeHeightHandler(event) {
+    const xCoord = getXCoord();
+    const yCoord = getYCoord();
+    if (areCoordsValid(xCoord, yCoord)) {
+      for (let room of floor.rooms) {
+        for (let waypoint of room.waypoints) {
+          if (waypoint.xCoord == xCoord && waypoint.yCoord == yCoord) {
+            waypoint.relativeHeight = elems.tileWaypointRelativeHeight.value & 0xff;
+          }
+        }
+      }
+      updateVisibleByCoords(xCoord, yCoord);
+    }
+    event.preventDefault();
+    event.stopPropagation();
   }
 
   function tileElevatorHandler(event) {
@@ -585,7 +685,7 @@
         floor.elevators.push(elevator);
       } else {
         floor.elevators = floor.elevators.filter(function(elevator) {
-          elevator.xCoord != xCoord || elevator.yCoord != yCoord
+          return elevator.xCoord != xCoord || elevator.yCoord != yCoord
         });
       }
       updateVisibleByCoords(xCoord, yCoord);
@@ -625,7 +725,7 @@
         floor.items.push(item);
       } else {
         floor.items = floor.items.filter(function(item) {
-          item.xCoord != xCoord || item.yCoord != yCoord
+          return item.xCoord != xCoord || item.yCoord != yCoord
         });
       }
       updateVisibleByCoords(xCoord, yCoord);
@@ -734,7 +834,7 @@
         floor.traps.push(trap);
       } else {
         floor.traps = floor.traps.filter(function(trap) {
-          trap.xCoord != xCoord || trap.yCoord != yCoord
+          return trap.xCoord != xCoord || trap.yCoord != yCoord
         });
       }
       updateVisibleByCoords(xCoord, yCoord);
@@ -820,7 +920,7 @@
         floor.monsters.push(monster);
       } else {
         floor.monsters = floor.monsters.filter(function(monster) {
-          monster.xCoord != xCoord || monster.yCoord != yCoord
+          return monster.xCoord != xCoord || monster.yCoord != yCoord
         });
       }
       updateVisibleByCoords(xCoord, yCoord);
@@ -880,9 +980,10 @@
         updateVisibleByCoords(xCoord, yCoord);
       } else {
         floor.rooms = floor.rooms.filter(function(room) {
-          room.xCoord != xCoord || room.yCoord != yCoord
+          return room.xCoord != xCoord || room.yCoord != yCoord
         });
         makeTilesReflectViewMode();
+        makeWaypointMatchCoords(xCoord, yCoord);
       }
     }
     event.preventDefault();
@@ -942,9 +1043,12 @@
   }
 
   function importTextHandler(event) {
-    const importExportField = document.getElementById('import-export');
-    floor = JSON.parse(importExportField.value);
-    processImport();
+    //catch enter being pressed in other fields which triggers this, for some reason
+    if (event.detail !== 0) {
+      const importExportField = document.getElementById('import-export');
+      floor = JSON.parse(importExportField.value);
+      processImport();
+    }
     event.preventDefault();
     event.stopPropagation();
   }
@@ -1060,6 +1164,8 @@
     elems.tileRoom = document.getElementById('tile-room');
     elems.tileRoomXSize = document.getElementById('tile-room-x-size');
     elems.tileRoomYSize = document.getElementById('tile-room-y-size');
+    elems.tileWaypoint = document.getElementById('tile-waypoint');
+    elems.tileWaypointRelativeHeight = document.getElementById('tile-waypoint-relative-height');
 
     document.getElementById('tile-appearance').addEventListener('change', appearanceChangeHandler);
     document.getElementById('tile-height').addEventListener('change', heightChangeHandler);
@@ -1100,6 +1206,15 @@
     elems.tileRoom.addEventListener('change', tileRoomHandler);
     elems.tileRoomXSize.addEventListener('change', tileRoomXSizeHandler);
     elems.tileRoomYSize.addEventListener('change', tileRoomYSizeHandler);
+    elems.tileWaypoint.addEventListener('change', tileWaypointHandler);
+    elems.tileWaypointRelativeHeight.addEventListener('change', tileWaypointRelativeHeightHandler);
+
+    elems.tileWaypointRelativeHeight.value = "";
+    elems.tileElevatorType.value = "";
+    elems.tileItemCategory.value = "";
+    elems.tileTrapId.value = "";
+    elems.tileMonsterId.value = "";
+
     return true;
   }
 
