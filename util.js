@@ -119,6 +119,16 @@
     this.writeWord(address, changeEndianWord(val))
   }
 
+  checked.prototype.writeSectors = function writeSectors(firstSector, numSectors, val) {
+    let byteIndex = 0
+    for (let sectorIndex = 0; sectorIndex < numSectors ; sectorIndex++) {
+      let address = constants.headerSize + constants.sectorSize * (sectorIndex + firstSector)
+      for (let countWithinSector = 0; countWithinSector < constants.sectorDataSize; countWithinSector++) {
+        this.writeByte(address++, val[byteIndex++])
+      }
+    }
+  }
+
   checked.prototype.sum = function sum() {
     const state = JSON.stringify(this.writes)
     let hex = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(state))

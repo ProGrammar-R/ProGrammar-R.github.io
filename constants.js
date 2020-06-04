@@ -190,6 +190,8 @@
     spells: spells,
     lcgConstants: lcgConstants,
     sectorSize: 0x930,
+    sectorDataSize: 0x800,
+    headerSize: 0x18,
   }
   if (self) {
     self.adRando = Object.assign(self.adRando || {}, {
