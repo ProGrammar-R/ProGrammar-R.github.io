@@ -270,6 +270,19 @@
   }
 
   function writeTiles() {
+    floor.tiles = floor.tiles.sort(function compare(a, b) {
+      if (a.yCoord < b.yCoord) {
+        return -1;
+      } else if (a.yCoord > b.yCoord) {
+        return 1;
+      }
+      if (a.xCoord < b.xCoord) {
+        return -1;
+      } else if (a.xCoord > b.xCoord) {
+        return 1;
+      }
+      return 0;
+    })
     const unpackedTiles = convertTilesToArray();
     packData(unpackedTiles);
   }

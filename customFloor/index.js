@@ -311,6 +311,19 @@
   }
 
   function processImport() {
+    floor.tiles = floor.tiles.sort(function compare(a, b) {
+      if (a.yCoord < b.yCoord) {
+        return -1;
+      } else if (a.yCoord > b.yCoord) {
+        return 1;
+      }
+      if (a.xCoord < b.xCoord) {
+        return -1;
+      } else if (a.xCoord > b.xCoord) {
+        return 1;
+      }
+      return 0;
+    })
     makeTilesReflectViewMode();
     document.getElementById('spawns-items').checked = floor.spawnRandomItems;
     document.getElementById('spawns-traps').checked = floor.spawnRandomTraps;
