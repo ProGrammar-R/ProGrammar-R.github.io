@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <title>Azure Dreams PS1 (De-)Randomizer changelog</title>
+    <link rel="stylesheet"
+          href="https://unpkg.com/purecss@1.0.0/build/pure-min.css">
+    <link rel="stylesheet"
+          href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
+    <link rel="stylesheet" href="index.css">
+    <link rel="icon" type="image/png" href="../favicon.png">
+  </head>
+  <body>
+    <div id="content" style="background-color: white;">
+      <h1>Custom floor help</h1>
+      <h2>View mode</h2>
+      <div>
+        <ul>
+          <li>Appearance: shows what each tile looks like. Some tiles may look the same in the editor but have different appearance IDs because
+            they incorporate elements that can't be shown in the editor, such as an archway overhead.
+          </li>
+          <li>Height: colors each tile based on height. Blue is 0; tiles get redder the lower they are, and greener the higher they are.
+          </li>
+          The following modes all color tiles with a non-empty appearance as dark green, except as specified.
+          <li>Rooms: shows rooms in red, with waypoints colored green with a number on them indicating their relative height.
+          </li>
+          <li>Elevators: shows elevators in green.
+          </li>
+          <li>Items: shows items in blue.
+          </li>
+          <li>Traps: shows traps in fuchsia.
+          </li>
+          <li>Monsters: shows monsters in red.
+          </li>
+        </ul>
+      </div>
+      <h2>Edit mode</h2>
+      <div>
+        <ul>
+          <li>Apply: hotkey A. Clicking on a tile will apply the currently specified height, appearance, and tile status to that tile.
+          </li>
+          <li>Select: hotkey S. Clicking on a tile will fill the height, appearance, and tile status field with that tile's values.
+          </li>
+        </ul>
+      </div>
+      <h2>Tile status</h2>
+      <div>
+        <ul>
+          <li>No tile: tile acts as if no tile was there (it had appearance 0). Used for walls, pillars, etc.
+          </li>
+          <li>No spawns: random monsters, items, and traps will not spawn here.
+          </li>
+          <li>Water: tile contains water, so only flying monsters can path over it.
+          </li>
+        </ul>
+      </div>
+      <h2>Height</h2>
+      <div>
+        The height of the tile off the ground. This should generally be set in increments of 32.
+        The minimum height is -32,768 and maximum height is 32,767.
+      </div>
+      <h2>Appearance</h2>
+      <div>
+        What each tile looks like. An appearance of 0 means an empty tile. An appearance of 3 is used around the perimeter of the floor.
+        Some tiles may look the same in the editor but have different appearance IDs because
+        they incorporate elements that can't be shown in the editor, such as an archway overhead.
+      </div>
+      <h2>Room</h2>
+      <div>
+        Rooms must be manually specified so monsters behave accordingly.
+            To select a room, click the top-left corner tile (use the "Rooms" view mode to see where that is).
+            Generally rooms are specified to start just inside the walls, but the tutoirial floor acts differently.
+            Rooms should have associated waypoints set at the entrances and exits and may need intermediates.
+            The game supports up to 36 rooms in the same floor.
+        <ul>
+          <li>Checkbox: check to create a new room with the selected tile as the top-left corner.
+            Uncheck to delete the room and any associated waypoints.
+          </li>
+          <li>xSize: the room's width (along the X axis) in tiles. Must be at least 1.
+          </li>
+          <li>ySize: the room's length (along the Y axis) in tiles. Must be at least 1.
+          </li>
+        </ul>
+      </div>
+      <h2>Waypoint</h2>
+      <div>
+        Waypoints are used to define entrances and exits of a room, and intermediate points if necessary. Waypoints are used by monster AI.
+        <ul>
+          <li>Checkbox: check to create a new waypoint; it will automatically be associated with the nearest room. Uncheck to delete the waypoint.
+          </li>
+          <li>Relative height: A monster will only traverse to waypoints within +/-1 relative height as where it entered.
+            As such, set the relative height of all waypoints to 0, except if the following applies.
+            To indicate that a waypoint is higher up and can't be reached directly, give it a relative height of 2.
+            To indicate that monsters should travel to this waypoint as an intermediate between relative heights of 0 and 2,
+            give it a relative height of 1.
+          </li>
+        </ul>
+      </div>
+      <h2>Item</h2>
+      <div>
+        To be described.
+        <ul>
+          <li>Quality: the +/- on equipment, number of charges on a ball, or the percentage from 100% that an egg has left to warm (e.g. 1 is 99% warm).
+          </li>
+        </ul>
+      </div>
+      <h2>Trap</h2>
+      <div>
+        To be described.
+        <ul>
+          <li>Level: only available for monster dens. Specifies how many enemies will spawn, max 32.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>

@@ -464,8 +464,8 @@
     elems.tileTrapHidden.disabled = !enabled;
     elems.tileTrapNotAttackable.disabled = !enabled;
     if (!enabled) {
-      elems.tileTrapHidden.value = false;
-      elems.tileTrapNotAttackable.value = false;
+      elems.tileTrapHidden.checked = false;
+      elems.tileTrapNotAttackable.checked = false;
       elems.tileTrapLevel.hidden = true;
     }
   }
@@ -546,8 +546,8 @@
         elems.tileItemId.value = item.id;
         elems.tileItemCategory.value = item.category;
         elems.tileItemQuality.value = item.quality;
-        elems.tileItemUnidentified.checked = item.status & itemUnidentified !== 0;
-        elems.tileItemCursed.checked = item.status & itemCursed !== 0;
+        elems.tileItemUnidentified.checked = (item.status & itemUnidentified) !== 0;
+        elems.tileItemCursed.checked = (item.status & itemCursed) !== 0;
       }
     }
     if (!foundMatch && !!elems.tileItem.checked) {
@@ -566,8 +566,8 @@
           setTrapEnabled(true);
         }
         elems.tileTrapId.value = trap.id;
-        elems.tileTrapHidden.checked = trap.status & itemUnidentified !== 0;
-        elems.tileTrapNotAttackable.checked = trap.status & itemCursed !== 0;
+        elems.tileTrapHidden.checked = (trap.status & itemUnidentified) !== 0;
+        elems.tileTrapNotAttackable.checked = (trap.status & itemCursed) !== 0;
         elems.tileTrapLevel.hidden = trap.id != constants.TRAP_TYPES.monsterDen;
         elems.tileTrapLevel.value = trap.level;
       }
