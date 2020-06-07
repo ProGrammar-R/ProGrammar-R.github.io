@@ -31,7 +31,7 @@ html, body {
 
 .tile-row {
   padding: 0 0;
-  height: 1.5625%;
+  height: 0.78125%;
 }
 
 .t03 {
@@ -70,9 +70,9 @@ html, body {
   width: 3em;
 }
 
-/* .color-0 {
-  background-color: black;
-} */
+.transparency-color {
+  background-color: lightslategray;
+}
 
 h1 {
     clear: both;
