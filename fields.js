@@ -161,12 +161,13 @@
       if (this.values) {
         const self = this;
         Object.getOwnPropertyNames(this.values).forEach(function(valueName) {
-          const option = document.createElement('option')
-          option.value = self.values[valueName]
-          option.innerText = valueName
-          self.elem.appendChild(option)
+          const option = document.createElement('option');
+          option.value = self.values[valueName];
+          option.innerText = valueName;
+          self.elem.appendChild(option);
         })
       }
+      this.set(this.getDefault());
     }
 
     setIfNext(optionString, index) {
