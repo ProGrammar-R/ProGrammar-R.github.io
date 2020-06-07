@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <title>Azure Dreams PS1 (De-)Randomizer floor editor</title>
+    <link rel="stylesheet"
+          href="https://unpkg.com/purecss@1.0.0/build/pure-min.css">
+    <link rel="stylesheet"
+          href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
+    <link rel="stylesheet" href="index.css">
+    <link rel="icon" type="image/png" href="../favicon.png">
+  </head>
+  <body>
+    <div id="content" class="hflow">
+      <div id="sprite-area">
+        
+      </div>
+      <div id="side-bar">
+        <form id="form" class="pure-g">
+          <div class="space-down" style="width:100%">
+            <div class="pure-u-6-24 space-down">
+              <label for="transparency-color">Transparency Color</label>
+              <input id="transparency-color" type="color">
+            </div>
+            <div class="pure-u-8-24 space-down">
+              <label for="tile-monster-id">Monster</label>
+              <select id="tile-monster-id" name="monster-id" disabled>
+                <option value="" disabled>--</option>
+              </select>
+            </div>
+            <div class="pure-u-6-24 space-down">
+              <label for="tile-monster-element">Element</label>
+              <select id="tile-monster-element" name="monster-element" disabled>
+                <option value="" disabled>--</option>
+                <!-- <option value="0" disabled>Enemy</option>
+                <option value="1" disabled>Fire</option>
+                <option value="2" disabled>Water</option>
+                <option value="3" disabled>Wind</option> -->
+              </select>
+            </div>
+          </div>
+          <div class="pure-u-1 space-down">
+            Palette colors:
+          </div>
+          <div id="palette-colors" class="pure-u-6-24 space-down">
+            <label for="color-0">0</label>
+            <input id="color-0" type="color" disabled>
+          </div>
+          
+          <div class="pure-u-1 space-down">
+            <label for="import-export">Import/Export:</label>
+          </div>
+          <div class="pure-u-1">
+            <textarea id="import-export" cols="40" rows="5"></textarea>
+          </div>
+          <div class="pure-u-12-24">
+            <!-- <label for="import-file">Import file</label> -->
+            <input id="import-file" type="file" accept=".json"></input>
+          </div>
+          <div class="pure-u-12-24">
+            <!-- <label for="import-file">Import file</label> -->
+            <input id="import-bin-file" type="file" accept=".bin"></input>
+          </div>
+          <div class="pure-u-4-24">
+            <button id="import-text">Import text</button>
+          </div>
+          <div class="pure-u-4-24">
+            <button id="export-text">Export text</button>
+          </div>
+          <div class="pure-u-4-24">
+            <button id="export-file">Export file</button>
+            <a id="download-file" style="display:none"></a>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script src="../constants.js"></script>
+    <script src="../monsters.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>
