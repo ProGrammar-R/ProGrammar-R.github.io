@@ -35,7 +35,7 @@
   
   const tiles = [];
   const elems = {};
-  const monsterPalettes = {};
+  let monsterPalettes = {};
   let romArrayBuffer;
   let colorStyles;
 
@@ -111,7 +111,7 @@
         const palette = [];
         let paletteColorIndex = 0;
         if (paletteData.getUint16(paletteColorIndex * 2 + paletteType * 0x80, true) !== 0) {
-          alert('color index 0 is not transparent');
+          logToOutput('Color index 0 is not transparent');
         }
         for (; paletteColorIndex < colorsPerPalette; paletteColorIndex++) {
           const read = paletteData.getUint16(paletteColorIndex * 2 + paletteType * 0x80, true);
@@ -171,15 +171,22 @@
     event.stopPropagation();
   }
 
+  function tryParsingJson() {
+    try {
+      monsterPalettes = JSON.parse(elems.importExport.value);
+      updatePaletteColorsToMatchPaletteType();
+      updateTilesToMatchPaletteAndPaletteType();
+    } catch (error) {
+      logToOutput(error.message);
+    }
+  }
+
   function importFileHandler(event) {
     if (elems.importFile.files[0]) {
       const reader = new FileReader();
       reader.onload = function() {
-        const importExportField = document.getElementById('import-export');
-        importExportField.value = this.result;
-        monsterPalettes = JSON.parse(importExportField.value);
-        updatePaletteColorsToMatchPaletteType();
-        updateTilesToMatchPaletteAndPaletteType();
+        elems.importExport.value = this.result;
+        tryParsingJson();
       }
       reader.readAsText(elems.importFile.files[0]);
     }
@@ -190,18 +197,14 @@
   function importTextHandler(event) {
     //catch enter being pressed in other fields which triggers this, for some reason
     if (event.detail !== 0) {
-      const importExportField = document.getElementById('import-export');
-      monsterPalettes = JSON.parse(importExportField.value);
-      updatePaletteColorsToMatchPaletteType();
-      updateTilesToMatchPaletteAndPaletteType();
+      tryParsingJson();
     }
     event.preventDefault();
     event.stopPropagation();
   }
 
   function exportTextHandler(event) {
-    const importExportTextbox = document.getElementById('import-export');
-    importExportTextbox.value = JSON.stringify(monsterPalettes);
+    elems.importExport.value = JSON.stringify(monsterPalettes);
     event.preventDefault();
     event.stopPropagation();
   }
@@ -219,6 +222,12 @@
     event.stopPropagation();
   }
 
+  async function logToOutput(message) {
+    elems.importOutput.value = message;
+    await new Promise(handler => setTimeout(handler, 5000));
+    elems.importOutput.value = '';
+  }
+
   function keyPressHandler(event) {
     const keyCode = event.which;
     if (keyCode != null) {
@@ -231,8 +240,9 @@
 
   function setUpPage() {
     document.onkeypress = keyPressHandler;
-
+    elems.importExport = document.getElementById('import-export');
     elems.spriteArea = document.getElementById('sprite-area');
+    elems.importOutput = document.getElementById('import-output');
     elems.importBinFile = document.getElementById('import-bin-file');
     elems.importFile = document.getElementById('import-file');
     elems.importText = document.getElementById('import-text');
@@ -253,7 +263,9 @@
         colorStyles = stylesheet;
       }
     }
-    for (let styleIndex = 0; styleIndex < 16; styleIndex++) {
+    colorStyles.insertRule('.color-0 {opacity: 0;}', 0);
+
+    for (let styleIndex = 1; styleIndex < 16; styleIndex++) {
       colorStyles.insertRule('.color-'+styleIndex.toString()+' {background-color: #778899;}', styleIndex);
     }
     
@@ -294,7 +306,7 @@
       const elementId = 'palette-color-' + paletteColorIndex.toString();
       const label = document.createElement('label');
       label.for = elementId;
-      label.innerText = paletteColorIndex.toString();
+      label.innerText = paletteColorIndex.toString(HEX_FORMAT).toUpperCase();
       div.appendChild(label);
       const input = document.createElement('input');
       input.type = 'color';

@@ -38,7 +38,7 @@ html, body {
   background-color: #222;
 }
 
-#floor-area {
+#sprite-area {
   width: 70%;
 }
 
@@ -60,6 +60,10 @@ html, body {
 #import-export {
   width: 100%;
   height: 6em;
+}
+
+#import-output {
+  font-weight: bold;
 }
 
 .semi-narrow-input {
