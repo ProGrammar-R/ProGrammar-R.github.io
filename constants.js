@@ -180,6 +180,23 @@
 
   const lcgConstants = {modulus: 0x1fffFFFFffff, multiplier: 0x5DEECE66D, increment: 11,}
 
+  const paletteTypes = {
+    Enemy: 0,
+    Fire: 1,
+    Water: 2,
+    Wind: 3
+  };
+
+  const paletteInfo = {
+    firstMonsterSector: 0x56d6,
+    animationDataSectors: 0x1a,
+    spriteDataSectors: 0x10,
+    paletteDataSectors: 0x1,
+    colorsPerPalette: 16,
+    paletteTypes: paletteTypes,
+    numPaletteTypes: Object.getOwnPropertyNames(paletteTypes).length,
+  }
+
   const exports = {
     defaultOptions: defaultOptions,
     TYPE: TYPE,
@@ -189,6 +206,7 @@
     monsterStats: monsterStats,
     spells: spells,
     lcgConstants: lcgConstants,
+    paletteInfo: paletteInfo,
     sectorSize: 0x930,
     sectorDataSize: 0x800,
     headerSize: 0x18,

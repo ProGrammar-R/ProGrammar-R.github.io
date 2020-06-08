@@ -15,27 +15,11 @@
   const sectorsToShow = 4;
   const pixelsPerTile = 8;
   const tilesPerAxis = 16;
-  const colorsPerPalette = 16;
   const pixelsPerAxis = pixelsPerTile * tilesPerAxis;
-  const urlText = window.location.href;
-  const urlBase = window.location.href.match('.*/');
-  const clearURL = new URL(urlBase + 'clearPixel.png');
-  const standardBackgroundColor = 'background-color:#044020';
-  const paletteTypes = {
-    Enemy: 0,
-    Fire: 1,
-    Water: 2,
-    Wind: 3
-  };
-  const numPaletteTypes = Object.getOwnPropertyNames(paletteTypes).length;
-  const firstMonsterSector = 0x56d6;
-  const animationDataSectors = 0x1a;
-  const spriteDataSectors = 0x10;
-  const paletteDataSectors = 0x1;
   
   const tiles = [];
   const elems = {};
-  let monsterPalettes = {};
+  let allPalettes = {};
   let romArrayBuffer;
   let colorStyles;
 
@@ -63,11 +47,39 @@
   function tileHandler(event) {
     const classNameTokens = event.target.className.split('-');
     const paletteColorIndex = parseInt(classNameTokens[classNameTokens.length - 1]);
-    for (let colorClickedLabelIndex = 1; colorClickedLabelIndex < colorsPerPalette; colorClickedLabelIndex++) {
+    for (let colorClickedLabelIndex = 1; colorClickedLabelIndex < constants.paletteInfo.colorsPerPalette; colorClickedLabelIndex++) {
       elems.colorLastClickedLabels[colorClickedLabelIndex].hidden = colorClickedLabelIndex !== paletteColorIndex;
     }
     event.preventDefault();
     event.stopPropagation();
+  }
+
+  function getNearestFiveBitColorForChannel(singleColor) {
+    if (singleColor >= 0xf8) {
+      return 0xf8;
+    }
+    if ((singleColor & 0x7) < 4) {
+      return singleColor & 0xf8;
+    }
+    return (singleColor + (8 - (singleColor & 0x7))) & 0xff;
+  }
+
+  function getNearestFiveBitColor(color) {
+    let closestColor = color;
+    if (color.match('#[0-9a-fA-F]{6}')) {
+      const colorAsNumber = parseInt(color.replace('#', '0x'));
+      const r = getNearestFiveBitColorForChannel((colorAsNumber & 0xff0000) >>> 16);
+      const g = getNearestFiveBitColorForChannel((colorAsNumber & 0x00ff00) >>> 8);
+      const b = getNearestFiveBitColorForChannel(colorAsNumber & 0x0000ff);
+      closestColor = '#' + ensureHexStringHasTwoDigits(r.toString(HEX_FORMAT)) +
+                                 ensureHexStringHasTwoDigits(g.toString(HEX_FORMAT)) +
+                                 ensureHexStringHasTwoDigits(b.toString(HEX_FORMAT));
+      //special logic to avoid transparency
+      if (closestColor === '#000000') {
+        closestColor = '#080808';
+      }
+    }
+    return closestColor;
   }
 
   function transparencyColorHandler(event) {
@@ -79,15 +91,15 @@
   }
 
   function updatePaletteColorsToMatchPaletteType() {
-    for (let paletteColorIndex = 1; paletteColorIndex < colorsPerPalette; paletteColorIndex++) {
-      document.getElementById('palette-color-'+ paletteColorIndex.toString()).value = monsterPalettes[getMonsterId()][getPaletteType()][paletteColorIndex];
+    for (let paletteColorIndex = 1; paletteColorIndex < constants.paletteInfo.colorsPerPalette; paletteColorIndex++) {
+      document.getElementById('palette-color-'+ paletteColorIndex.toString()).value = allPalettes.monsters[getMonsterId()][getPaletteType()][paletteColorIndex];
     }
   }
 
   function updateTilesToMatchPaletteAndPaletteType() {
-    const palettesByType = monsterPalettes[getMonsterId()];
+    const palettesByType = allPalettes.monsters[getMonsterId()];
     const palettes = palettesByType[getPaletteType()];
-    for (let paletteColorIndex = 1; paletteColorIndex < colorsPerPalette; paletteColorIndex++) {
+    for (let paletteColorIndex = 1; paletteColorIndex < constants.paletteInfo.colorsPerPalette; paletteColorIndex++) {
       colorStyles.deleteRule(paletteColorIndex);
       colorStyles.insertRule('.color-'+paletteColorIndex.toString()+' { background-color: '+ palettes[paletteColorIndex] + '}', paletteColorIndex);
     }
@@ -95,7 +107,9 @@
 
   function makePixelsMatchChosenMonster() {
     const monsterId = getMonsterId();
-    const spritesLocation = (firstMonsterSector + (monsterId - 1) * (animationDataSectors + spriteDataSectors + paletteDataSectors) + animationDataSectors) * constants.sectorSize + constants.headerSize;
+    const spritesLocation = (constants.paletteInfo.firstMonsterSector + (monsterId - 1) *
+      (constants.paletteInfo.animationDataSectors + constants.paletteInfo.spriteDataSectors + constants.paletteInfo.paletteDataSectors) +
+      constants.paletteInfo.animationDataSectors) * constants.sectorSize + constants.headerSize;
     const sprites = new DataView(romArrayBuffer, spritesLocation, sectorsToShow * constants.sectorSize);
     for (let spriteSet = 0; spriteSet < sectorsToShow; spriteSet++) {
       for (let offset = 0; offset < constants.sectorDataSize; offset++) {
@@ -104,16 +118,19 @@
         tiles[(spriteSet * constants.sectorDataSize + offset)*2 + 1].className = 'floor-tile color-' + (value >>> 4).toString();
       }
     }
-    if (!monsterPalettes[monsterId]) {
-      const paletteData = new DataView(romArrayBuffer, spritesLocation + spriteDataSectors * constants.sectorSize, constants.sectorDataSize);
+    if (!allPalettes.monsters) {
+      allPalettes.monsters = {};
+    }
+    if (!allPalettes.monsters[monsterId]) {
+      const paletteData = new DataView(romArrayBuffer, spritesLocation + constants.paletteInfo.spriteDataSectors * constants.sectorSize, constants.sectorDataSize);
       const monsterPalette = {};
-      for (let paletteType = 0; paletteType < numPaletteTypes; paletteType++) {
+      for (let paletteType = 0; paletteType < constants.paletteInfo.numPaletteTypes; paletteType++) {
         const palette = [];
         let paletteColorIndex = 0;
         if (paletteData.getUint16(paletteColorIndex * 2 + paletteType * 0x80, true) !== 0) {
           logToOutput('Color index 0 is not transparent');
         }
-        for (; paletteColorIndex < colorsPerPalette; paletteColorIndex++) {
+        for (; paletteColorIndex < constants.paletteInfo.colorsPerPalette; paletteColorIndex++) {
           const read = paletteData.getUint16(paletteColorIndex * 2 + paletteType * 0x80, true);
           const b = (read & 0x7fff) >>> 10;
           const g = (read & 0x03ff) >>> 5;
@@ -122,7 +139,7 @@
         }
         monsterPalette[paletteType] = palette;
       }
-      monsterPalettes[monsterId] = monsterPalette;
+      allPalettes.monsters[monsterId] = monsterPalette;
     }
     updatePaletteColorsToMatchPaletteType();
     updateTilesToMatchPaletteAndPaletteType(); 
@@ -144,7 +161,9 @@
   function paletteColorHandler(event) {
     const clicked = event.target;
     const clickedId = clicked.id.split('-')[2];
-    monsterPalettes[getMonsterId()][getPaletteType()][clickedId] = clicked.value;
+    const snappedColor = getNearestFiveBitColor(clicked.value);
+    clicked.value = snappedColor;
+    allPalettes.monsters[getMonsterId()][getPaletteType()][clickedId] = clicked.value;
     updateTilesToMatchPaletteAndPaletteType();
     event.preventDefault();
     event.stopPropagation();
@@ -160,6 +179,7 @@
 
   function importBinFileHandler(event) {
     if (elems.importBinFile.files[0]) {
+      logToOutput('Reading file, please wait...');
       const reader = new FileReader();
       reader.onload = function() {
         romArrayBuffer = this.result;
@@ -173,7 +193,7 @@
 
   function tryParsingJson() {
     try {
-      monsterPalettes = JSON.parse(elems.importExport.value);
+      allPalettes = JSON.parse(elems.importExport.value);
       updatePaletteColorsToMatchPaletteType();
       updateTilesToMatchPaletteAndPaletteType();
     } catch (error) {
@@ -204,13 +224,13 @@
   }
 
   function exportTextHandler(event) {
-    elems.importExport.value = JSON.stringify(monsterPalettes);
+    elems.importExport.value = JSON.stringify(allPalettes);
     event.preventDefault();
     event.stopPropagation();
   }
 
   function exportFileHandler(event) {
-    const urlDownload = URL.createObjectURL(new Blob([JSON.stringify(monsterPalettes)], {
+    const urlDownload = URL.createObjectURL(new Blob([JSON.stringify(allPalettes)], {
       type: 'text/json; charset=UTF-8',
     }));
     const downloadFileElem = document.getElementById('download-file');
@@ -279,6 +299,7 @@
         tile.tileNumber = tileNumber;
         tile.id = 'tile-' + tileNumber;
         tile.className = 'floor-tile color-0';
+        tile.tabIndex = -1;
         //tile.classList = ['floor-tile', 'color-transparent'];
         tile.xCoord = tileIndex;
         tile.yCoord = row;
@@ -300,7 +321,7 @@
     elems.tileMonsterElement.addEventListener('change', tileMonsterElementHandler);
 
     elems.colorLastClickedLabels = [document.getElementById('palette-color-note')];
-    for (let paletteColorIndex = 1; paletteColorIndex < colorsPerPalette; paletteColorIndex++) {
+    for (let paletteColorIndex = 1; paletteColorIndex < constants.paletteInfo.colorsPerPalette; paletteColorIndex++) {
       const div = document.createElement('div');
       div.className = 'pure-u-1 hflow';
       const elementId = 'palette-color-' + paletteColorIndex.toString();
@@ -311,6 +332,7 @@
       const input = document.createElement('input');
       input.type = 'color';
       input.id = elementId;
+      input.className = 'space-right';
       input.addEventListener('change', paletteColorHandler, false);
       input.addEventListener('input', paletteColorHandler, false);
       div.appendChild(input);
@@ -329,9 +351,9 @@
       option.innerText = monster.name;
       elems.tileMonsterId.appendChild(option);
     })
-    Object.getOwnPropertyNames(paletteTypes).forEach(function(paletteType) {
+    Object.getOwnPropertyNames(constants.paletteInfo.paletteTypes).forEach(function(paletteType) {
       const option = document.createElement('option');
-      option.value = paletteTypes[paletteType];
+      option.value = constants.paletteInfo.paletteTypes[paletteType];
       option.id = 'palette-type-' +paletteType;
       option.innerText = paletteType;
       elems.tileMonsterElement.appendChild(option);

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <title>Azure Dreams PS1 (De-)Randomizer changelog</title>
+    <link rel="stylesheet"
+          href="https://unpkg.com/purecss@1.0.0/build/pure-min.css">
+    <link rel="stylesheet"
+          href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
+    <link rel="stylesheet" href="index.css">
+    <link rel="icon" type="image/png" href="../favicon.png">
+  </head>
+  <body>
+    <div id="content" style="background-color: white;">
+      <h1>Custom palettes help</h1>
+      <h2>About</h2>
+      <div>
+        This is a tool to improve the accessibility of Azure Dreams (PS1) by modifying some in-game colors.<br>
+        It can be difficult for players to distinguish the elements of some monsters based on color, especially for players with
+        color vision deficiency or color blindness. This feature allows users to create a set of custom palettes for each monster and element
+        combination that meets their particular needs. Using custom palettes does not change the checksum generated, so players with different
+        color needs can use the same seed URL and set their own custom palette file without getting a checksum error.<br>
+        In the future, this tool will hopefully be expanded to include things like mini-map colors.
+      </div>
+      <h2>Accessibility</h2>
+      <div>
+        I have designed this tool with accessibility in mind, with the intention that users with any level of color vision
+        (or none at all) may use it successfully. Please see "Helpful tips" for suggestions on how to improve your experience.
+        This tool also supports keyboard-only and mouse-only navigation.<br>
+        If you have an accessibility or other type of concern, please post a message in the
+        <a href="https://discordapp.com/invite/m2dB3m7">#randomizer channel of the Azure Dreams Discord</a> and '@pro_grammar'.
+      </div>
+      <h2>How To</h2>
+      <div>
+        <ol>
+          <li>Import your NTSC-U copy of <a href="http://redump.org/disc/2424/"><i>Azure Dreams</i> (PS1, SLUS-00614)</a> in BIN format
+             by clicking the button labeled "Import BIN file" and selecting the file.
+          </li>
+          <li>Please wait a moment; the process of reading the file might take several seconds.
+            If the file was read successfully, a portion of the monster Hikewne's sprite sheet should appear after a short while.
+            If the file was not read successfully, the page might reload or an error message might appear near "Import/Export".
+          </li>
+          <li>(Optional) If you already have a palette file, you may import it by clicking on the button labeled "Import palette file".
+          </li>
+          <li>Modify the sprite colors as desired (see "Modifying palettes" below).
+          </li>
+          <li>When you are finished or want to stop for the moment, click "Export palette file" to download your work. You may come back
+            later and continue where you left off by repeating this process, being sure in step 3 to import the palette file you've just downloaded.
+          </li>
+          <li>To make your custom palettes appear in-game, go to the <a href="..">randomizer home page</a> or click the randomizer seed URL if participating
+            in a race. Provide your BIN file as usual, then select your custom palettes file under "Customizations > Custom palettes"
+            before clicking "Randomize". Generate your CUE file as usual and play.
+          </li>
+        </ul>
+      </div>
+      <h2>Modifying palettes</h2>
+      <h3>Only available after importing your BIN</h3>
+      <div>
+        <ul>
+          <li>Monster - Choose which monster you would like to modify. The spritesheet for that monster should appear on the left after a moment.
+          </li>
+          <li>Colorway - Monsters can appear in one of four different colorways: default enemy, fire, water, and wind. In the original game,
+            all enemy monsters will have the "enemy" colorway, and your familiars will always have the colorway of their current element.
+            When using the randomizer's "Randomize enemy elements" feature, all monsters will have the colorway that corresponds to their element,
+            so players can react to the element accordingly.<br>
+            Change this setting to show what the monster looks like in the colorway selected. Modifying the palette colors will modify that
+            particular colorway.
+          </li>
+          <li>
+            Background color - Choose what background color should appear behind the spritesheet, where the spritesheet has transparency.
+            This does not affect the palette used in-game at all- it is only to make it easier to use the editor. The color of the sidebar will
+            stay the same to keep text legible.
+          </li>
+          <li>
+            Palette colors - The 16 colors that are used for the selected monster in the selected colorway. The sprites are drawn with
+            each pixel having one of 16 different values. One value, value 0, is always reserved for transparency. Pixels with one of the
+            other 15 values are colored using the color defined for that value.<br>
+            Click one of the colors labeled 1 through F and select a new value. With the color selection window open,
+            you can undo your change by pressing "Escape" on your keyboard, or keep your change by pressing enter or clicking outside
+            the box to close the color selection window.<br>
+            <i>Azure Dreams</i> uses 5 bits per color channel compared to the 8 allowed by browsers, so the value you choose will be rounded to the nearest
+            available value.
+          </li>
+          <li>
+            Spritesheet - This area on the left shows the sprites in game. Click on any non-transparent pixel in the spritesheet will cause a message
+            to appear next to the color value used by that pixel. Click on any transparent pixel in the spritesheet (the background color)
+            to hide this message.
+          </li>
+        </ul>
+      </div>
+      <h2>Import/Export</h2>
+      <div>
+        <ul>
+          <li>
+            Import BIN file - The first step to using the tool. See "How To" above.
+          </li>
+          <li>
+            Import palette file - Used to import a previously-created palette file. This file is copied into memory; any changes you make
+            will not directly change an imported file. Instead, click "Export palette file" to create a new file with the changes.
+          </li>
+          <li>
+            Import text - Clicking this will replace all palettes currently in memory with the palette data in the import/export text area.
+            This can be useful if you have copied palette data to your clipboard instead of downloading it to a file. If you have clicked
+            "Export text" to fill the import/export text area, clicking this will restore the palettes to their state when they were exported.
+          </li>
+          <li>
+            Export text - Clicking this will output all palettes currently in memory to the import/export text area.
+            This can be useful to take a temporary snapshot, so if you don't like a change, you can revert it by clicking "Import text".
+          </li>
+          <li>
+            Export palette file - Download a file containing any palettes from memory. This can be used with the randomizer, or imported
+            again to make further changes. If you import a palette file and make changes, the imported palette file will remain unchanged.
+            You will need to click "Export palette file" to produce a new file with the changes.
+          </li>
+        </ul>
+      </div>
+      <h2>Helpful tips</h2>
+      <h3>(especially for users with color vision deficiency, a.k.a. color blindness)</h3>
+      <div>
+        <ul>
+          <li>To see what pixels use a particular color value, change that color
+            back and forth between a light and dark color, pressing Escape to restore the color if desired.
+          </li>
+          <li>For the opposite, i.e. to see what color value a particular pixel in the spritesheet uses, just click on it.
+            A message will appear next to the color value you clicked.
+            If no such message appears, then you have clicked on a transparent pixel (which uses the background color), as clicking on the background color
+            hides this message.
+            You can verify that this was a transparent by either changing the background color or clicking on a non-transparent first to bring up the message
+            then clicking on the spritesheet pixel in question, which should make the message go away. 
+          </li>
+          <li>
+            To know what color a particular palette color is, just click it. Modern browsers like Firefox will display the amount of red, green, and blue
+            in the color selection window that appears.
+          </li>
+          <li>You can freely set the background color of the sprite area as you work to increase the contrast with the other colors.
+            It has no effect on the palette file you will generate.
+          </li>
+          <li>
+            This tool will not work properly on old browsers like Internet Explorer.
+            Make sure you are using a modern desktop browser like (at the time of writing)
+            <a href="https://www.mozilla.org/en-US/firefox/new/">Mozilla Firefox</a>.
+          </li>
+        </ul>
+      </div>
+      <h2>Special cases</h2>
+      <ul>
+        <li>
+          Since true black is used for transparency, attempting to select it will cause the color to be snapped to the next closest shade, #080808.
+        </li>
+        <li>
+          Kewne and Hikewne always use the default ("enemy") colorway, even if changed to another element. These have been left as editable in case
+          a future update to the randomizer allows them change their colorways.
+        </li>
+        <li>
+          The model of Kewne in town is completely separate and thus not changed.
+        </li>
+        <li>
+          Monster portraits in the status screen are not changed.
+        </li>
+      </ul>
+    </div>
+  </body>
+</html>

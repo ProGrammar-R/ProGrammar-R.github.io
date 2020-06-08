@@ -57,6 +57,10 @@ html, body {
   padding-top: 1em;
 }
 
+.space-right {
+  margin-left: 0.6em;
+}
+
 #import-export {
   width: 100%;
   height: 6em;

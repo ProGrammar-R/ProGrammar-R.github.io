@@ -258,6 +258,18 @@
     }
   }
 
+  function customPalettesFileChange(event) {
+    event.preventDefault()
+    event.stopPropagation()
+    const reader = new FileReader()
+    if (elems.customPalettesFile.files[0]) {
+      reader.onload = function() {
+        elems.customPalettesFile.data = JSON.parse(this.result);
+      }
+      reader.readAsText(elems.customPalettesFile.files[0]);
+    }
+  }
+
   function dragLeaveListener(event) {
     elems.target.classList.remove('active')
   }
@@ -318,6 +330,7 @@
     lastSeed = seed
     info[1]['Seed'] = seed
     const customFloor = elems.customFloorFile.data
+    const customPalettes = elems.customPalettesFile.data
     const reader = new FileReader()
     reader.onload = function() {
       worker.postMessage({
@@ -329,6 +342,7 @@
         info: info,
         userSeed: userSeed,
         customFloor: customFloor,
+        customPalettes: customPalettes,
       }, [this.result])
     }
     reader.readAsArrayBuffer(selectedFile)
@@ -750,6 +764,7 @@
       experimentalChanges: document.getElementById('experimental-changes'),
       barongsContainer: document.getElementById('barongs-container'),
       customFloorFile: document.getElementById('custom-floor-file'),
+      customPalettesFile: document.getElementById('custom-palettes-file'),
       download: document.getElementById('download'),
       downloadCue: document.getElementById('downloadCue'),
       loader: document.getElementById('loader'),
@@ -770,6 +785,7 @@
     elems.clear.addEventListener('click', clearHandler)
     elems.appendSeed.addEventListener('change', appendSeedChange)
     elems.customFloorFile.addEventListener('change', customFloorFileChange)
+    elems.customPalettesFile.addEventListener('change', customPalettesFileChange)
     elems.experimentalChanges.addEventListener('change', experimentalChangesChange)
     fields.forEachField(function(field, fieldName) {
       switch (fieldName) {

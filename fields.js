@@ -239,7 +239,9 @@
   'have Koh\'s element, the mix magic element, and any element from Koh\'s weapon.'
 
   const monsterElementsTooltip = 'Depending on your selection, monster elements will either be randomized by type (e.g. all Trolls are wind) or will have a random ' +
-  'element each time they spawn, in which case you can choose whether they have spells that match their default element or a random element by monster type.';
+  'element each time they spawn, in which case you can choose whether they have spells that match their default element or a random element by monster type. ' + 
+  'Monsters will have the color palette that corresponds to their new element, like familiars do, to make it easier to tell what element they are. ' +
+  'As some users may have difficulty determining the element based on color, custom palettes can be specified to suit each user\'s individual needs- see Customizations.';
 
   const enduranceTooltip = 'Moves the top of the tower from floor 40 to floor 99. Floor 41 will have the egg and monster types of floor 1, but scaled up ' +
    'by 30, 40, or 50 levels depending on the difficulty level chosen; floor 42 will be like floor 2, and so on. Since there is no floor 0, a surprise waits on floors 40 and 80.';

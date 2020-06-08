@@ -348,12 +348,25 @@
               </div>
               <div class="pure-u-1">
                 <br>
-                <em>Custom floor</em>
-                (<a href="customFloor/">Create floors here</a>)
+                <em>Customizations</em>
               </div>
               <div class="pure-u-12-24">
-                <label for="custom-floor-file">Custom floor file</label>
+                <label for="custom-floor-file"><a href="customFloor/">Custom floor file</a></label>
                 <input id="custom-floor-file" type="file" accept=".json">
+              </div>
+              <div class="pure-u-12-24">
+                <label for="custom-palettes-file"><a href="customPalettes/">Custom palettes (accessibility)</a></label>
+                <input id="custom-palettes-file" type="file" accept=".json">
+                <span class="tooltip-wrapper">
+                  <span class="tooltip-indicator">?</span>
+                  <span class="tooltip hidden">
+                    <span>It can be difficult for players to distinguish the elements of some monsters based on color, especially for players with
+                      color vision deficiency or color blindness. This feature allows users to create a set of custom palettes for each monster and element
+                      combination that meets their particular needs. Using custom palettes does not change the checksum generated, so players with different
+                      color needs can use the same seed URL and set their own custom palette file without getting a checksum error.
+                    </span>
+                  </span>
+                </span>
               </div>
               <div class="pure-u-1">
                 <input id="clear"
@@ -462,6 +475,14 @@
       </p>
       <hr>
       <h2><a name="changelog" href="changelog.html">Changelog</a></h2>
+      <h3><time>June 7, 2020</time></h3>
+      <ul>
+        <li>v2.7.0 (Hopefully) fixed a bug that caused checksum matching to fail. Added a new feature to improve accessibility,
+          <a name="customPalettesEditor" href="customPalettes/">an editor to create custom color palettes</a> for monsters in the tower.
+          This is especially helpful when using the option "Randomize enemy elements". For a thorough description of the tool,
+          open the <a name="customPalettesEditor" href="customPalettes/">custom palettes editor</a> and click "Help".
+        </li>
+      </ul>
       <h3><time>June 4, 2020</time></h3>
       <ul>
         <li>v2.6.0-beta3 Fixed bugs with item and trap statuses. Added help page.
