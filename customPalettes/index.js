@@ -107,9 +107,9 @@
     return paletteIsAPredefinedPalette;
   }
 
-  function updateColorwayList(resetColorway) {
+  function updateColorwayList() {
     //if using an extra palette, set to default (enemy)
-    if (resetColorway && !isPaletteAPredefinedPalette(getPaletteType())) {
+    if (!isPaletteAPredefinedPalette(getPaletteType())) {
       elems.tileMonsterElement.value = 0;
     }
 
@@ -195,7 +195,9 @@
       }
       allPalettes.monsters[monsterId] = monsterPalette;
     }
-    updateColorwayList(resetColorway);
+    if (resetColorway) {
+      updateColorwayList();
+    }
     updatePaletteColorsToMatchPaletteType();
     updateTilesToMatchPaletteAndPaletteType(); 
   }
