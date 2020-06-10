@@ -182,9 +182,9 @@
 
   const paletteTypes = {
     Enemy: 0,
-    Fire: 1,
-    Water: 2,
-    Wind: 3
+    Fire: 4,
+    Water: 8,
+    Wind: 12
   };
 
   const paletteInfo = {
@@ -193,8 +193,11 @@
     spriteDataSectors: 0x10,
     paletteDataSectors: 0x1,
     colorsPerPalette: 16,
+    paletteSizeBytes: 32,
     paletteTypes: paletteTypes,
+    paletteNames: Object.getOwnPropertyNames(paletteTypes),
     numPaletteTypes: Object.getOwnPropertyNames(paletteTypes).length,
+    maxPossiblePalettes: 16,
   }
 
   const exports = {

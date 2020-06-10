@@ -22,6 +22,7 @@
   let allPalettes = {};
   let romArrayBuffer;
   let colorStyles;
+  let paletteCopy;
 
   let pageIsSetUp = false;
 
@@ -42,6 +43,10 @@
 
   function getPaletteType() {
     return parseInt(elems.tileMonsterElement.value);
+  }
+
+  function getSpritesheet() {
+    return parseInt(elems.tileMonsterSpritesheet.value);
   }
 
   function tileHandler(event) {
@@ -90,6 +95,48 @@
     event.stopPropagation();
   }
 
+  function isPaletteAPredefinedPalette(somePalette) {
+    const somePaletteAsInt = parseInt(somePalette);
+    const predefinedPalettes = constants.paletteInfo.paletteNames;
+    let paletteIsAPredefinedPalette = false;
+    for (let predefinedPalette of predefinedPalettes) {
+      if (constants.paletteInfo.paletteTypes[predefinedPalette] === somePaletteAsInt) {
+        paletteIsAPredefinedPalette = true;
+      }
+    }
+    return paletteIsAPredefinedPalette;
+  }
+
+  function updateColorwayList(resetColorway) {
+    //if using an extra palette, set to default (enemy)
+    if (resetColorway && !isPaletteAPredefinedPalette(getPaletteType())) {
+      elems.tileMonsterElement.value = 0;
+    }
+
+    //remove old extra children
+    const children = elems.tileMonsterElement.children;
+    for (let colorwayIndex = 0; colorwayIndex < children.length; ) {
+      if (isPaletteAPredefinedPalette(children[colorwayIndex].value)) {
+        colorwayIndex++;
+      } else {
+        children[colorwayIndex].remove();
+      }
+    }
+
+    //add new
+    const allMonsterColorways = allPalettes.monsters[getMonsterId()];
+    const allMonsterColorwayIDs = Object.getOwnPropertyNames(allMonsterColorways);
+    for (let colorway of allMonsterColorwayIDs) {
+      if (!isPaletteAPredefinedPalette(colorway)) {
+        const option = document.createElement('option');
+        option.value = parseInt(colorway);
+        option.id = 'palette-type-' + colorway;
+        option.innerText = 'Extra ' + colorway;
+        elems.tileMonsterElement.appendChild(option);
+      }
+    }
+  }
+
   function updatePaletteColorsToMatchPaletteType() {
     for (let paletteColorIndex = 1; paletteColorIndex < constants.paletteInfo.colorsPerPalette; paletteColorIndex++) {
       document.getElementById('palette-color-'+ paletteColorIndex.toString()).value = allPalettes.monsters[getMonsterId()][getPaletteType()][paletteColorIndex];
@@ -105,11 +152,11 @@
     }
   }
 
-  function makePixelsMatchChosenMonster() {
+  function makePixelsMatchChosenMonster(resetColorway) {
     const monsterId = getMonsterId();
     const spritesLocation = (constants.paletteInfo.firstMonsterSector + (monsterId - 1) *
       (constants.paletteInfo.animationDataSectors + constants.paletteInfo.spriteDataSectors + constants.paletteInfo.paletteDataSectors) +
-      constants.paletteInfo.animationDataSectors) * constants.sectorSize + constants.headerSize;
+      constants.paletteInfo.animationDataSectors + getSpritesheet() * sectorsToShow) * constants.sectorSize + constants.headerSize;
     const sprites = new DataView(romArrayBuffer, spritesLocation, sectorsToShow * constants.sectorSize);
     for (let spriteSet = 0; spriteSet < sectorsToShow; spriteSet++) {
       for (let offset = 0; offset < constants.sectorDataSize; offset++) {
@@ -124,29 +171,38 @@
     if (!allPalettes.monsters[monsterId]) {
       const paletteData = new DataView(romArrayBuffer, spritesLocation + constants.paletteInfo.spriteDataSectors * constants.sectorSize, constants.sectorDataSize);
       const monsterPalette = {};
-      for (let paletteType = 0; paletteType < constants.paletteInfo.numPaletteTypes; paletteType++) {
+
+      for (let paletteType = 0; paletteType < constants.paletteInfo.maxPossiblePalettes; paletteType++) {
         const palette = [];
         let paletteColorIndex = 0;
-        if (paletteData.getUint16(paletteColorIndex * 2 + paletteType * 0x80, true) !== 0) {
+        if (paletteData.getUint16(paletteColorIndex * 2 + paletteType * constants.paletteInfo.paletteSizeBytes, true) !== 0) {
           logToOutput('Color index 0 is not transparent');
         }
+        let foundNonTransparentPalette = false;
         for (; paletteColorIndex < constants.paletteInfo.colorsPerPalette; paletteColorIndex++) {
-          const read = paletteData.getUint16(paletteColorIndex * 2 + paletteType * 0x80, true);
+          const read = paletteData.getUint16(paletteColorIndex * 2 + paletteType * constants.paletteInfo.paletteSizeBytes, true);
           const b = (read & 0x7fff) >>> 10;
           const g = (read & 0x03ff) >>> 5;
           const r = (read & 0x001f);
           palette[paletteColorIndex] = '#' + fiveBitsToByte(r) + fiveBitsToByte(g) + fiveBitsToByte(b);
+          if (!foundNonTransparentPalette && palette[paletteColorIndex] !== '#000000') {
+            foundNonTransparentPalette = true;
+          }
         }
-        monsterPalette[paletteType] = palette;
+        if (foundNonTransparentPalette) {
+          monsterPalette[paletteType] = palette;
+        }
       }
       allPalettes.monsters[monsterId] = monsterPalette;
     }
+    updateColorwayList(resetColorway);
     updatePaletteColorsToMatchPaletteType();
     updateTilesToMatchPaletteAndPaletteType(); 
   }
 
   function tileMonsterIdHandler(event) {
-    makePixelsMatchChosenMonster();
+    elems.tileMonsterSpritesheet.value = 0;
+    makePixelsMatchChosenMonster(true);
     event.preventDefault();
     event.stopPropagation();
   }
@@ -154,6 +210,12 @@
   function tileMonsterElementHandler(event) {
     updatePaletteColorsToMatchPaletteType();
     updateTilesToMatchPaletteAndPaletteType();
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  function tileMonsterSpritesheetHandler(event) {
+    makePixelsMatchChosenMonster(false);
     event.preventDefault();
     event.stopPropagation();
   }
@@ -169,12 +231,33 @@
     event.stopPropagation();
   }
 
+  function copyHandler(event) {
+    paletteCopy = allPalettes.monsters[getMonsterId()][getPaletteType()];
+    elems.pasteButton.disabled = false;
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  function pasteHandler(event) {
+    for (let paletteColorIndex = 1; paletteColorIndex < constants.paletteInfo.colorsPerPalette; paletteColorIndex++) {
+      allPalettes.monsters[getMonsterId()][getPaletteType()][paletteColorIndex] = paletteCopy[paletteColorIndex];
+    }
+    updatePaletteColorsToMatchPaletteType();
+    updateTilesToMatchPaletteAndPaletteType();
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
   function processImportBin() {
     elems.tileMonsterId.disabled = false;
-    elems.tileMonsterId.value = 1;
+    elems.tileMonsterId.value = 0x15;
     elems.tileMonsterElement.disabled = false;
     elems.tileMonsterElement.value = 0;
-    makePixelsMatchChosenMonster();
+    elems.tileMonsterSpritesheet.disabled = false;
+    elems.tileMonsterSpritesheet.value = 0;
+    elems.copyButton.disabled = false;
+    makePixelsMatchChosenMonster(true);
+    logToOutput('');
   }
 
   function importBinFileHandler(event) {
@@ -260,6 +343,8 @@
 
   function setUpPage() {
     document.onkeypress = keyPressHandler;
+    elems.copyButton = document.getElementById('copy-button');
+    elems.pasteButton = document.getElementById('paste-button');
     elems.importExport = document.getElementById('import-export');
     elems.spriteArea = document.getElementById('sprite-area');
     elems.importOutput = document.getElementById('import-output');
@@ -271,6 +356,7 @@
     elems.transparencyColor = document.getElementById('transparency-color');
     elems.tileMonsterId = document.getElementById('tile-monster-id');
     elems.tileMonsterElement = document.getElementById('tile-monster-element');
+    elems.tileMonsterSpritesheet = document.getElementById('tile-monster-spritesheet');
     elems.paletteColors = document.getElementById('palette-colors');
 
     tileNumber = 0;
@@ -310,6 +396,8 @@
       elems.spriteArea.appendChild(tileRow);
     }
 
+    elems.copyButton.addEventListener('click', copyHandler);
+    elems.pasteButton.addEventListener('click', pasteHandler);
     elems.importBinFile.addEventListener('change', importBinFileHandler);
     elems.importFile.addEventListener('change', importFileHandler);
     elems.importText.addEventListener('click', importTextHandler);
@@ -319,6 +407,7 @@
     elems.transparencyColor.addEventListener('change', transparencyColorHandler, false);
     elems.tileMonsterId.addEventListener('change', tileMonsterIdHandler);
     elems.tileMonsterElement.addEventListener('change', tileMonsterElementHandler);
+    elems.tileMonsterSpritesheet.addEventListener('change', tileMonsterSpritesheetHandler);
 
     elems.colorLastClickedLabels = [document.getElementById('palette-color-note')];
     for (let paletteColorIndex = 1; paletteColorIndex < constants.paletteInfo.colorsPerPalette; paletteColorIndex++) {
@@ -351,10 +440,10 @@
       option.innerText = monster.name;
       elems.tileMonsterId.appendChild(option);
     })
-    Object.getOwnPropertyNames(constants.paletteInfo.paletteTypes).forEach(function(paletteType) {
+    constants.paletteInfo.paletteNames.forEach(function(paletteType) {
       const option = document.createElement('option');
       option.value = constants.paletteInfo.paletteTypes[paletteType];
-      option.id = 'palette-type-' +paletteType;
+      option.id = 'palette-type-' +constants.paletteInfo.paletteTypes[paletteType];
       option.innerText = paletteType;
       elems.tileMonsterElement.appendChild(option);
     })

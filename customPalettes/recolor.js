@@ -30,7 +30,6 @@
   }
 
   function recolorMonsters(data, customPalettes) {
-    const offsetBetweenPalettes = 0x80;
     const palettesLocation = (constants.paletteInfo.firstMonsterSector + 
       constants.paletteInfo.animationDataSectors + constants.paletteInfo.spriteDataSectors) * constants.sectorSize + constants.headerSize;
     
@@ -51,7 +50,7 @@
               const colorToWrite = colorsForPalette[colorIndex];
               if (colorToWrite.match('#[0-9a-fA-F]{6}')) {
                 const colorAsNumber = parseInt(colorToWrite.replace('#', '0x'));
-                writeColor(colorAsNumber, monsterPalettesLocation + offsetBetweenPalettes * paletteType + colorIndex * 2, data);
+                writeColor(colorAsNumber, monsterPalettesLocation + constants.paletteInfo.paletteSizeBytes * paletteType + colorIndex * 2, data);
               }
             }
           }

@@ -19,14 +19,14 @@
         <form id="form" class="pure-g">
           <div style="width:100%">
             <div class="pure-u-12-24">
-              <label for="tile-monster-id">Monster</label>
-              <select id="tile-monster-id" name="monster-id" disabled>
+              <label for="tile-monster-element">Colorway</label>
+              <select id="tile-monster-element" name="monster-element" disabled>
                 <option value="" disabled>--</option>
               </select>
             </div>
             <div class="pure-u-12-24">
-              <label for="tile-monster-element">Colorway</label>
-              <select id="tile-monster-element" name="monster-element" disabled>
+              <label for="tile-monster-id">Monster</label>
+              <select id="tile-monster-id" name="monster-id" disabled>
                 <option value="" disabled>--</option>
               </select>
             </div>
@@ -34,9 +34,25 @@
               <label for="transparency-color">Background color</label>
               <input id="transparency-color" type="color" value="#778899">
             </div>
+            <div class="pure-u-12-24">
+              <label for="tile-monster-spritesheet">Spritesheet</label>
+              <select id="tile-monster-spritesheet" name="monster-spritesheet" disabled>
+                <option value="" disabled>--</option>
+                <option value="0">1</option>
+                <option value="1">2</option>
+                <option value="2">3</option>
+                <option value="3">4</option>
+              </select>
+            </div>
           </div>
-          <div class="pure-u-1 space-down">
+          <div class="pure-u-8-24 space-down">
             Palette colors:
+          </div>
+          <div class="pure-u-4-24 space-down">
+            <button id="copy-button" disabled>Copy</button>
+          </div>
+          <div class="pure-u-4-24 space-down">
+            <button id="paste-button" disabled>Paste</button>
           </div>
           <div id="palette-colors" class="pure-u-1 space-down">
             <div class="pure-u-1 hflow">
