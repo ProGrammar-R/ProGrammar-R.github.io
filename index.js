@@ -370,7 +370,17 @@
     } else {
       elems.download.download = selectedFile.name
     }
-    const urlCue = URL.createObjectURL(new Blob(['FILE "',elems.download.download,'" BINARY\r\n','  TRACK 01 MODE2/2352\r\n','    INDEX 01 00:00:00\r\n'], {
+
+    const urlSeed = util.optionsToUrl(
+      getFormOptions(),
+      checksum,
+      seed,
+      window.location.href,
+    )
+
+    const urlCue = URL.createObjectURL(new Blob(['FILE "',elems.download.download,'" BINARY\r\n','  TRACK 01 MODE2/2352\r\n',
+      '    INDEX 01 00:00:00\r\nREM Azure Dreams Randomizer v', version,
+      '\r\nREM Seed  ', urlSeed, '\r\nREM Generated ', new Date().toString(), '\r\n'], {
       type: 'application/octet-binary',
     }))
     elems.downloadCue.download = [elems.download.download.slice(0, -3), 'cue'].join('')
@@ -605,7 +615,7 @@
         process.exit(1)
       }
       expectChecksum = parseInt(argv.expectChecksum, 16)
-      haveChecksum = true
+      haveChecksum = !isNaN(expectChecksum)
     }
     // Check for randomization string.
     if ('options' in argv) {
@@ -624,7 +634,7 @@
         options = url.options
         seed = url.seed
         expectChecksum = url.checksum
-        haveChecksum = true
+        haveChecksum = !isNaN(expectChecksum)
       } catch (e) {
         yargs.showHelp()
         console.error('\nInvalid url')

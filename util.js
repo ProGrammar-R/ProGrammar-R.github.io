@@ -243,6 +243,8 @@
     }
     if (checksum) {
       args.push(checksum.toString(16))
+    } else {
+      args.push('')
     }
     args.push(encodeURIComponent(seed))
     return baseUrl + '?' + args.join(',')

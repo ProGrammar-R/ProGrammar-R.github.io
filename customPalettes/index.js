@@ -234,7 +234,7 @@
   }
 
   function copyHandler(event) {
-    paletteCopy = allPalettes.monsters[getMonsterId()][getPaletteType()];
+    paletteCopy = [...allPalettes.monsters[getMonsterId()][getPaletteType()]];
     elems.pasteButton.disabled = false;
     event.preventDefault();
     event.stopPropagation();
