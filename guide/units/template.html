@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <link rel="stylesheet"
+          href="https://unpkg.com/purecss@1.0.0/build/pure-min.css">
+    <link rel="stylesheet"
+          href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
+    <link rel="stylesheet" href="/index.css">
+  </head>
+  <body>
+    <div id="version"></div>
+    <div id="content" class="wide">
+      <h1>Azure Dreams PS1 Encyclopedia</h1>
+      <div class="shift-up">
+        by pro_grammar
+      </div>
+      <a href="index.html">Back to unit list</a>
+      <h2 id="unit_name">Unit:</h2>
+      <h3>Name</h3>
+      <div class="pure-u-1">
+        <div class="pure-u-6-24" id="name">Name (PS1, NTSC):</div>
+        <div class="pure-u-6-24" id="gbc_name">Name (GBC, NTSC):</div>
+        <div class="pure-u-3-24" id="hiragana_name">Name (PS1, JP):</div>
+        <div class="pure-u-3-24" id="romaji_name"></div>
+        <div class="pure-u-1" id="origin_of_name">Origin of name:</div>
+      </div>
+      <h3><a href="/guide/mechanics/stats.html#coreStats">Core Stats</a></h3>
+      <div class="pure-u-1">
+        <div class="pure-u-3-24" id="base_hp">Base HP:</div>
+        <div class="pure-u-3-24" id="base_mp">Base MP:</div>
+        <div class="pure-u-3-24" id="base_atk">Base ATK:</div>
+        <div class="pure-u-3-24" id="base_def">Base DEF:</div>
+        <div class="pure-u-3-24" id="base_agility">Base Agility:</div>
+        <div class="pure-u-3-24" id="base_luck">Base Luck:</div>
+        <div class="pure-u-3-24" id="base_exp">Base EXP given:</div>
+
+        <div class="pure-u-3-24" id="growth_hp">HP growth:</div>
+        <div class="pure-u-3-24" id="growth_mp">MP growth:</div>
+        <div class="pure-u-3-24" id="growth_atk">ATK growth:</div>
+        <div class="pure-u-3-24" id="growth_def">DEF growth:</div>
+        <div class="pure-u-3-24" id="growth_agility">Agility growth:</div>
+        <div class="pure-u-3-24" id="growth_luck">Luck growth:</div>
+        <div class="pure-u-3-24" id="growth_exp">EXP given growth:</div>
+      </div>
+      <h3>Properties</h3>
+      <div class="pure-u-1">
+        <div class="pure-u-4-24" id="native_element">Native element:</div>
+        <div class="pure-u-4-24" id="liftable">Liftable:</div>
+        <div class="pure-u-4-24" id="pushable">Pushable:</div>
+        <div class="pure-u-4-24" id="flying">Flying:</div>
+        <div class="pure-u-4-24" id="evolves_into">Evolves into:</div>
+
+        <div class="pure-u-4-24" id="weapon_damage">Weapon damage:</div>
+        <div class="pure-u-4-24" id="accuracy">Accuracy:</div>
+        <div class="pure-u-4-24" id="special_damage">Weapon damage (ability):</div>
+        <div class="pure-u-4-24" id="special_accuracy">Accuracy (ability):</div>
+        <div class="pure-u-1" id="talents">Talent(s): TBA</div>
+      </div>
+      <h3>Spells</h3>
+      <div class="pure-u-1">
+        <div class="pure-u-6-24" id="native_spell_id">Native spell:</div>
+        <div class="pure-u-6-24" id="hidden_spell_id">Dormant spell:</div>
+      </div>
+      <h3>Diet (MP restoration)</h3>
+      <div class="pure-u-1">
+        <div class="pure-u-3-24" id="likes_pitas">Pita fruit:</div>
+        <div class="pure-u-3-24" id="likes_big_pitas">Big Pita fruit:</div>
+        <div class="pure-u-3-24" id="likes_vegetation">Other vegetation:</div>
+        <div class="pure-u-3-24" id="likes_meat">Meat: 10</div>
+        <div class="pure-u-3-24" id="likes_eggs">Eggs:</div>
+        <div class="pure-u-3-24" id="likes_metal">Metal:</div>
+        <div class="pure-u-3-24" id="likes_any">Other items:</div>
+      </div>
+      <h3>Enemy Stats</h3>
+      <span id="enemy_stats"></span>
+      <template id="enemy_stats_template">
+        <div class="pure-u-1">
+          <div class="pure-u-2-24" id="floor">Floor:</div>
+          <div class="pure-u-2-24" id="level">Level:</div>
+          <div class="pure-u-3-24" id="probability">Probability:</div>
+          <div class="pure-u-2-24" id="notes"></div>
+          <div class="pure-u-2-24" id="hp">HP:</div>
+          <div class="pure-u-2-24" id="mp">MP:</div>
+          <div class="pure-u-2-24" id="atk">ATK:</div>
+          <div class="pure-u-2-24" id="def">DEF:</div>
+          <div class="pure-u-2-24" id="agility">Agility:</div>
+          <div class="pure-u-2-24" id="luck">Luck:</div>
+          <div class="pure-u-2-24" id="exp">EXP given:</div>
+        </div>
+      </template>
+      <h3>Eggs probabilities</h3>
+      <div>The probabilities that an egg found on a given floor will be of this unit's type.</div>
+      <span id="egg_probabilities"></span>
+      <template id="egg_probabilities_template">
+        <div class="pure-u-1">
+          <div class="pure-u-2-24" id="floor">Floor:</div>
+          <div class="pure-u-4-24" id="probability">Probability:</div>
+        </div>
+      </template>
+      <h3>Stats by Level</h3>
+      <span id="stats_by_level"></span>
+      <template id="stats_by_level_template">
+        <div class="pure-u-1">
+          <div class="pure-u-2-24" id="level">Level:</div>
+          <div class="pure-u-2-24" id="hp">HP:</div>
+          <div class="pure-u-2-24" id="mp">MP:</div>
+          <div class="pure-u-2-24" id="atk">ATK:</div>
+          <div class="pure-u-2-24" id="def">DEF:</div>
+          <div class="pure-u-2-24" id="agility">Agility:</div>
+          <div class="pure-u-2-24" id="luck">Luck:</div>
+          <div class="pure-u-3-24" id="exp">EXP given:</div>
+        </div>
+      </template>
+      <h3>Other</h3>
+      <div class="pure-u-1">
+        <div class="pure-u-6-24" id="unit_id">Internal ID:</div>
+        <div class="pure-u-6-24" id="monster_book_id">Monster book number: TBA</div>
+      </div>
+    </div>
+    <div id="dev-border"></div>
+    <script src="../tables/elements.js"></script>
+    <script src="../tables/floors.js"></script>
+    <script src="../tables/spells.js"></script>
+    <script src="../tables/units.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>

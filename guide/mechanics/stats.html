@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <title>Azure Dreams PS1 Encyclopedia - Damage calculator</title>
+    <link rel="stylesheet"
+          href="https://unpkg.com/purecss@1.0.0/build/pure-min.css">
+    <link rel="stylesheet"
+          href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
+    <link rel="stylesheet" href="/index.css">
+    <link rel="icon" type="image/png" href="/favicon.png">
+  </head>
+  <body>
+    <div id="version"></div>
+    <div id="content">
+      <h1>Azure Dreams PS1 Encyclopedia</h1>
+      <div class="shift-up">
+        by pro_grammar
+      </div>
+      <h2>Stats</h2>
+      <h3>Overview</h3>
+      <div>
+        Any given unit in Azure Dreams has a number of stats, numerical values that can be seen in the tower menu (with some exceptions).
+      </div>
+      <h3 id="coreStats">Core Stats</h3>
+      <div>
+        There are seven core stats in Azure Dreams, as defined below. They are defined for all units, even if that unit doesn't
+        use that stat.
+        <ul>
+          <li id="hp">
+            HP: How much damage a unit can take before fainting.
+          </li>
+          <li id="mp">
+            MP: How much a unit can act before becoming unresponsive.
+            It is consumed by monsters every turn when collared. The amount consumed depends on the action taken by the monster.
+          </li>
+          <li id="atk">
+            ATK: Used to calculate how much damage a unit deals when attacking. Increased by Hazak seed.
+          </li>
+          <li id="def">
+            DEF: Used to calculate how much damage a unit receives when attacked. Increased by Shomuro seed.
+          </li>
+          <li id="agility">
+            Agility: Despite the game dutifully tracking this number, it seems to go entirely unused. Increased by Mahell seed.
+          </li>
+          <li id="luck">
+            Luck: Used to calculate the likelihood of attacks hitting, critical hits, traps failing, etc. Increased by Tovar seed.
+          </li>
+          <li id="expGiven">
+            EXP given: The amount of experience gained by a unit when this unit is defeated. This experience is doubled
+            if the unit receiving the EXP is at a lower level than the defeated unit.
+            When a unit is defeated by Koh or one of his familiars, the experience is split between them.
+          </li>
+        </ul>
+      </div>
+      <h3>Stat Forms</h3>
+      <div>
+        These core stats have several different forms.
+      </div>
+      <ul>
+        <li id="baseStat">
+          Base stat: The stat at level 1. This stat is also used to calculate stats at subsequent levels.
+          Base stats are increased by their respective seeds when the current stat equals the max stat.
+        </li>
+        <li id="statGrowth">
+          Growth stat: Used in combination with the base stat to calculate stats after level 1. This is intrinsic
+          to a unit's type and cannot be changed.
+        </li>
+        <li id="maxStat">
+          Max stat: The unit's stat based on the unit's base stat, stat growth, current level, and talents.
+        </li>
+        <li id="currentStat">Current stat: The stat value used in calculations, which may be lower (or in rare cases higher)
+          than the max stat. For example, Vipers have a chance of lowering a target's current ATK when attacking.
+        </li>
+      </ul>
+    </div>
+    <div id="dev-border"></div>
+  </body>
+</html>

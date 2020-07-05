@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <title>Azure Dreams PS1 Encyclopedia</title>
+    <link rel="stylesheet"
+          href="https://unpkg.com/purecss@1.0.0/build/pure-min.css">
+    <link rel="stylesheet"
+          href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
+    <link rel="stylesheet" href="../../index.css">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <script>
+      function iframeLoaded(obj) {
+        const url = new URL(window.location.href)
+        let origin = url.protocol === "file:" ? "*" : url.origin;
+        obj.contentWindow.postMessage("13", origin);
+      }
+    </script>
+  </head>
+  <body>
+    <div id="iframe-container" class="iframe-container">
+      <iframe src="template.html" onload="iframeLoaded(this)"></iframe>
+    </div>
+  </body>
+</html>

@@ -2,6 +2,10 @@ html, body {
     height: 100%;
 }
 
+#content.wide {
+    padding: 0 5%;
+}
+
 #content {
     padding: 0 15%;
 }
@@ -14,6 +18,11 @@ html, body {
 
 h1 {
     clear: both;
+}
+
+.shift-up {
+    margin-top: -1em;
+    padding-bottom: 1em;
 }
 
 .hflow {
@@ -204,4 +213,20 @@ select:disabled {
     right: 5px;
     font-size: small;
     color: #999;
+}
+
+.iframe-container {
+    overflow: hidden;
+    position: relative;
+    padding-top: 50%;
+    margin-left: 2em;
+}
+
+.iframe-container iframe {
+    border: 0;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
 }
