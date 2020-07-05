@@ -22,7 +22,7 @@
       <div>
         Any given unit in Azure Dreams has a number of stats, numerical values that can be seen in the tower menu (with some exceptions).
       </div>
-      <h3 id="coreStats">Core Stats</h3>
+      <h3 id="core-stats">Core Stats</h3>
       <div>
         There are seven core stats in Azure Dreams, as defined below. They are defined for all units, even if that unit doesn't
         use that stat.
@@ -46,33 +46,35 @@
           <li id="luck">
             Luck: Used to calculate the likelihood of attacks hitting, critical hits, traps failing, etc. Increased by Tovar seed.
           </li>
-          <li id="expGiven">
+          <li id="exp-given">
             EXP given: The amount of experience gained by a unit when this unit is defeated. This experience is doubled
             if the unit receiving the EXP is at a lower level than the defeated unit.
             When a unit is defeated by Koh or one of his familiars, the experience is split between them.
           </li>
         </ul>
       </div>
-      <h3>Stat Forms</h3>
+      <h3 id="stat-forms">Stat Forms</h3>
       <div>
         These core stats have several different forms.
       </div>
       <ul>
-        <li id="baseStat">
+        <li id="base-stat">
           Base stat: The stat at level 1. This stat is also used to calculate stats at subsequent levels.
           Base stats are increased by their respective seeds when the current stat equals the max stat.
         </li>
-        <li id="statGrowth">
+        <li id="stat-growth">
           Growth stat: Used in combination with the base stat to calculate stats after level 1. This is intrinsic
           to a unit's type and cannot be changed.
         </li>
-        <li id="maxStat">
+        <li id="max-stat">
           Max stat: The unit's stat based on the unit's base stat, stat growth, current level, and talents.
         </li>
-        <li id="currentStat">Current stat: The stat value used in calculations, which may be lower (or in rare cases higher)
+        <li id="current-stat">Current stat: The stat value used in calculations, which may be lower (or in rare cases higher)
           than the max stat. For example, Vipers have a chance of lowering a target's current ATK when attacking.
         </li>
       </ul>
+      <h3 id="stat-calculation">Stat Calculation</h3>
+      <img src="stat_calculation.png">
     </div>
     <div id="dev-border"></div>
   </body>
