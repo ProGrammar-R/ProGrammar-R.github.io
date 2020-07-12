@@ -2,11 +2,11 @@
 
   // Logic metadata.
   const metadata = {
-    id: 'tournament',
-    name: 'RM3T #2 Tournament',
-    description: 'Seeded tower, all skips, used in the Rock Me to the Top (RM3T) #2 tournament.',
+    id: 'starsTournament',
+    name: 'STARS Tournament',
+    description: 'Only seeded tower + intro skip, used in the Starting Tamers and Rising Stars (STARS) #1 tournament.',
     author: 'pro_grammar',
-    weight: -90,
+    weight: -85,
   }
 
   // Boilerplate.
@@ -27,10 +27,8 @@
   // Create PresetBuilder.
   const builder = new PresetBuilder(metadata)
 
-  builder.tutorialSkip = true
   builder.introSkip = true
   builder.derandomize = true
-  builder.fastTutorial = true
 
   // Export.
   const preset = builder.build()

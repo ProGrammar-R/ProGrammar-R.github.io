@@ -9,6 +9,7 @@
       require('./secondTower'),
       require('./secondTowerRun'),
       require('./tournament'),
+      require('./starsTournament'),
     ]
   }
   exports.sort(function(a, b) {

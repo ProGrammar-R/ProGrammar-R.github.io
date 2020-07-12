@@ -12,8 +12,12 @@
   </head>
   <body>
     <div id="content">
-      <h1>List of Bugs in Azure Dreams</h1>
-      <div>This is a non-exhaustive list of bugs present in Azure Dreams, grouped by type.</div>
+      <h1>Azure Dreams PS1 Encyclopedia - List of Bugs</h1>
+      <div class="shift-up">
+        by pro_grammar
+      </div>
+      <a href="index.html">Back to main guide page</a>
+      <div class="space-down">This is a non-exhaustive list of bugs present in Azure Dreams, grouped by type.</div>
       <h2>Crashes</h2>
       <h3>Bugs that cause the game to encounter an exception from which it can't recover, or enter an infinite loop.</h3>
       <ul>
@@ -100,6 +104,13 @@
           but the Cursed status condition isn't applied by cursed equipment, only the effect, probably because this would cause it to be
           removed automatically after a finite number of turns. Manually setting the status condition does make the De-curse scoll work as intended,
           as well as show an otherwise unseen portrait of a cursed Koh in the tower menu.
+        </li>
+        <li>
+          Lifting a familiar and then either choosing to Return/Free it or giving it a Tumna or Roche fruit will mark the tile Koh is currently
+          standing on as no longer containing a friendly unit, as the game marks the tile occupied by the lifted unit as empty despite Koh standing there.
+          The same will happen if a frogged familiar turns back into a monster while Koh is holding it.<br>
+          The effect of this is that although enemy monsters will still try to hit Koh with spells and attacks, these will not hurt Koh as the game
+          cannot find a valid target. This is useful in 
         </li>
         <li>Only units that are paralyzed, asleep, blind, or out of MP (henceforth referred to as being incapacitated) have a chance to dodge attacks
           based on luck, despite all other combat-related checks disfavoring these statuses. Since these are all immbolizing statuses,

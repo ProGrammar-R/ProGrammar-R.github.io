@@ -230,3 +230,7 @@ select:disabled {
     left: 0;
     position: absolute;
 }
+
+.space-down {
+    padding-top: 1em;
+  }

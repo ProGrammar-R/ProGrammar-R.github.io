@@ -39,7 +39,8 @@
     36: [{unitId: 0x1F, level: 0x14, likelihood: 1}, {unitId: 0x2A, level: 0x1E, likelihood: 5}, {unitId: 0x2C, level: 0x1E, likelihood: 5}, {unitId: 0x2D, level: 0x1E, likelihood: 5}],
     37: [{unitId: 0x03, level: 0x1D, likelihood: 4}, {unitId: 0x2A, level: 0x1E, likelihood: 4}, {unitId: 0x2C, level: 0x1E, likelihood: 4}, {unitId: 0x2D, level: 0x1E, likelihood: 4}],
     38: [{unitId: 0x03, level: 0x1D, likelihood: 4}, {unitId: 0x2A, level: 0x1E, likelihood: 4}, {unitId: 0x2C, level: 0x1E, likelihood: 4}, {unitId: 0x2D, level: 0x1E, likelihood: 4}],
-    39: [{unitId: 0x03, level: 0x1D, likelihood: 4}, {unitId: 0x2A, level: 0x1E, likelihood: 4}, {unitId: 0x2C, level: 0x1E, likelihood: 4}, {unitId: 0x2D, level: 0x1E, likelihood: 4}]
+    39: [{unitId: 0x03, level: 0x1D, likelihood: 4}, {unitId: 0x2A, level: 0x1E, likelihood: 4}, {unitId: 0x2C, level: 0x1E, likelihood: 4}, {unitId: 0x2D, level: 0x1E, likelihood: 4}],
+    40: [{unitId: 0x38, level: 0x63, likelihood: 16}]
   }
 
   const eggTable = {
