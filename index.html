@@ -100,6 +100,13 @@
                 <label for="ball-elements">Randomize spell ball elements</label>
               </div>
               <div class="pure-u-12-24">
+                <input id="spells" type="checkbox">
+                <label for="spells">Randomize monster spells</label>
+              </div>
+              <div class="pure-u-12-24">
+                <!-- placeholder -->
+              </div>
+              <div class="pure-u-12-24">
                 <label for="monster-elements">Enemy elements</label>
                 <select id="monster-elements">
                   <option value=0>Default</option>
@@ -140,9 +147,13 @@
                 <input id="blue-collar" type="checkbox">
                 <label for="blue-collar">Start with blue collar</label>
               </div>
-              <div id="hidden-spells-select" class="pure-u-1">
+              <div id="hidden-spells-select" class="pure-u-12-24">
                 <label for="hidden-spells">Dormant spells awakened for</label>
                 <select id="hidden-spells"></select>
+              </div>
+              <div class="pure-u-12-24">
+                <input id="super-koh" type="checkbox">
+                <label for="super-koh">All monster types can be lifted & pushed</label>
               </div>
               <div class="pure-u-12-24">
                 <input id="non-native-spells-level" type="checkbox">
@@ -474,6 +485,11 @@
       </p>
       <hr>
       <h2><a name="changelog" href="changelog.html">Changelog</a></h2>
+      <h3><time>July 22, 2020</time></h3>
+      <ul>
+        <li>v3.4.0 Added an option to randomize monster spells. Added an option to allow Koh to push and attempt to pick up all monsters.
+        </li>
+      </ul>
       <h3><time>July 12, 2020</time></h3>
       <ul>
         <li>v3.3.0 Added STARS tournament preset, and renamed existing tournament preset. 
@@ -585,29 +601,6 @@
       <h3><time>April 16, 2020</time></h3>
       <ul>
         <li>v2.4.0 Added <a href="gbc/">GBC de-randomizer</a>.</li>
-      </ul>
-      <h3><time>April 4, 2020</time></h3>
-      <ul>
-        <li>v2.3.1 Tweaked layout. Added tooltip for traps.</li>
-        <li>v2.3.0 The option "Fix some types of crashes" fixes more crashes present in the original game.
-          This now includes crashes caused by trying to spawn monsters with level > 99.
-          This should fix floor 99 of the second tower and egg-bombing when Koh is level 50+.
-        </li>
-        <li>Added tooltips to options which are not self-evident. 
-        </li>
-        <li>Default states of options now match the vanilla game, which should fix issues with sharing certain seeds.
-        </li>
-        <li>Minor changes: moved full changelog to a separate page, removed tournament explainer, "Safe" present now has fix crashes option turned on.
-        </li>
-      </ul>
-      <h3><time>March 28, 2020</time></h3>
-      <ul>
-        <li>v2.2.0 Added an option to fix some crashes that are present in the original game. Right now this only includes the crash that occurs when
-          gaining too much experience at once (specifically, between 32,767 and 39,480 EXP; higher amounts would only cause graphical glitches).
-          This is particularly useful for the second tower and survival modes, where this bug would be encountered more often. The game will still overflow
-          the amount of experience earned at once above 65,535 EXP; the text box will still show the pre-overflow value, but the pop-up will now now show
-          the actual amount earned.
-        </li>
       </ul>
     </div>
     <div id="dev-border"></div>

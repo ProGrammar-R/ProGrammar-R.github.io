@@ -145,6 +145,7 @@
     beldoInvulnerability:  0x31d0aa0, //RAM 0x8016c688
     customBeldoCode:       0x31d6ed4, //RAM 0x80171dac
     beldoIdle:             0x31d91b4, //RAM 0x80173bcc
+    hiddenSpellTable:      0x376318c,
   }
 
   //offsets in bytes
@@ -175,7 +176,10 @@
 
   const spells = {
     poison: 0x0d,
+    deaheal: 0x19,
+    deoforth: 0x1e,
     lagrave: 0x2b,
+    darkWave: 0x2e,
   }
 
   const lcgConstants = {modulus: 0x1fffFFFFffff, multiplier: 0x5DEECE66D, increment: 11,}

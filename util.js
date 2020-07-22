@@ -1115,7 +1115,9 @@
     itemCap,
     blueCollar,
     fixCrashes,
-    fixBugs
+    fixBugs,
+    spells,
+    superKoh
   ) {
     this.id = id
     this.name = name
@@ -1159,6 +1161,8 @@
     this.blueCollar = blueCollar
     this.fixCrashes = fixCrashes
     this.fixBugs = fixBugs
+    this.spells = spells
+    this.superKoh = superKoh
   }
 
   function clone(obj) {

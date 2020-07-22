@@ -15,6 +15,7 @@
   //which words from the hex string control which aspects
   const randomStarterHexKey = 6
   const randomStarterElementHexKey = 7
+  const randomSpellsHexKey = 4
 
   const allElements = [
     {ID: -3, name: "Default",   primary: false, isDefault: true},
@@ -130,6 +131,7 @@
   }
 
   function setEnemizer(options, data, hex) {
+    randomizeMonsterSpells(options, data, hex)
     if (options.enemizer) {
       const maxMonsterTypesPerFloor = 4
       const firstPossibleBarongFloor = 10
@@ -137,6 +139,7 @@
       const whitePicketFloor = 25
       const firstFloorForHealers = 6
       const firstFloorForMajorThreats = 4
+      const healers = getMonsterIdsWithHealingSpells(options, data)
 
       let address = 0x24638e8
       let f = 1
@@ -164,13 +167,9 @@
           monsterChoices = removeValueNamed(monsterChoices, "Killer")
         }
         if (f < firstFloorForHealers) {
-          monsterChoices = removeValueNamed(monsterChoices, "Battnel")
-          monsterChoices = removeValueNamed(monsterChoices, "Nyuel")
-          if (!!options.hiddenSpells) { //these monsters gain healing
-            monsterChoices = removeValueNamed(monsterChoices, "Pulunpa")
-            monsterChoices = removeValueNamed(monsterChoices, "Manoeva")
-            monsterChoices = removeValueNamed(monsterChoices, "Mandara")
-          }
+          healers.forEach(function(healerMonsterId) {
+            monsterChoices = removeMonsterWithID(monsterChoices, healerMonsterId)
+          })
         }
         while (floorMonsters.length < maxMonsterTypesPerFloor) {
           let idOfMonsterToAdd = lcg.rollBetween(0, monsterChoices.length-1)
@@ -219,9 +218,54 @@
       }
     }
     //For some reason, calling setStarter from index.js doesn't work
+    setSuperKoh(options, data)
     setStarter(options, data, hex)
     replaceTutorialPulunpaWithBarong(options, data)
     setMonsterSpawns(options, data)
+  }
+
+  function getMonsterIdsWithHealingSpells(options, data) {
+    const healers = []
+    allMonsters.forEach(function(monster) {
+      let spellId = data.readByte(getInitialStatAddressForMonster(monster.ID) + constants.monsterStats.spell1Id)
+      //if the monster has no awoken spell, get the hidden spell
+      if (!spellId && !!options.hiddenSpells) {
+        spellId = data.readByte(constants.romAddresses.hiddenSpellTable + monster.ID)
+      }
+      if (spellId >= constants.spells.deaheal && spellId <= constants.spells.deoforth) {
+        healers.push(monster.ID)
+      }
+    })
+    return healers
+  }
+
+  function randomizeMonsterSpells(options, data, hex) {
+    if (options.spells) {
+      const lcgSeed = hex.length > randomSpellsHexKey ? Math.abs(hex[randomSpellsHexKey]) : 15;
+      const lcg = new util.LCG(constants.lcgConstants.modulus, constants.lcgConstants.multiplier, constants.lcgConstants.increment, lcgSeed)
+      const numberOfSpells = 16
+      allMonsters.forEach(function(monster) {
+        const spellAddress = getInitialStatAddressForMonster(monster.ID) + constants.monsterStats.spell1Id
+        const newSpellId = 1 + 3 * (lcg.roll() % numberOfSpells)
+        let spellId = data.readByte(spellAddress)
+        if (!!spellId) {
+          data.writeByte(spellAddress, getSpellInElement(newSpellId, getElementOfSpell(spellId)))
+        } else {
+          const spellElement = getElementOfSpell(data.readByte(constants.romAddresses.hiddenSpellTable + monster.ID))
+          data.writeByte(constants.romAddresses.hiddenSpellTable + monster.ID, getSpellInElement(newSpellId, spellElement))
+        }
+      })
+    }
+  }
+
+  function setSuperKoh(options, data) {
+    if (options.superKoh) {
+      allMonsters.forEach(function(monster) {
+        const initialAddress = getInitialStatAddressForMonster(monster.ID)
+        data.writeByte(initialAddress + constants.monsterStats.pushable, 0x01)
+        data.writeByte(initialAddress + constants.monsterStats.flyingLiftable, 0x08 | data.readByte(initialAddress + constants.monsterStats.flyingLiftable))
+      })
+    }
   }
 
   function setStarter(options, data, hex) {
@@ -282,20 +326,7 @@
       //but only change it for monsters that have spells, aren't Tri, and weren't originally Tri (Hikewne)
       if (matchSpellToElement && !!starterSpell && starterDefaultElement != tri) {
         if (starterElement != tri) {
-          let spellElement = primaryElements[(starterSpell - 1) % primaryElements.length].ID
-          //console.log('Spell ID '+starterSpell)
-          //console.log('Spell element '+spellElement)
-          //console.log('Starter element '+starterElement)
-          while (spellElement < starterElement) {
-            spellElement *= 2
-            starterSpell++
-            //console.log('starterSpell ID ' + starterSpell)
-          }
-          while (spellElement > starterElement) {
-            spellElement /= 2
-            starterSpell--
-            //console.log('starterSpell ID ' + starterSpell)
-          }
+          starterspell = getSpellInElement(starterSpell, starterElement)
         } else {
           //disable for monsters that weren't originally Tri
           starterSpell = 0
@@ -308,14 +339,34 @@
     }
   }
 
+  function getElementOfSpell(spell) {
+    const primaryElements = getPrimaryElements()
+    return primaryElements[(spell - 1) % primaryElements.length].ID
+  }
+
+  function getSpellInElement(spell, desiredElement) {
+    //don't change the element of dark wave or bad things can happen
+    if (spell !== constants.spells.darkWave) {
+      let spellElement = getElementOfSpell(spell)
+      while (spellElement < desiredElement) {
+        spellElement *= 2
+        spell++
+      }
+      while (spellElement > desiredElement) {
+        spellElement /= 2
+        spell--
+      }
+    }
+    return spell
+  }
+
   function setHiddenSpellsAvailable(options, data, starter) {
-    const hiddenSpellTableAddress = 0x376318c
     if (options.hiddenSpells != util.getDefaultFromList(hiddenSpellOptions).ID) {
       let changeForAllMonsters = options.hiddenSpells == hiddenSpellOptionFromName("All monsters").ID
       allMonsters.forEach(function(monster) {
         if (changeForAllMonsters || monster.ID == starter) {
-          let hiddenSpell = data.readByte(hiddenSpellTableAddress + monster.ID)
-          let initialSpellAddress = constants.romAddresses.initialStatsTable + monster.ID * constants.rowLength.initialStats + constants.monsterStats.spell1Id
+          let hiddenSpell = data.readByte(constants.romAddresses.hiddenSpellTable + monster.ID)
+          let initialSpellAddress = getInitialStatAddressForMonster(monster.ID) + constants.monsterStats.spell1Id
           if (!!hiddenSpell) {
             data.writeByte(initialSpellAddress, hiddenSpell)
             data.writeByte(initialSpellAddress + 1, 0x01) // set initial level

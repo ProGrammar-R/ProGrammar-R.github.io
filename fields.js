@@ -235,8 +235,11 @@
   const startingItemsTooltip = 'Replaces the items on the tutorial floor with a random weapon, shield, spell ball, egg, and the usual medicinal herb. ' +
    'Note that the egg may be that of an evolved monster or Kewne, in which case it will not have a name.';
 
-  const kohElementToolTip = 'Set or randomize Koh\'s element. When using a mix magic attack that applies an element (e.g. Flame Sword), the resulting attack will ' +
+  const kohElementTooltip = 'Set or randomize Koh\'s element. When using a mix magic attack that applies an element (e.g. Flame Sword), the resulting attack will ' +
   'have Koh\'s element, the mix magic element, and any element from Koh\'s weapon.'
+
+  const superKohTooltip = 'Koh is normally only able to push and/or attempt to pick up some monster types. This option enables Koh to do this for all monsters, ' +
+  'although picking up a monster may still fail (the monster "doesn\'t like being picked up") with the usual 3 in 8 odds.'
 
   const monsterElementsTooltip = 'Depending on your selection, monster elements will either be randomized by type (e.g. all Trolls are wind) or will have a random ' +
   'element each time they spawn, in which case you can choose whether they have spells that match their default element or a random element by monster type. ' + 
@@ -249,7 +252,8 @@
   const bossTooltip = 'SPOILERS: Changes the mechanics of the final boss fight to remove the condition where you must lose to win. Changes the final boss\'s stats and more.';
 
   const portableElevatorsTooltip = 'New items called "Elevators" will spawn in the first tower. They can be picked up like ordinary items, and placed down and stepped on ' +
-   'to act like elevators. The elevator can be directly triggered by the "Use" command or giving them to, or throwing them at, a monster.';
+   'to act like elevators. The elevator can be directly triggered by the "Use" command or giving them to, or throwing them at, a monster. ' +
+   'Be aware that this will cause Wind Crystals to spawn much less often, and portable elevators will not spawn if you already have two in your inventory.';
 
   const barongItemsTooltip = 'The herbs that can ordinarily only be found from a Barong or in the second tower will spawn like normal.';
 
@@ -290,7 +294,8 @@
     themes:               new CheckOption('themes',               'themes',                   'H', null, false, null),
     introSkip:            new CheckOption('introSkip',            'intro-skip',               'i', null, false, introSkipTooltip),
     startingItems:        new CheckOption('startingItems',        'starting-items',           'I', null, false, startingItemsTooltip),
-    kohElement:           new DropdownOption('kohElement',        'koh-element',              'k', kohElementOptions, 0, kohElementToolTip),
+    kohElement:           new DropdownOption('kohElement',        'koh-element',              'k', kohElementOptions, 0, kohElementTooltip),
+    superKoh:             new CheckOption('superKoh',             'super-koh',                'K', null, false, superKohTooltip),
     blueCollar:           new CheckOption('blueCollar',           'blue-collar',              'l', null, false, null),
     elevatorSpawns:       new DropdownOption('elevatorSpawns',    'elevator-spawns',          'L', null, 63,    null),
     nonnativeSpellsLevel: new CheckOption('nonnativeSpellsLevel', 'non-native-spells-level',  'n', null, false, null),
@@ -301,6 +306,7 @@
     portableElevators:    new CheckOption('portableElevators',    'portable-elevators',       'p', null, false, portableElevatorsTooltip),
     //preset:             new DropdownOption('preset',            'preset',                   'P', null, ),
     questReload:          new CheckOption('questReload',          'quest-reload',             'q', null, false, null),
+    spells:               new CheckOption('spells',               'spells',                   'r', null, false, null),
     singleRoom:           new CheckOption('singleRoom',           'single-room',              's', null, false, null),
     starter:              new DropdownOption('starter',           'starter',                  'S', null, 2,     null),
     tutorialSkip:         new CheckOption('tutorialSkip',         'tutorial-skip',            't', null, false, null),
