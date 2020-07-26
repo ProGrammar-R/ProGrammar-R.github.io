@@ -268,6 +268,9 @@
    const fixBugsTooltip = 'Restores behavior that was clearly intended by the developers but doesn\'t function due to a bug. ' +
    'Currently this only includes restoring the particles that the salamander should spawn when attacking.';
 
+   const animationsTooltip = 'Randomize monster appearances and animations by type. This option is highly experimental, not fully tested, ' +
+   'and will result in some bizarre looking effects. The randomization process will also take much longer to complete.';
+
   const kohElementOptions =
   {
     Randomized: -1,
@@ -279,6 +282,7 @@
 
   const allOptions = {
     altTrapAlgorithm:     new CheckOption('altTrapAlgorithm',     'alt-trap-algorithm',       'a', null, false, altTrapAlgorithmTooltip),
+    animations:           new CheckOption('animations',           'animations',               'A', null, false, animationsTooltip),
     barongs:              new CheckOption('barongs',              'barongs',                  'b', null, false, barongsTooltip),
     ballElements:         new CheckOption('ballElements',         'ball-elements',            'B', null, false, ballElementsTooltip),
     secondTower:          new CheckOption('secondTower',          'second-tower',             'c', null, false, secondTowerTooltip),

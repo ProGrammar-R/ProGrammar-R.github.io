@@ -129,6 +129,19 @@
     }
   }
 
+  checked.prototype.copySectors = function copySectors(srcSector, destSector, numSectors) {
+    let byteIndex = 0
+    for (let sectorIndex = 0; sectorIndex < numSectors ; sectorIndex++) {
+      let srcAddress  = constants.headerSize + constants.sectorSize * (sectorIndex + srcSector)
+      let destAddress = constants.headerSize + constants.sectorSize * (sectorIndex + destSector)
+      for (let countWithinSector = 0; countWithinSector < constants.sectorDataSize; countWithinSector += 4) {
+        this.writeWord(destAddress, this.readWord(srcAddress))
+        srcAddress += 4
+        destAddress += 4
+      }
+    }
+  }
+
   checked.prototype.sum = function sum() {
     const state = JSON.stringify(this.writes)
     let hex = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(state))
@@ -414,6 +427,7 @@
       //always make cursor start at New Game
       //data.writeInstruction(0x43a920, 0x01000224)
     //}
+    applyAnimations(options, data, hex)
   }
 
   function applyTutorialSkip(options, data) {
@@ -706,6 +720,81 @@
       //add selfi
       addCharacter(data, 0x32)
     }
+  }
+
+  function applyAnimations(options, data, hex) {
+    if (options.animations) {
+      const unitIdToNumberOfAnimations = [
+        { unitId: 0x01, numAnimations: 0x42 },
+        { unitId: 0x02, numAnimations: 0x3c },
+        { unitId: 0x03, numAnimations: 0x4a },
+        { unitId: 0x04, numAnimations: 0x36 },
+        { unitId: 0x05, numAnimations: 0x34 },
+        { unitId: 0x06, numAnimations: 0x22 },
+        { unitId: 0x07, numAnimations: 0x3b },
+        { unitId: 0x08, numAnimations: 0x40 },
+        { unitId: 0x09, numAnimations: 0x41 },
+        { unitId: 0x0A, numAnimations: 0x40 },
+        { unitId: 0x0B, numAnimations: 0x3b },
+        { unitId: 0x0C, numAnimations: 0x39 },
+        { unitId: 0x0D, numAnimations: 0x31 },
+        { unitId: 0x0E, numAnimations: 0x5a },
+        { unitId: 0x0F, numAnimations: 0x31 },
+        { unitId: 0x10, numAnimations: 0x2c },
+        { unitId: 0x11, numAnimations: 0x45 },
+        { unitId: 0x12, numAnimations: 0x4f },
+        { unitId: 0x13, numAnimations: 0x31 },
+        { unitId: 0x14, numAnimations: 0x36 },
+        { unitId: 0x15, numAnimations: 0x6d },
+        { unitId: 0x16, numAnimations: 0x9d },
+        { unitId: 0x17, numAnimations: 0x3d },
+        { unitId: 0x18, numAnimations: 0x4a },
+        { unitId: 0x19, numAnimations: 0x4d },
+        { unitId: 0x1A, numAnimations: 0x2c },
+        { unitId: 0x1B, numAnimations: 0x3c },
+        { unitId: 0x1C, numAnimations: 0x36 },
+        { unitId: 0x1D, numAnimations: 0x57 },
+        { unitId: 0x1E, numAnimations: 0x40 },
+        { unitId: 0x1F, numAnimations: 0x4a },
+        { unitId: 0x20, numAnimations: 0x42 },
+        { unitId: 0x21, numAnimations: 0x37 },
+        { unitId: 0x22, numAnimations: 0x3b },
+        { unitId: 0x23, numAnimations: 0x3b },
+        { unitId: 0x24, numAnimations: 0x4b },
+        { unitId: 0x25, numAnimations: 0x4a },
+        { unitId: 0x26, numAnimations: 0x31 },
+        { unitId: 0x27, numAnimations: 0x36 },
+        { unitId: 0x28, numAnimations: 0x4a },
+        { unitId: 0x29, numAnimations: 0x4f },
+        { unitId: 0x2A, numAnimations: 0x2e },
+        { unitId: 0x2B, numAnimations: 0x40 },
+        { unitId: 0x2C, numAnimations: 0x3e },
+        { unitId: 0x2D, numAnimations: 0x2c },
+      ]
+
+      const randomAnimationsHexSeed = 2;
+      const lcgSeed = hex.length > randomAnimationsHexSeed ? Math.abs(hex[randomAnimationsHexSeed]) : 15;
+      const lcg = new util.LCG(constants.lcgConstants.modulus, constants.lcgConstants.multiplier, constants.lcgConstants.increment, lcgSeed)
+
+      const sortedUnitIdToNumberOfAnimations = unitIdToNumberOfAnimations.sort((a, b) => a.numAnimations - b.numAnimations)
+      sortedUnitIdToNumberOfAnimations.forEach(function(unitIdAndNumAnimations) {
+        const srcUnitIndex = lcg.rollBetween(unitIdAndNumAnimations.unitId - 1, 0x2c)
+        const srcUnitId = sortedUnitIdToNumberOfAnimations[srcUnitIndex].unitId
+        const destUnitId = unitIdAndNumAnimations.unitId
+        if (srcUnitId != destUnitId) {
+          copyGraphicsAndAnimation(data, srcUnitId, destUnitId)
+        }
+      })
+    }
+  }
+
+  function copyGraphicsAndAnimation(data, srcUnitId, destUnitId) {
+    const sectorsForAnimationAndGraphics = 0x2b
+    const firstSector = 0x56d6
+
+    data.copySectors(firstSector + sectorsForAnimationAndGraphics * (srcUnitId - 1),
+                     firstSector + sectorsForAnimationAndGraphics * (destUnitId - 1),
+                     sectorsForAnimationAndGraphics)
   }
 
   function addCharacter(data, characterId) {
@@ -1117,7 +1206,8 @@
     fixCrashes,
     fixBugs,
     spells,
-    superKoh
+    superKoh,
+    animations
   ) {
     this.id = id
     this.name = name
@@ -1163,6 +1253,7 @@
     this.fixBugs = fixBugs
     this.spells = spells
     this.superKoh = superKoh
+    this.animations = animations
   }
 
   function clone(obj) {
