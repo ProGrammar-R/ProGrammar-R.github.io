@@ -110,7 +110,8 @@
           standing on as no longer containing a friendly unit, as the game marks the tile occupied by the lifted unit as empty despite Koh standing there.
           The same will happen if a frogged familiar turns back into a monster while Koh is holding it.<br>
           The effect of this is that although enemy monsters will still try to hit Koh with spells and attacks, these will not hurt Koh as the game
-          cannot find a valid target. This is useful in 
+          cannot find a valid target. This is not foolproof, as Koh can be hit under certain conditions (Glacier's ice shot, elevation differences?),
+          but it can still be useful in emergency situations.
         </li>
         <li>Only units that are paralyzed, asleep, blind, or out of MP (henceforth referred to as being incapacitated) have a chance to dodge attacks
           based on luck, despite all other combat-related checks disfavoring these statuses. Since these are all immbolizing statuses,
@@ -122,6 +123,21 @@
           (assuming non-zero luck; zero luck is the equivalent of rolling a 0). Since the "evasion" of all units always appears to be 0
           (n.b. this is different from agility, see point below), an incapacitated defending unit would need at least 129 luck to be capable of rolling 128+.
           This means that in practice this issue has no effect, as the standard monster with the highest luck still only has 100 luck initially.
+        </li>
+        <li>Fusing units that have been turned into frogs can have a variety of effects. If Hikewne is frogged, it can survive the fusion where it
+          would normally always be absorbed. If both units are frogged then fused, attempting to take out another monster on that floor will fail.
+          If the fused monster is then put away and you once again try to take out another monster, it will come out, but have the appearance and animation
+          of one of the fused monsters. (<a href="https://www.youtube.com/watch?v=dAlE2QwF6SA">Video</a>)
+        </li>
+        <li>
+          Traps and items can spawn in hallways or inaccessible locations on rare occasions. This occurs when the game generates an item or trap room,
+          but then needs  to redo the floor layout. Since the items and traps have already been placed, but are not removed when redoing the floor layout,
+          they could be on top of walls, in hallways, or in the void in the new layout.
+        </li>
+        <li>
+          The vision of Beldo that appears the first time Koh reaches floor 31 will fail to appear if a trap room spawns on that floor.
+          This is because that vision is loaded in the same memory area that is used for traps, and a trap room writes traps to this same memory area.
+          Similarly, special items like the blue collar and healing herb will be overwritten if the floor has an item room.
         </li>
       </ul>
       <h2>Graphical bugs</h2>
@@ -139,6 +155,7 @@
         <li>Rotating the camera while heating an egg in the tower, cancelling the heating before the egg finishes hatching,
           and then (without turning the camera) walking in the direction that Koh was facing before heating the egg
           will cause Koh to walk in that direction without turning to face it, making him appear to be strafing or moonwalking.
+          (<a href="https://www.youtube.com/watch?v=o9UQR9W_1Wo">Video</a>)
         </li>
       </ul>
       <h2>Speculation</h2>

@@ -268,8 +268,8 @@
    const fixBugsTooltip = 'Restores behavior that was clearly intended by the developers but doesn\'t function due to a bug. ' +
    'Currently this only includes restoring the particles that the salamander should spawn when attacking.';
 
-   const animationsTooltip = 'Randomize monster appearances and animations by type. This option is highly experimental, not fully tested, ' +
-   'and will result in some bizarre looking effects. The randomization process will also take much longer to complete.';
+   const animationsTooltip = 'Randomize monster appearances and animations by type. This option is highly experimental, ' +
+   'will result in some bizarre looking effects, and may even crash your emulator. The randomization process will also take much longer to complete.';
 
   const kohElementOptions =
   {
