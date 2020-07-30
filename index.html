@@ -460,9 +460,9 @@
       <ul>
         <li><a href="guide/">Azure Dreams PS1 Encyclopedia</a>, a compendium of facts about the game (unit stats, etc).</li>
         <li><a href="gbc/">Azure Dreams GBC (De-)randomizer</a>, a tool for the GBC version.</li>
+        <li><a href="https://discordapp.com/invite/m2dB3m7">Azure Dreams Speedruns</a>, an AD discord server. All are welcome, from casual fans to speedrunners.</li>
         <li><a href="https://sotn.io/">SotN Randomizer</a>, from which this project is derived.
                (under the terms of the <a href="https://github.com/3snowp7im/SotN-Randomizer/blob/master/LICENSE">WTFPL</a> - thanks Wild Mouse).</li>
-        <li><a href="https://discordapp.com/invite/m2dB3m7">Azure Dreams Speedruns</a>, an AD discord server. All are welcome, from casual fans to speedrunners.</li>
         <li><a href="https://twitter.com/sustainna">Sustainna</a>, for creating the site's icon, favicon, and 404 page image.</li>
         <li><a href="https://www.mozilla.org/en-US/MPL/">Mozilla Public License 2.0</a>, the license under which this software is released.</li>
       </ul>
@@ -486,6 +486,14 @@
       </p>
       <hr>
       <h2><a name="changelog" href="changelog.html">Changelog</a></h2>
+      <h3><time>July 29, 2020</time></h3>
+      <ul>
+        <li>v3.5.2 Fixed issue where trap customizations would not load from seed URLs.
+          Note that seed URLs with spell randomization on generated prior to this patch will no longer work as expected, as that flag has been
+          changed from 'r' to 'R'. Provided that the seed URL doesn't have a checksum, you can manually update this and the seed URL will work
+          once again. Fixed a bug where the elements of monster spells would always match the monster's default element.
+        </li>
+      </ul>
       <h3><time>July 26, 2020</time></h3>
       <ul>
         <li>v3.5.1 Marked the below option as highly unstable, as it can result in crashes.

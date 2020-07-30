@@ -326,7 +326,7 @@
       //but only change it for monsters that have spells, aren't Tri, and weren't originally Tri (Hikewne)
       if (matchSpellToElement && !!starterSpell && starterDefaultElement != tri) {
         if (starterElement != tri) {
-          starterspell = getSpellInElement(starterSpell, starterElement)
+          starterSpell = getSpellInElement(starterSpell, starterElement)
         } else {
           //disable for monsters that weren't originally Tri
           starterSpell = 0

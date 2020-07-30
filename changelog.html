@@ -13,6 +13,14 @@
   <body>
     <div id="content">
       <h2><a name="changelog">Full Changelog</a></h2>
+      <h3><time>July 29, 2020</time></h3>
+      <ul>
+        <li>v3.5.2 Fixed issue where trap customizations would not load from seed URLs.
+          Note that seed URLs with spell randomization on generated prior to this patch will no longer work as expected, as that flag has been
+          changed from 'r' to 'R'. Provided that the seed URL doesn't have a checksum, you can manually update this and the seed URL will work
+          once again. Fixed a bug where the elements of monster spells would always match the monster's default element.
+        </li>
+      </ul>
       <h3><time>July 26, 2020</time></h3>
       <ul>
         <li>v3.5.1 Marked the below option as highly unstable, as it can result in crashes.
