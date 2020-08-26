@@ -16,7 +16,11 @@
       const listItemElement = document.createElement('li');
       unitListElement.appendChild(listItemElement);
       const linkElement = document.createElement('a');
-      linkElement.href = 'unit.html?unitId=' + tableEntry.unitId;
+      if (!tableEntry.name.includes(" ")) {
+        linkElement.href = 'unit.html?name=' + tableEntry.name;
+      } else {
+        linkElement.href = 'unit.html?unitId=' + tableEntry.unitId;
+      }
       linkElement.innerText = tableEntry.name;
       listItemElement.appendChild(linkElement);
     });

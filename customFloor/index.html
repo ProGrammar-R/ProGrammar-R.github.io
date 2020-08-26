@@ -43,6 +43,8 @@
             <input type="radio" id="rooms-mode" name="view-mode" value="rooms">
           </div>
           <div class="pure-u-5-24">
+            <label for="movement-mode">Movement</label>
+            <input type="radio" id="movement-mode" name="view-mode" value="movement">
           </div>
           <div class="pure-u-3-24">
           </div>
@@ -253,14 +255,29 @@
             <input type="checkbox" id="spawns-monsters">
           </div>
           <div class="pure-u-1 space-down">
-            <label for="import-export">Import/Export:</label>
+            <div class="pure-u-11-24">
+              <label for="import-export">Import/Export:</label>
+            </div>
+            <div class="pure-u-12-24">
+              <label for="load-template">Load template</label>
+              <select id="load-template">
+                <option value="" selected disabled>--</option>
+                <option value="predefinedFloor1Tutorial">Tutorial floor 1</option>
+                <option value="predefinedFloor1A">Floor 1 (version A)</option>
+                <option value="predefinedFloor1B">Floor 1 (version B)</option>
+                <option value="predefinedFloor1C">Floor 1 (version C)</option>
+                <option value="predefinedFloor1D">Floor 1 (version D)</option>
+                <option value="predefinedFloor2">Floor 2 (Ghosh/Selfi)</option>
+                <option value="predefinedFloorDebug">Debug floor</option>
+              </select>
+            </div>
           </div>
           <div class="pure-u-1">
             <textarea id="import-export" cols="40" rows="5"></textarea>
           </div>
           <div class="pure-u-12-24">
             <!-- <label for="import-file">Import file</label> -->
-            <input id="import-file" type="file" accept=".json"></input>
+            <input id="import-file" alt="Select file to import" type="file" accept=".json"></input>
           </div>
           <div class="pure-u-4-24">
             <button id="import-text">Import text</button>

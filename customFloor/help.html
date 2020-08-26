@@ -24,6 +24,10 @@
           The following modes all color tiles with a non-empty appearance as dark green, except as specified.
           <li>Rooms: shows rooms in red, with waypoints colored green with a number on them indicating their relative height.
           </li>
+          <li>Movement: shows the directions that Koh could move in if standing on the tile in brown. If a tile has a line radiating from its
+            center to another tile, then it is possible to move from the first to the second tile. Otherwise, it's not possible to move in that
+            direction from the first tile.
+          </li>
           <li>Elevators: shows elevators in green.
           </li>
           <li>Items: shows items in blue.
@@ -109,6 +113,31 @@
         To be described.
         <ul>
           <li>Level: only available for monster dens. Specifies how many enemies will spawn, max 32.
+          </li>
+        </ul>
+      </div>
+      <h2>Import/Export</h2>
+      <div>
+        <ul>
+          <li>
+            Load template: Unless you are working with an existing file, loading a template is highly recommended as your starting point
+            to provide some required properties like "firstSector" and "sizeInSectors". Selecting a template will overwrite all existing
+            work, so if you have made any changes, be sure to export your file before loading a template.
+          </li>
+          <li>
+            Import file: Listed as "Choose File", this imports a custom floor JSON file.
+          </li>
+          <li>
+            Import text: This replaces the contents of the editor with the contents in the text area, which can be useful if you have made
+            a change and want to revert back to the loaded template or imported file.
+          </li>
+          <li>
+            Export text: Outputs the contents of the editor into the text area, which can be useful if you want to be able to quickly
+            restore to your current state after testing a few changes.
+          </li>
+          <li>
+            Export file: Save your work to a JSON file to either work on later or patch into the game using the randomizer (just select
+            your exported file for the "custom floor" option).
           </li>
         </ul>
       </div>

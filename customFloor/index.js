@@ -29,7 +29,16 @@
   const itemCursed = 0x40;
   const itemUncursed = 0xff ^ itemCursed;
 
-  const elems = {}
+  const predefinedFloors = {};
+  const elems = {};
+  const movementTiles = {};
+  const offsetsByAngle = {};
+
+  for (let i = 0; i < 8; i++) {
+    const yOffset = -1 * Math.round(Math.cos(Math.PI * i / 4));
+    const xOffset = Math.round(Math.sin(Math.PI * i / 4));
+    offsetsByAngle[i] = {"xOffset": xOffset, "yOffset": yOffset};
+  }
 
   let floor = {
     rooms: [],
@@ -44,11 +53,15 @@
   let minHeight = minPossibleHeight;
   let maxHeight = maxPossibleHeight;
 
+  const maxJumpHeight = 0x20;
+  const elevatorHeightOffset = 0x20;
+
   const appearances = {
     void:         0x00,
     elevator:     0x01,
     skewElevator: 0x02,
     mapBoundary:  0x03,
+    torch:        111,
     bush:         115,
   }
 
@@ -129,6 +142,63 @@
     return foundMatch ? fTile : undefined;
   }
 
+  function getMovementTile(movement) {
+    if (!movementTiles[movement]) {
+      const mCanvas = document.createElement("canvas");
+      const scale = 40;
+      mCanvas.height = scale * 2;
+      mCanvas.width = scale * 2;
+      const c = mCanvas.getContext('2d');
+      c.beginPath();
+      c.lineWidth = 5;
+      c.strokeStyle = 'brown';
+      for (let i = 0; i < 8; i++) {
+        if (!!((1 << i) & movement)) {
+          c.moveTo(scale, scale);
+          c.lineTo(scale * (1 + offsetsByAngle[i].xOffset), scale * (1 + offsetsByAngle[i].yOffset))
+          c.stroke();
+        }
+      }
+      movementTiles[movement] = mCanvas.toDataURL();
+    }
+    return movementTiles[movement];
+  }
+
+  function isTilePassable(fTile) {
+    return !([appearances.void, appearances.mapBoundary, appearances.torch].includes(fTile.appearance) || !!(fTile.status & statuses.water) || !!(fTile.status & statuses.noTile));
+  }
+
+  function getActualHeight(fTile) {
+    return fTile.height + ((fTile.appearance === appearances.elevator) ? elevatorHeightOffset : 0);
+  }
+
+  function calculateMovement(x, y) {
+    let result = 0;
+    for (let i = 0; i < 8; i++) {
+      const xDest = x + offsetsByAngle[i].xOffset;
+      const yDest = y + offsetsByAngle[i].yOffset;
+      if (xDest < 0 || yDest < 0 || xDest >= tilesPerAxis || yDest >= tilesPerAxis) {
+        continue;
+      }
+      const dest = getFloorTileByCoords(xDest, yDest);
+      if (!isTilePassable(dest)) {
+        continue;
+      }
+      const orig = getFloorTileByCoords(x, y);
+      const origHeight = getActualHeight(orig)
+      if (!isTilePassable(orig) || origHeight + maxJumpHeight < getActualHeight(dest)) {
+        continue;
+      }
+      //if moving diagonally and can't jump over the corner
+      if (i % 2 === 1 && (origHeight + maxJumpHeight < getActualHeight(getFloorTileByCoords(x, yDest)))
+                      || (origHeight + maxJumpHeight < getActualHeight(getFloorTileByCoords(xDest, y)))) {
+        continue;
+      }
+      result |= (1 << i);
+    }
+    return result;
+  }
+
   function recalculateMinMaxHeight() {
     let newMinHeight = 0;
     let newMaxHeight = 0;
@@ -159,6 +229,12 @@
         const newSrc = new URL(urlBase + 'tiles/Appr'+fTile.appearance+'.png');
         eTile.src = newSrc;
         eTile.alt = '';
+        break;
+      case "movement":
+        const movement = calculateMovement(fTile.xCoord, fTile.yCoord);
+        eTile.src = getMovementTile(movement);
+        eTile.alt = '';
+        eTile.style = ![appearances.void, appearances.mapBoundary].includes(fTile.appearance) ? standardBackgroundColor : 'background-color:black';
         break;
       case "height":
         if (recalc) {
@@ -1026,17 +1102,34 @@
     event.stopPropagation();
   }
 
+  function loadTemplateHandler(event) {
+    const loadTemplateField = document.getElementById('load-template');
+    if (!predefinedFloors[loadTemplateField.value]) {
+      const xhr = new XMLHttpRequest(); //required because fetch doesn't work locally
+      xhr.open("GET", window.location.href.split("/index.html")[0] + '/examples/'+ loadTemplateField.value + '.json');
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && (xhr.status === 0 || xhr.status === 200)) {
+          predefinedFloors[loadTemplateField.value] = xhr.responseText;
+          elems.importExport.value = xhr.responseText;
+          importTextHandler(event);
+        }
+      };
+      xhr.send();
+    } else {
+      elems.importExport.value = predefinedFloors[loadTemplateField.value];
+      importTextHandler(event);
+    }
+  }
+
   function importFileHandler(event) {
-    const importFileField = document.getElementById('import-file');
-    if (importFileField.files[0]) {
+    if (elems.importFile.files[0]) {
       const reader = new FileReader();
       reader.onload = function() {
-        const importExportField = document.getElementById('import-export');
-        importExportField.value = this.result;
-        floor = JSON.parse(importExportField.value);
+        elems.importExport.value = this.result;
+        floor = JSON.parse(elems.importExport.value);
         processImport();
       }
-      reader.readAsText(importFileField.files[0]);
+      reader.readAsText(elems.importFile.files[0]);
     }
     event.preventDefault();
     event.stopPropagation();
@@ -1045,8 +1138,7 @@
   function importTextHandler(event) {
     //catch enter being pressed in other fields which triggers this, for some reason
     if (event.detail !== 0) {
-      const importExportField = document.getElementById('import-export');
-      floor = JSON.parse(importExportField.value);
+      floor = JSON.parse(elems.importExport.value);
       processImport();
     }
     event.preventDefault();
@@ -1054,8 +1146,7 @@
   }
 
   function exportTextHandler(event) {
-    const importExportTextbox = document.getElementById('import-export');
-    importExportTextbox.value = JSON.stringify(floor);
+    elems.importExport.value = JSON.stringify(floor);
     event.preventDefault();
     event.stopPropagation();
   }
@@ -1142,7 +1233,8 @@
       option.innerText = monster.name;
       monsterIdElem.appendChild(option);
     })
-
+    elems.importFile = document.getElementById('import-file');
+    elems.importExport = document.getElementById('import-export');
     elems.xCoord = document.getElementById('x-coord');
     elems.yCoord = document.getElementById('y-coord');
     elems.tileElevator = document.getElementById('tile-elevator');
@@ -1169,6 +1261,7 @@
 
     document.getElementById('tile-appearance').addEventListener('change', appearanceChangeHandler);
     document.getElementById('tile-height').addEventListener('change', heightChangeHandler);
+    document.getElementById('load-template').addEventListener('change', loadTemplateHandler);
     document.getElementById('import-file').addEventListener('change', importFileHandler);
     document.getElementById('import-text').addEventListener('click', importTextHandler);
     document.getElementById('export-text').addEventListener('click', exportTextHandler);
@@ -1177,6 +1270,7 @@
     document.getElementById('appearance-mode').addEventListener('change', viewModeHandler);
     document.getElementById('height-mode').addEventListener('change', viewModeHandler);
     document.getElementById('rooms-mode').addEventListener('change', viewModeHandler);
+    document.getElementById('movement-mode').addEventListener('change', viewModeHandler);
     document.getElementById('elevators-mode').addEventListener('change', viewModeHandler);
     document.getElementById('items-mode').addEventListener('change', viewModeHandler);
     document.getElementById('traps-mode').addEventListener('change', viewModeHandler);

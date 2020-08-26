@@ -82,12 +82,37 @@
     36: [{unitId: 0x04, probability: 15.625}, {unitId: 0x28, probability: 21.875}, {unitId: 0x2A, probability: 18.75}, {unitId: 0x2B, probability: 18.75}, {unitId: 0x2C, probability: 15.625}, {unitId: 0x2D, probability: 9.375},],
     37: [{unitId: 0x04, probability: 15.625}, {unitId: 0x28, probability: 21.875}, {unitId: 0x2A, probability: 18.75}, {unitId: 0x2B, probability: 18.75}, {unitId: 0x2C, probability: 15.625}, {unitId: 0x2D, probability: 9.375},],
     38: [{unitId: 0x04, probability: 15.625}, {unitId: 0x28, probability: 21.875}, {unitId: 0x2A, probability: 18.75}, {unitId: 0x2B, probability: 18.75}, {unitId: 0x2C, probability: 15.625}, {unitId: 0x2D, probability: 9.375},],
-    39: [{unitId: 0x04, probability: 15.625}, {unitId: 0x28, probability: 21.875}, {unitId: 0x2A, probability: 18.75}, {unitId: 0x2B, probability: 18.75}, {unitId: 0x2C, probability: 15.625}, {unitId: 0x2D, probability: 9.375},]
-    }
+    39: [{unitId: 0x04, probability: 15.625}, {unitId: 0x28, probability: 21.875}, {unitId: 0x2A, probability: 18.75}, {unitId: 0x2B, probability: 18.75}, {unitId: 0x2C, probability: 15.625}, {unitId: 0x2D, probability: 9.375},],
+    40: []
+  }
+
+  const floor1Tutorial = "The first time you enter this floor, it will have a fixed layout with fixed items, enemies, and traps. The items are a Copper sword, Wooden shield, Fire ball (5 charges), Medicinal herb, and Pulunpa egg (80% warm). The enemy is a single level 1 Pulunpa. The trap is a single, already activated Sleep trap.";
+  const floor1Alt = "\nOn all subsequent tower entries, floor 1 will randomly use one of four fixed layouts with random items, enemies, and traps being placed as usual. To view these layouts, open the custom floor tool and load the appropriate template.";
+  const floor2 = "The enemies listed above are only found in floor 2 on the first tower entry. Thereafter, the player will encounter a fixed layout without items, traps, or enemies, just an encounter with Ghosh and/or Selfi.";
+  const floor12 = "If the player has not already aquired it, the blue collar will spawn on this floor (unless the game spawns an item room, which places items in a different way and overwrites the blue collar)."
+  const floor15 = "If the player has talked to Isaac near the windmills and has not already aquired Guru's oil pot, it can be found on this floor."
+  const floor20 = "If the player has talked to Okami at the bar and has not already aquired the blue cape, it can be found on this floor."
+  const floor25 = "If the player has talked to Watta to begin the water medal quest and has not aquired the water medal, the game can spawn a white Picket which is holding the water medal."
+  const floor28 = "If the player has completed the necessary conditions in Cherrl's story and has not already aquired the healing herb, it can be found on this floor."
+  const floor31 = "The first time the player enters this floor, they will encounter a vision of Beldo (unless the game spawns a trap room or monster den, which handle traps in a different way and overwrite the Beldo vision)."
+  const floor40 = "The first time the player enters this floor, they will encounter Beldo. Subsequent visits will not have Beldo, but will have wind crystals to allow the player to return."
+
+  const specialNotesTable = {
+    1: floor1Tutorial + floor1Alt,
+    2: floor2,
+    12: floor12,
+    15: floor15,
+    20: floor20,
+    25: floor25,
+    28: floor28,
+    31: floor31,
+    40: floor40,
+  }
 
   const exports = {
     enemyTable: enemyTable,
     eggTable: eggTable,
+    specialNotesTable: specialNotesTable,
   }
   if (self) {
     self.adRando = Object.assign(self.adRando || {}, {
