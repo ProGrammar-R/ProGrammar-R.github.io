@@ -3,6 +3,7 @@
   let elements;
   let floors;
   let spells;
+  let talents;
   let units;
   
   let pageIsSetUp = false;
@@ -11,11 +12,13 @@
     elements = self.adRando.elements;
     floors = self.adRando.floors;
     spells = self.adRando.spells;
+    talents = self.adRando.talents;
     units = self.adRando.units;
   } else {
     elements = require('../tables/elements');
     floors = require('../tables/floors');
     spells = require('../tables/spells');
+    talents = require('../tables/talents');
     units = require('../tables/units');
   }
 
@@ -82,6 +85,18 @@
     }
   }
 
+  function appendTalentLink(talentEntry, templateId) {
+    const clone = document.getElementById(templateId).content.cloneNode(true);
+    const cloneLink = clone.getElementById("talent_link");
+    cloneLink.innerText = talentEntry.name;
+    cloneLink.href = "../talents/talent.html?talentId=" + talentEntry.talentId;
+    document.getElementById("talents").appendChild(clone);
+  }
+
+  function createTalents(entry, templateId) {
+    talents.getAllTalentsByTalentBitmask(entry.talentIds).forEach(talentEntry => appendTalentLink(talentEntry, templateId));
+  }
+
   function jsonNameToElementName(jsonName) {
     let elementName = "";
     for (let i = 0; i < jsonName.length; i++) {
@@ -131,6 +146,7 @@
         foundElement.innerText += " " + processAttribute(attribute, entry[attribute]);
       }
     });
+    createTalents(entry, "talent_template");
     createStatsForAllLevels(entry);
     createStatsForAllFloors(entry);
     createEggProbabilitiesForAllFloors(entry);

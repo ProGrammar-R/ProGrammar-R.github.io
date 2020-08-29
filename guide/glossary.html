@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta name="description" content="A collection of knowledge for Azure Dreams (PS1)">
+    <meta name="keywords" content="Azure Dreams,Glossary">
+    <title>Azure Dreams PS1 Encyclopedia</title>
+    <link rel="stylesheet"
+          href="https://unpkg.com/purecss@1.0.0/build/pure-min.css">
+    <link rel="stylesheet"
+          href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
+    <link rel="stylesheet" href="../index.css">
+    <link rel="icon" type="image/png" href="/favicon.png">
+  </head>
+  <body>
+    <div id="version"></div>
+    <div id="content">
+      <h1>Azure Dreams PS1 Encyclopedia</h1>
+      <div class="shift-up">
+        by pro_grammar
+      </div>
+      <a href="index.html">Back to main guide page</a>
+      <h2><a name="pages">Glossary</a></h2>
+      <div>
+        This is a work in progress. Terms will be added as questions arise.
+      </div>
+      <dl>
+        <dt>Ability</dt>
+        <dd>Abilities are actions that a unit can perform which generally appear when opening the command menu for that unit.
+          Abilities should not be confused with talents, which are characteristics that can be passed in fusion, and traits,
+          which are characteristics intrinsic to a unit type (not possible commands that can be performed).
+        </dd>
+        <dt>Diet</dt>
+        <dd>A unit's diet determines how much MP can be restored by consuming various different kinds of items. A unit's diet is
+          intrinsic to a unit's type, e.g. Vipers can restore 100 MP by consuming an egg.
+        </dd>
+        <dt>Element</dt>
+        <dd>The game defines three elements: fire, water, and wind.
+          Fire is weak to water, water is weak to wind, wind is weak to fire.
+          Items, spells, and units may have an element or they may not, in which case they are referred to as being non-elemental.
+          The term "tri-elemental" is used elsewhere, but this is a misnomer, as they are actually coded as not having an element.
+          Technically, elements are generally represented as bitfields, so objects which can have one element could theoretically
+          have multiple elements, which is another reason to distinguish objects without elements as being non-elemental.
+        </dd>
+        <dt>Genus</dt>
+        <dd>The element of a monster. This is the term used in game (e.g. "Kewne changes genus to water."), but as it is
+          specific to monsters and has the potential to be confused with unit type, it is not used on this site.          
+        </dd>
+        <dt><a href="mechanics/stats.html">Stats</a></dt>
+        <dd>The basic numeric values that define how a monster performs in battle.
+          Stats generally increase with level but can also be increased by consuming certain items.
+        </dd>
+        <dt><a href="talents/">Talent</a></dt>
+        <dd>Talents are properties of monsters that can be combined when fusing monsters
+          and are generally (but not always) shown after a fusion occurs (e.g "Talented with Unbrainwashable").
+          They are distinct from traits, which are also inherent properties but which cannot be passed in fusion.
+          Talents generally provide some sort of stat boost or status immunity.
+        </dd>
+        <dt>Trait</dt>
+        <dd>Traits are characteristics specific to a single type of monster, such as Manoevas having the possibility of creating
+          a clone when damaged. They are distict from talents, as traits cannot be passed in fusion. This is not a term found directly
+          in the game, but one I use to differentiate these characteristics from other things like abilities and diet.
+        </dd>
+        <dt><a href="units/">Unit</a></dt>
+        <dd>Units are the monsters, characters, and destructable obstables found in the tower.
+          The term "unit" is generally used over monster because the topic also applies to Koh, Ghosh, etc.
+        </dd>
+      </ul>
+    </div>
+    <div id="dev-border"></div>
+  </body>
+</html>

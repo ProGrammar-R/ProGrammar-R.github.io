@@ -57,7 +57,16 @@
         <div class="pure-u-4-24" id="accuracy">Accuracy:</div>
         <div class="pure-u-4-24" id="special_damage">Weapon damage (ability):</div>
         <div class="pure-u-4-24" id="special_accuracy">Accuracy (ability):</div>
-        <div class="pure-u-1" id="talents">Talent(s): TBA</div>
+      </div>
+      <h3>Talent(s)</h3>
+      <div class="pure-u-1" id="talents">
+        <ul>
+          <template id="talent_template">
+            <li class="shift-up">
+              <a id="talent_link"></a>
+            </li>
+          </template>
+        </ul>
       </div>
       <h3>Spells</h3>
       <div class="pure-u-1">
@@ -123,6 +132,7 @@
     <div id="dev-border"></div>
     <script src="../tables/elements.js"></script>
     <script src="../tables/floors.js"></script>
+    <script src="../tables/talents.js"></script>
     <script src="../tables/spells.js"></script>
     <script src="../tables/units.js"></script>
     <script src="unit.js"></script>
