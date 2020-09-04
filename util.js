@@ -777,8 +777,13 @@
       const lcg = new util.LCG(constants.lcgConstants.modulus, constants.lcgConstants.multiplier, constants.lcgConstants.increment, lcgSeed)
 
       const sortedUnitIdToNumberOfAnimations = unitIdToNumberOfAnimations.sort((a, b) => a.numAnimations - b.numAnimations)
+      let index = 0;
       sortedUnitIdToNumberOfAnimations.forEach(function(unitIdAndNumAnimations) {
-        const srcUnitIndex = lcg.rollBetween(unitIdAndNumAnimations.unitId - 1, 0x2c)
+        let lowerBound = index;
+        while (lowerBound > 0 && sortedUnitIdToNumberOfAnimations[lowerBound].numAnimations === sortedUnitIdToNumberOfAnimations[index].numAnimations) {
+          lowerBound--;
+        }
+        const srcUnitIndex = lcg.rollBetween(index++, 0x2c)
         const srcUnitId = sortedUnitIdToNumberOfAnimations[srcUnitIndex].unitId
         const destUnitId = unitIdAndNumAnimations.unitId
         if (srcUnitId != destUnitId) {

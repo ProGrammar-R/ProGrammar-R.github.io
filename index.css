@@ -233,4 +233,33 @@ select:disabled {
 
 .space-down {
     padding-top: 1em;
-  }
+}
+
+.space-right {
+    padding-right: 1em;
+}
+
+div.hflow button.space-right {
+    padding-right: 0.5em;
+    margin-right: 1em;
+    margin-bottom: 0.5em;
+}
+
+div.hflow #paste {
+    display: none;
+}
+
+.floor-number {
+    margin-left: -0.1em;
+    padding-right: 0.5em;
+}
+
+ul.hflow li {
+    margin-left: 2.5em;
+    padding-right: 1em;
+}
+
+ul.hflow li li {
+    margin-left: 0em;
+    padding-right: 1em;
+}

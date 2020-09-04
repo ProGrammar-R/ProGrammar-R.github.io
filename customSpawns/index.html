@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <title>Azure Dreams PS1 (De-)Randomizer monster spawn editor</title>
+    <link rel="stylesheet"
+          href="https://unpkg.com/purecss@1.0.0/build/pure-min.css">
+    <link rel="stylesheet"
+          href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
+    <link rel="stylesheet" href="../index.css">
+    <link rel="icon" type="image/png" href="../favicon.png">
+  </head>
+  <body>
+    <script>
+      function changeLevel(target, delta) {
+        const spawnsNode = target.parentNode.parentNode.getElementsByTagName('input');
+        for (let i = 0; i < spawnsNode.length; i++) {
+          const levelNode = spawnsNode[i];
+          levelNode.value = Math.max(Math.min(parseInt(levelNode.value) + delta, parseInt(levelNode.max)), parseInt(levelNode.min));
+        }
+      }
+    </script>
+    <div style="padding-left: 5%; padding-right: 5%;">
+      <h1>Custom Monster Spawns</h1>
+      <div class="pure-u-12-24">
+        <a href="../">Back to randomizer</a>
+      </div>
+      <h2>About</h2>
+      <p>
+        This tool lets you select exactly which monsters will spawn on each floor. For each slot on each floor,
+        specify the monster and the level it should spawn at. Once you are finished, export your spawn file,
+        go to the randomizer home page and select the spawn file in the "Customizations" section when randomizing your game.
+      </p>
+      <h2>FAQ</h2>
+      <ul>
+        <li id="faq-slots">Why are there so many slots with the same monster?
+          <ul><li>That's how the game sets the relative spawn rates. The game randomly picks a slot and spawns that monster.</li></ul>
+        </li>
+        <li id="faq-types">How many different enemy monster types can appear on a floor?
+          <ul><li>Only four beyond your familiars. Once the game has spawned four enemy monster types within a floor, attempts to spawn
+          enemies of a fifth type will result in the monster not spawning. Variants within a type count as a single type.</li></ul>
+        </li>
+        <li id="faq-variants">What levels do the monster variants (e.g. dark Pulunpa) spawn at?
+          <ul class="hflow">
+            <li>Pulunpa
+              <ul>
+                <li>Normal: 1-9</li>
+                <li>Dark: 10+</li>
+              </ul>
+            </li>
+            <li>Troll
+              <ul>
+                <li>Hammer: 1-9</li>
+                <li>Bow gun: 10-12</li>
+                <li>Sword: 13+</li>
+              </ul>
+            </li>
+            <li>Manoeva
+              <ul>
+                <li>Doesn't transform: 1-9</li>
+                <li>Transforms into items: 10-19</li>
+                <li>Transforms into items and monsters: 20+</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <div class="pure-u-1 space-down hflow">
+        <label for="import-file">Import file</label>
+        <input id="import-file" type="file" accept=".json"></input>
+        <button id="export-file">Export file</button>
+        <a id="download-file" style="display:none"></a>
+        <output id="import-output"></output>
+      </div>
+    </div>
+    <div class="hflow space-down">
+      <div id="spawns-area">
+        <template id="floor-template">
+          <div id="floor-container" name="floor-container" style="padding-top: 0.75em; padding-bottom: 0.75em;">
+            <div class="hflow">
+              <label for="floor-container" style="margin-left: 1em;" class="space-right">Floor</label>
+              <div id="floor-number" class="space-right floor-number"></div>
+              <button class="space-right" id="copy">Copy</button>
+              <button class="space-right" id="paste">Paste</button>
+              <button class="space-right" onclick="changeLevel(this, 1)">Level up</button>
+              <button class="space-right" onclick="changeLevel(this, -1)">Level down</button>
+            </div>
+            <div id="floor-spawns" class="hflow">
+
+            </div>
+          </div>
+        </template>
+        <template id="spawn-template">
+          <fieldset>
+            <div>
+              <label for="monster-id">Monster</label>
+              <select id="monster-id"></select>
+            </div>
+            <div>
+              <label for="monster-level">Level</label>
+              <input id="monster-level" type="number" min="1" max="98"></select>
+            </div>
+          </fieldset>
+        </template>
+      </div>
+    </div>
+    <script src="../constants.js"></script>
+    <script src="../monsters.js"></script>
+    <script src="../guide/tables/floors.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>
