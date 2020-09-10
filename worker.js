@@ -35,7 +35,7 @@ self.addEventListener('message', function(message) {
     adRando.traps.setTraps(check, options)
     //adRando.util.pauseAfterDeath(check)
     //adRando.text.writeBattleTextToFile(check, adRando.constants.romAddresses.isExhaustedBattleText, "collapsed.\\p\\0")
-    adRando.monsters.setEnemizer(options, check, hex)
+    adRando.monsters.setEnemizer(options, check, hex, message.data.customSpawns)
     adRando.items.setStartingItems(options, check, hex)
     adRando.util.setAppliedOptions(options, check, hex)
     if (!!message.data.customFloor) {

@@ -33,8 +33,12 @@
       </p>
       <h2>FAQ</h2>
       <ul>
+        <li id="faq-what">What are all of these boxes?
+          <ul><li>Each floor has 16 "slots" which determine what monsters can spawn on that floor (if that floor is not pre-defined), and at what level they spawn.
+            Make sure to scroll horizontally and vertically if necessary to see all the slots.</li></ul>
+        </li>
         <li id="faq-slots">Why are there so many slots with the same monster?
-          <ul><li>That's how the game sets the relative spawn rates. The game randomly picks a slot and spawns that monster.</li></ul>
+          <ul><li>That's how the game sets the relative spawn rates. When spawning an enemy, the game randomly picks a slot and spawns that monster if the slot contains one.</li></ul>
         </li>
         <li id="faq-types">How many different enemy monster types can appear on a floor?
           <ul><li>Only four beyond your familiars. Once the game has spawned four enemy monster types within a floor, attempts to spawn
@@ -93,12 +97,12 @@
         <template id="spawn-template">
           <fieldset>
             <div>
-              <label for="monster-id">Monster</label>
-              <select id="monster-id"></select>
+              <label for="monster-id" class="smaller-input">Monster</label>
+              <select id="monster-id" class="smaller-input"></select>
             </div>
             <div>
-              <label for="monster-level">Level</label>
-              <input id="monster-level" type="number" min="1" max="98"></select>
+              <label for="monster-level" class="smaller-input">Level</label>
+              <input id="monster-level" type="number" min="1" max="98" class="smaller-input narrower-input"></select>
             </div>
           </fieldset>
         </template>

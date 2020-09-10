@@ -130,9 +130,19 @@
     return thingFromName(hiddenSpellOptions, name)
   }
 
-  function setEnemizer(options, data, hex) {
+  function setEnemizer(options, data, hex, customSpawns) {
     randomizeMonsterSpells(options, data, hex)
-    if (options.enemizer) {
+    let address = 0x24638e8
+    if (customSpawns) {
+      const monsterSpawnData = customSpawns.monsters
+      monsterSpawnData.forEach(floorSpawnData => {
+        let floorMonsterAddress = address + (floorSpawnData.floor - 1) * constants.sectorSize
+        floorSpawnData.spawns.forEach(spawnData => {
+          data.writeByte(floorMonsterAddress++, spawnData.unitId)
+          data.writeByte(floorMonsterAddress++, spawnData.level)
+        })
+      })
+    } else if (options.enemizer) {
       const maxMonsterTypesPerFloor = 4
       const firstPossibleBarongFloor = 10
       const normalBarongFloorLSD = 6
@@ -141,7 +151,6 @@
       const firstFloorForMajorThreats = 4
       const healers = getMonsterIdsWithHealingSpells(options, data)
 
-      let address = 0x24638e8
       let f = 1
       let s = 0
       let lcgSeed = hex.length > 0 ? Math.abs(hex[s++]) : 15;

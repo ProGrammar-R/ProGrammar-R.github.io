@@ -263,3 +263,11 @@ ul.hflow li li {
     margin-left: 0em;
     padding-right: 1em;
 }
+
+.narrower-input {
+    width: 3em;
+}
+
+.smaller-input {
+    font-size: 0.875em;
+}

@@ -94,7 +94,12 @@
   }
 
   function createTalents(entry, templateId) {
-    talents.getAllTalentsByTalentBitmask(entry.talentIds).forEach(talentEntry => appendTalentLink(talentEntry, templateId));
+    const unitTalents = talents.getAllTalentsByTalentBitmask(entry.talentIds);
+    if (unitTalents.length > 0) {
+      unitTalents.forEach(talentEntry => appendTalentLink(talentEntry, templateId));
+    } else {
+      document.getElementById("talents").innerText = "None";
+    }
   }
 
   function jsonNameToElementName(jsonName) {
